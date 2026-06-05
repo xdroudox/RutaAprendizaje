@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 6 - Fetch API</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f5f5f5; color: #333; }
+        h1 { border-bottom: 3px solid #2c3e50; padding-bottom: 10px; }
+        .ejercicio { background: white; border-radius: 8px; padding: 20px; margin: 20px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .ejercicio h2 { color: #2c3e50; margin-top: 0; }
+        .pista { background: #fff3cd; border-left: 4px solid #ffc107; padding: 10px; margin: 10px 0; }
+        .codigo { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 5px; font-family: 'Consolas', monospace; white-space: pre; overflow-x: auto; }
+        hr { border: 0; border-top: 1px solid #ddd; margin: 30px 0; }
+        .btn { background: #3498db; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+        .btn:hover { background: #2980b9; }
+        .resultado { background: #fafafa; padding: 15px; border-radius: 4px; border: 1px solid #ddd; margin: 10px 0; min-height: 50px; font-family: 'Consolas', monospace; font-size: 13px; white-space: pre-wrap; }
+        .loading { opacity: 0.5; pointer-events: none; }
+        .card { border: 1px solid #ddd; padding: 10px; margin: 5px 0; border-radius: 4px; background: white; }
+        .card h3 { margin: 0 0 5px 0; }
+        .card p { margin: 0; color: #666; }
+    </style>
+</head>
+<body>
+    <h1>> EJERCICIO 6: Fetch API</h1>
+    <p>Completa las funciones en la seccion "TU CODIGO AQUI" para consumir la API de JSONPlaceholder.</p>
+
+    <hr>
+
+    <!-- EJERCICIO 1 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 1: GET - Obtener posts</h2>
+        <p>Usando fetch(), obtiene los primeros 5 posts de JSONPlaceholder y muestralos en el contenedor de resultados.</p>
+        <p>Cada post debe mostrar: titulo (en negrita) y cuerpo del texto.</p>
+        <div class="pista">PISTA: fetch('https://jsonplaceholder.typicode.com/posts').then(r => r.json()).then(data => data.slice(0, 5)). Usa .map() para crear elementos HTML.</div>
+
+        <button class="btn" onclick="ejercicio1()">Cargar posts</button>
+        <div class="resultado" id="resultado-ej1">Los posts apareceran aqui...</div>
+    </div>
+
+    <hr>
+
+    <!-- EJERCICIO 2 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 2: POST - Crear un recurso</h2>
+        <p>Al hacer clic en "Crear post", envia un POST a JSONPlaceholder con los datos del formulario.</p>
+        <p>Muestra la respuesta del servidor (deberia incluir un id: 101).</p>
+        <div class="pista">PISTA: fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({...}) }).</div>
+
+        <div style="margin: 10px 0;">
+            <input type="text" id="input-title" placeholder="Titulo del post" style="width: 100%; padding: 8px; margin-bottom: 8px; box-sizing: border-box;">
+            <textarea id="input-body" placeholder="Cuerpo del post" style="width: 100%; padding: 8px; height: 80px; box-sizing: border-box;"></textarea>
+            <button class="btn" onclick="ejercicio2()">Crear post</button>
+        </div>
+        <div class="resultado" id="resultado-ej2">La respuesta del servidor aparecera aqui...</div>
+    </div>
+
+    <hr>
+
+    <!-- EJERCICIO 3 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 3: GET con manejo de errores</h2>
+        <p>Haz un fetch a una URL que NO existe (por ejemplo, posts/99999) y maneja el error correctamente.</p>
+        <p>Si la respuesta no es ok (status != 200-299), debes mostrar un mensaje de error. Ademas, si hay un error de red, capturalo con catch.</p>
+        <div class="pista">PISTA: Verifica respuesta.ok. Si !respuesta.ok, lanza un error. Usa try/catch con async/await.</div>
+
+        <div>
+            <label>ID del post a buscar:</label>
+            <input type="number" id="input-post-id" value="1" min="1" style="width: 80px; padding: 8px;">
+            <button class="btn" onclick="ejercicio3()">Buscar post</button>
+        </div>
+        <div class="resultado" id="resultado-ej3">El resultado aparecera aqui...</div>
+    </div>
+
+    <script>
+        // ================================
+        // --- TU CODIGO AQUI ---
+        // ================================
+
+        var API_URL = 'https://jsonplaceholder.typicode.com';
+
+        // EJERCICIO 1: GET posts
+        function ejercicio1() {
+            var resultado = document.getElementById('resultado-ej1');
+            resultado.textContent = 'Cargando...';
+            resultado.classList.add('loading');
+
+            // Usa fetch() para obtener /posts
+            // Convierte la respuesta a JSON
+            // Toma solo los primeros 5 elementos (.slice(0, 5))
+            // Por cada post, crea un div.card con h3 (title) y p (body)
+            // Agrega cada card al contenedor resultado
+            // Si hay error, muestra el mensaje de error
+        }
+
+        // EJERCICIO 2: POST crear post
+        function ejercicio2() {
+            var resultado = document.getElementById('resultado-ej2');
+            var title = document.getElementById('input-title').value.trim();
+            var body = document.getElementById('input-body').value.trim();
+
+            if (!title || !body) {
+                resultado.textContent = 'Completa el titulo y el cuerpo del post.';
+                return;
+            }
+
+            resultado.textContent = 'Creando post...';
+
+            // Usa fetch() con method: 'POST'
+            // Incluye headers: { 'Content-Type': 'application/json' }
+            // El body debe ser JSON.stringify({ title, body, userId: 1 })
+            // Muestra la respuesta del servidor en formato JSON
+        }
+
+        // EJERCICIO 3: GET con manejo de errores
+        async function ejercicio3() {
+            var resultado = document.getElementById('resultado-ej3');
+            var postId = document.getElementById('input-post-id').value || '1';
+
+            resultado.textContent = 'Buscando post #' + postId + '...';
+
+            // Usa async/await con try/catch
+            // Construye la URL: API_URL + '/posts/' + postId
+            // Verifica si respuesta.ok es false -> lanza error
+            // Si es ok, muestra los datos del post
+            // Si hay error, muestra "Error: [mensaje]"
+        }
+
+        // ================================
+        // --- FIN ---
+        // ================================
+    </script>
+</body>
+</html>

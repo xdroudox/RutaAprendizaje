@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+*.egg
+.venv/
+venv/
+env/
+
+# Java
+*.class
+*.jar
+*.war
+*.nar
+target/
+bin/
+build/
+.gradle/
+*.iml
+.idea/
+*.swp
+*.swo
+*.swn
+
+# Node (para frontend)
+node_modules/
+package-lock.json
+yarn.lock
+dist/
+
+# Docker
+.docker/
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE
+.vscode/settings.json
+.vscode/launch.json
+*.code-workspace
+
+# Logs
+*.log

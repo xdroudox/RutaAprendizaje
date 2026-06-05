@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Solucion 4 - Eventos y Asincronia</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f5f5f5; color: #333; }
+        h1 { border-bottom: 3px solid #27ae60; padding-bottom: 10px; }
+        .ejercicio { background: white; border-radius: 8px; padding: 20px; margin: 20px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .ejercicio h2 { color: #2c3e50; margin-top: 0; }
+        .solucion { background: #d4edda; border-left: 4px solid #28a745; padding: 10px; margin: 10px 0; font-weight: bold; }
+        .explicacion { background: #e8f5e9; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .codigo { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 5px; font-family: 'Consolas', monospace; white-space: pre; overflow-x: auto; }
+        hr { border: 0; border-top: 1px solid #ddd; margin: 30px 0; }
+        .btn { background: #3498db; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+        .btn:hover { background: #2980b9; }
+        .caja { width: 100px; height: 100px; background: #e74c3c; border-radius: 8px; transition: all 0.3s; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+        .log { background: #1e1e1e; color: #0f0; padding: 10px; border-radius: 4px; font-family: 'Consolas', monospace; height: 100px; overflow-y: auto; font-size: 13px; }
+    </style>
+</head>
+<body>
+    <h1>> SOLUCION 4: Eventos y Asincronia</h1>
+    <p>Soluciones completas para eventos y asincronia.</p>
+
+    <hr>
+
+    <!-- SOLUCION 1 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 1: Eventos de raton</h2>
+        <div class="solucion">SOLUCION</div>
+        <div class="codigo">
+var caja1 = document.getElementById('caja-ej1-sol');
+
+caja1.addEventListener('click', function() {
+    caja1.style.background = '#3498db';
+    caja1.textContent = 'Click!';
+    logMsg('Click detectado');
+});
+
+caja1.addEventListener('mouseenter', function() {
+    caja1.style.transform = 'scale(1.2)';
+    caja1.textContent = 'Hover!';
+    logMsg('Mouse enter');
+});
+
+caja1.addEventListener('mouseleave', function() {
+    caja1.style.transform = 'scale(1)';
+    caja1.style.background = '#e74c3c';
+    caja1.textContent = 'Fuera!';
+    logMsg('Mouse leave');
+});
+        </div>
+        <div class="explicacion">
+            <strong>Explicacion:</strong>
+            <code>addEventListener</code> asocia funciones a eventos del elemento.
+            <code>click</code> se dispara al hacer clic. <code>mouseenter</code> al entrar el raton.
+            <code>mouseleave</code> al salir. La propiedad <code>style</code> modifica CSS inline.
+        </div>
+        <div>
+            <div class="caja" id="caja-ej1-sol" style="background: #e74c3c;">Click</div>
+            <div class="log" id="log-ej1-sol">[Log] Listo...</div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- SOLUCION 2 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 2: setTimeout y setInterval</h2>
+        <div class="solucion">SOLUCION</div>
+        <div class="codigo">
+var intervaloCuenta = null;
+var contador = 5;
+
+function iniciarCuenta() {
+    if (intervaloCuenta) return;
+    contador = 5;
+    document.getElementById('display-sol').textContent = contador;
+
+    intervaloCuenta = setInterval(function() {
+        contador--;
+        if (contador <= 0) {
+            document.getElementById('display-sol').textContent = 'Despegue!';
+            clearInterval(intervaloCuenta);
+            intervaloCuenta = null;
+        } else {
+            document.getElementById('display-sol').textContent = contador;
+        }
+    }, 1000);
+}
+
+function detenerCuenta() {
+    if (intervaloCuenta) {
+        clearInterval(intervaloCuenta);
+        intervaloCuenta = null;
+        document.getElementById('display-sol').textContent = '-';
+    }
+}
+        </div>
+        <div class="explicacion">
+            <strong>Explicacion:</strong>
+            <code>setInterval(funcion, 1000)</code> ejecuta la funcion cada 1000ms.
+            Se decrementa el contador en cada ejecucion.
+            Cuando llega a 0, se usa <code>clearInterval</code> para detenerlo.
+            <code>detenerCuenta()</code> permite cancelar manualmente.
+        </div>
+        <div>
+            <div style="font-size: 48px; font-weight: bold; text-align: center; padding: 20px;" id="display-sol">-</div>
+            <button class="btn" onclick="iniciarCuentaSol()">Iniciar cuenta regresiva</button>
+            <button class="btn" onclick="detenerCuentaSol()" style="background: #e74c3c;">Detener</button>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- SOLUCION 3 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 3: Promises y async/await</h2>
+        <div class="solucion">SOLUCION</div>
+        <div class="codigo">
+var modoErrorSol = false;
+
+function toggleErrorModeSol() {
+    modoErrorSol = !modoErrorSol;
+    var btn = document.getElementById('btn-error-sol');
+    btn.textContent = 'Modo error: ' + (modoErrorSol ? 'ON' : 'OFF');
+    btn.style.background = modoErrorSol ? '#e74c3c' : '#95a5a6';
+}
+
+function esperar(ms) {
+    return new Promise(function(resolve, reject) {
+        setTimeout(function() {
+            if (modoErrorSol) {
+                reject(new Error('Error simulado'));
+            } else {
+                resolve();
+            }
+        }, ms);
+    });
+}
+
+async function iniciarOperacionSol() {
+    var displayOp = document.getElementById('display-op-sol');
+    displayOp.textContent = 'Cargando...';
+    displayOp.style.background = '#fff3cd';
+
+    try {
+        await esperar(2000);
+        displayOp.textContent = 'Operacion completada!';
+        displayOp.style.background = '#d4edda';
+    } catch (error) {
+        displayOp.textContent = 'Error en la operacion';
+        displayOp.style.background = '#f8d7da';
+    }
+}
+        </div>
+        <div class="explicacion">
+            <strong>Explicacion:</strong>
+            <code>new Promise((resolve, reject) => {...})</code> crea una promesa.
+            <code>setTimeout</code> dentro de la promesa simula una operacion asincrona.
+            <code>async/await</code> permite escribir codigo asincrono como si fuera sincrono.
+            <code>try/catch</code> maneja tanto errores de la promesa (reject) como excepciones.
+        </div>
+        <div>
+            <div style="padding: 15px; border: 1px solid #ddd; border-radius: 4px; margin: 10px 0; min-height: 50px; display: flex; align-items: center; justify-content: center;" id="display-op-sol">
+                Presiona el boton para iniciar
+            </div>
+            <button class="btn" onclick="iniciarOperacionSol()">Iniciar operacion</button>
+            <button class="btn" onclick="toggleErrorModeSol()" id="btn-error-sol" style="background: #95a5a6;">Modo error: OFF</button>
+        </div>
+    </div>
+
+    <script>
+        // Solucion 1
+        var caja1 = document.getElementById('caja-ej1-sol');
+        var log1 = document.getElementById('log-ej1-sol');
+        function logMsg(msg) {
+            log1.innerHTML += '> ' + msg + '<br>';
+            log1.scrollTop = log1.scrollHeight;
+        }
+        caja1.addEventListener('click', function() {
+            caja1.style.background = '#3498db';
+            caja1.textContent = 'Click!';
+            logMsg('Click detectado');
+        });
+        caja1.addEventListener('mouseenter', function() {
+            caja1.style.transform = 'scale(1.2)';
+            caja1.textContent = 'Hover!';
+            logMsg('Mouse enter');
+        });
+        caja1.addEventListener('mouseleave', function() {
+            caja1.style.transform = 'scale(1)';
+            caja1.style.background = '#e74c3c';
+            caja1.textContent = 'Fuera!';
+            logMsg('Mouse leave');
+        });
+
+        // Solucion 2
+        var intervaloCuenta = null;
+        var contador = 5;
+        function iniciarCuentaSol() {
+            if (intervaloCuenta) return;
+            contador = 5;
+            document.getElementById('display-sol').textContent = contador;
+            intervaloCuenta = setInterval(function() {
+                contador--;
+                if (contador <= 0) {
+                    document.getElementById('display-sol').textContent = 'Despegue!';
+                    clearInterval(intervaloCuenta);
+                    intervaloCuenta = null;
+                } else {
+                    document.getElementById('display-sol').textContent = contador;
+                }
+            }, 1000);
+        }
+        function detenerCuentaSol() {
+            if (intervaloCuenta) {
+                clearInterval(intervaloCuenta);
+                intervaloCuenta = null;
+                document.getElementById('display-sol').textContent = '-';
+            }
+        }
+
+        // Solucion 3
+        var modoErrorSol = false;
+        function toggleErrorModeSol() {
+            modoErrorSol = !modoErrorSol;
+            var btn = document.getElementById('btn-error-sol');
+            btn.textContent = 'Modo error: ' + (modoErrorSol ? 'ON' : 'OFF');
+            btn.style.background = modoErrorSol ? '#e74c3c' : '#95a5a6';
+        }
+        function esperar(ms) {
+            return new Promise(function(resolve, reject) {
+                setTimeout(function() {
+                    if (modoErrorSol) {
+                        reject(new Error('Error simulado'));
+                    } else {
+                        resolve();
+                    }
+                }, ms);
+            });
+        }
+        async function iniciarOperacionSol() {
+            var displayOp = document.getElementById('display-op-sol');
+            displayOp.textContent = 'Cargando...';
+            displayOp.style.background = '#fff3cd';
+            try {
+                await esperar(2000);
+                displayOp.textContent = 'Operacion completada!';
+                displayOp.style.background = '#d4edda';
+            } catch (error) {
+                displayOp.textContent = 'Error en la operacion';
+                displayOp.style.background = '#f8d7da';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 1 - HTML Semantico</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; background: #f5f5f5; color: #333; }
+        h1 { border-bottom: 3px solid #2c3e50; padding-bottom: 10px; }
+        .ejercicio { background: white; border-radius: 8px; padding: 20px; margin: 20px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .ejercicio h2 { color: #2c3e50; margin-top: 0; }
+        .pista { background: #fff3cd; border-left: 4px solid #ffc107; padding: 10px; margin: 10px 0; }
+        .codigo { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 5px; font-family: 'Consolas', monospace; white-space: pre; overflow-x: auto; }
+        .nota { background: #d1ecf1; border-left: 4px solid #17a2b8; padding: 10px; margin: 10px 0; }
+        hr { border: 0; border-top: 1px solid #ddd; margin: 30px 0; }
+        .btn { background: #2c3e50; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+        .btn:hover { background: #34495e; }
+    </style>
+</head>
+<body>
+    <h1>> EJERCICIO 1: HTML Semantico</h1>
+    <p>Completa los 3 ejercicios editando este archivo. Abrelo en tu navegador, edita el codigo, recarga y verifica los cambios.</p>
+
+    <hr>
+
+    <!-- EJERCICIO 1 -->
+    <div class="ejercicio" id="ejercicio1">
+        <h2>Ejercicio 1: Estructura semantica basica</h2>
+        <p>El siguiente codigo usa solo &lt;div&gt;. Reemplazalos con etiquetas semanticas: header, nav, main, section, article, footer.</p>
+        <p>Debe verse igual, pero semanticamente correcto.</p>
+        <div class="pista">PISTA: Recuerda que &lt;header&gt; va arriba, &lt;nav&gt; dentro del header, &lt;main&gt; en el centro, &lt;footer&gt; abajo.</div>
+
+        <!-- INICIO: Edita este bloque -->
+        <div class="container">
+            <div class="cabecera">
+                <h1>Mi Sitio Web</h1>
+                <div class="menu">
+                    <a href="#">Inicio</a> |
+                    <a href="#">Blog</a> |
+                    <a href="#">Contacto</a>
+                </div>
+            </div>
+
+            <div class="contenido-principal">
+                <div class="seccion-bienvenida">
+                    <h2>Bienvenido</h2>
+                    <p>Este es un sitio de ejemplo para aprender HTML semantico.</p>
+                </div>
+
+                <div class="articulo-destacado">
+                    <h3>Articulo: HTML Semantico</h3>
+                    <p>El HTML semantico mejora la accesibilidad y el SEO de tu sitio web.</p>
+                    <p>Usa etiquetas como &lt;article&gt;, &lt;section&gt;, &lt;nav&gt; para dar significado.</p>
+                </div>
+            </div>
+
+            <div class="pie-pagina">
+                <p>&copy; 2025 Mi Sitio Web. Todos los derechos reservados.</p>
+            </div>
+        </div>
+        <!-- FIN: Edita este bloque -->
+    </div>
+
+    <hr>
+
+    <!-- EJERCICIO 2 -->
+    <div class="ejercicio" id="ejercicio2">
+        <h2>Ejercicio 2: Agregar aside y mejorar accesibilidad</h2>
+        <p>Al codigo anterior (ejercicio 1), agregale un &lt;aside&gt; con contenido complementario (enlaces relacionados, categorias).</p>
+        <p>Adicionalmente, agrega atributos de accesibilidad: role="navigation" al nav, alt a las imagenes, aria-label donde corresponda.</p>
+        <div class="pista">PISTA: El &lt;aside&gt; suele ir dentro de &lt;main&gt; pero al lado del contenido principal. Usa un div con clase "sidebar" para darle estilo si quieres.</div>
+
+        <!-- INICIO: Escribe tu codigo aqui -->
+        <div class="container">
+            <header>
+                <h1>Mi Sitio Web (accesible)</h1>
+                <nav role="navigation" aria-label="Menu principal">
+                    <a href="#">Inicio</a> |
+                    <a href="#">Blog</a> |
+                    <a href="#">Contacto</a>
+                </nav>
+            </header>
+
+            <main>
+                <section>
+                    <h2>Bienvenido</h2>
+                    <p>Agrega un &lt;aside&gt; con una lista de categorias debajo de esta seccion.</p>
+                    <img src="https://via.placeholder.com/200x100" alt="Imagen de ejemplo con descripcion">
+                </section>
+
+                <article>
+                    <h3>Articulo: Accesibilidad Web</h3>
+                    <p>La accesibilidad web asegura que las personas con discapacidad puedan usar los sitios.</p>
+                </article>
+
+                <!-- Agrega aqui el elemento <aside> con aria-label -->
+            </main>
+
+            <footer>
+                <p>&copy; 2025 Mi Sitio Web Accesible</p>
+            </footer>
+        </div>
+        <!-- FIN: Zona de edicion -->
+    </div>
+
+    <hr>
+
+    <!-- EJERCICIO 3 -->
+    <div class="ejercicio" id="ejercicio3">
+        <h2>Ejercicio 3: Blog completo con figure, time y article</h2>
+        <p>Crea la estructura completa de un blog usando: &lt;header&gt;, &lt;nav&gt;, &lt;main&gt;, &lt;article&gt;, &lt;section&gt;, &lt;aside&gt;, &lt;figure&gt;, &lt;time&gt;, &lt;footer&gt;.</p>
+        <p>Debe contener al menos 2 articulos. Cada articulo debe tener una imagen con figura y figcaption, y una fecha con &lt;time&gt;.</p>
+        <div class="pista">PISTA: &lt;figure&gt; envuelve a &lt;img&gt; + &lt;figcaption&gt;. &lt;time datetime="2025-01-15"&gt; se usa para fechas legibles por maquina.</div>
+
+        <!-- INICIO: Crea aqui la estructura completa del blog -->
+        <div>
+            <!-- Tu codigo aqui -->
+        </div>
+        <!-- FIN: Zona de edicion -->
+    </div>
+
+    <script>
+        // --- TU CODIGO AQUI ---
+        // No necesitas JavaScript para estos ejercicios, solo HTML.
+        // Edita las secciones marcadas como "INICIO: Edita este bloque"
+        // --- FIN ---
+    </script>
+</body>
+</html>

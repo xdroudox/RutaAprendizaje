@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 7 - Seguridad Web</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f5f5f5; color: #333; }
+        h1 { border-bottom: 3px solid #2c3e50; padding-bottom: 10px; }
+        .ejercicio { background: white; border-radius: 8px; padding: 20px; margin: 20px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .ejercicio h2 { color: #2c3e50; margin-top: 0; }
+        .pista { background: #fff3cd; border-left: 4px solid #ffc107; padding: 10px; margin: 10px 0; }
+        .codigo { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 5px; font-family: 'Consolas', monospace; white-space: pre; overflow-x: auto; }
+        hr { border: 0; border-top: 1px solid #ddd; margin: 30px 0; }
+        .btn { background: #3498db; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+        .btn:hover { background: #2980b9; }
+        .vulnerable { background: #f8d7da; border: 2px solid #e74c3c; padding: 15px; border-radius: 4px; margin: 10px 0; }
+        .seguro { background: #d4edda; border: 2px solid #28a745; padding: 15px; border-radius: 4px; margin: 10px 0; }
+        .resultado { background: #fafafa; padding: 10px; border-radius: 4px; border: 1px solid #ddd; margin: 10px 0; min-height: 30px; }
+    </style>
+</head>
+<body>
+    <h1>> EJERCICIO 7: Seguridad Web</h1>
+    <p>Completa las funciones en la seccion "TU CODIGO AQUI" para corregir vulnerabilidades de seguridad.</p>
+
+    <hr>
+
+    <!-- EJERCICIO 1 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 1: Prevenir XSS (Cross-Site Scripting)</h2>
+        <div class="vulnerable">
+            <strong>CODIGO VULNERABLE:</strong> El siguiente codigo usa innerHTML con datos del usuario, lo que permite inyeccion XSS.
+        </div>
+        <p>Corrige la funcion para que use textContent en lugar de innerHTML, previniendo la inyeccion de scripts.</p>
+        <div class="pista">PISTA: Reemplaza innerHTML por textContent. textContent no interpreta etiquetas HTML.</div>
+
+        <div>
+            <input type="text" id="input-xss" placeholder="Escribe algo aqui..." style="width: 250px; padding: 8px;" value='&lt;script&gt;alert("XSS")&lt;/script&gt;'>
+            <button class="btn" onclick="ejercicio1()">Mostrar texto</button>
+        </div>
+        <div class="resultado" id="resultado-ej1">El resultado se mostrara aqui...</div>
+        <div style="margin-top: 10px; font-size: 13px; color: #666;">
+            Prueba inyectando: <code>&lt;script&gt;alert("XSS")&lt;/script&gt;</code> - con innerHTML se ejecutaria el script, con textContent se muestra como texto.
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- EJERCICIO 2 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 2: Sanitizar entrada del usuario</h2>
+        <p>Crea una funcion que sanitice una URL antes de usarla en un enlace. Debe:</p>
+        <ul>
+            <li>Verificar que la URL comience con https:// o http://</li>
+            <li>Bloquear protocolos peligrosos como javascript: o data:</li>
+            <li>Si la URL es invalida, mostrar un mensaje de error</li>
+        </ul>
+        <div class="pista">PISTA: Verifica con .startsWith('https://') o .startsWith('http://'). Rechaza si incluye 'javascript:' o 'data:'.</div>
+
+        <div>
+            <input type="text" id="input-url" placeholder="https://ejemplo.com" style="width: 350px; padding: 8px;" value="javascript:alert('ataque')">
+            <button class="btn" onclick="ejercicio2()">Ir al sitio</button>
+        </div>
+        <div class="resultado" id="resultado-ej2">Resultado...</div>
+        <div style="margin-top: 10px; font-size: 13px; color: #666;">
+            Prueba con: <code>javascript:alert('xss')</code> - deberia ser bloqueado. Prueba con <code>https://google.com</code> - deberia funcionar.
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- EJERCICIO 3 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 3: Simular CSRF y su prevencion</h2>
+        <p>El siguiente formulario simula una transferencia bancaria. Implementa:</p>
+        <ul>
+            <li>Un mecanismo anti-CSRF: genera un token aleatorio y agregalo al formulario</li>
+            <li>Al enviar, verifica que el token coincida (simulado)</li>
+            <li>Si el token es valido, muestra "Transferencia exitosa"</li>
+            <li>Si no, muestra "Error: CSRF detected"</li>
+        </ul>
+        <div class="pista">PISTA: Genera un token con Math.random().toString(36). Almacena en variable global. Compara al enviar.</div>
+
+        <div id="csrf-form">
+            <div style="margin: 10px 0;">
+                <label>Cuenta destino: <input type="text" id="cuenta-destino" value="12345" style="padding: 8px; width: 200px;"></label>
+            </div>
+            <div style="margin: 10px 0;">
+                <label>Monto: <input type="number" id="monto" value="1000" style="padding: 8px; width: 150px;"></label>
+            </div>
+            <div style="margin: 10px 0;">
+                <label>Token CSRF: <input type="text" id="csrf-token-input" placeholder="Token..." style="padding: 8px; width: 200px;"></label>
+            </div>
+            <button class="btn" onclick="ejercicio3()">Enviar transferencia</button>
+            <button class="btn" onclick="generarToken()" style="background: #27ae60;">Generar token CSRF</button>
+        </div>
+        <div class="resultado" id="resultado-ej3">Resultado...</div>
+    </div>
+
+    <script>
+        // ================================
+        // --- TU CODIGO AQUI ---
+        // ================================
+
+        // EJERCICIO 1: Prevenir XSS
+        function ejercicio1() {
+            var input = document.getElementById('input-xss');
+            var resultado = document.getElementById('resultado-ej1');
+            var texto = input.value;
+
+            // CORREGIR: Cambia innerHTML por textContent
+            resultado.innerHTML = 'Contenido: ' + texto;
+        }
+
+        // EJERCICIO 2: Sanitizar URL
+        function ejercicio2() {
+            var input = document.getElementById('input-url');
+            var resultado = document.getElementById('resultado-ej2');
+            var url = input.value.trim();
+
+            // Implementa la validacion de URL aqui
+            // Debe aceptar solo http:// y https://
+            // Debe bloquear javascript: y data:
+
+            if (true) { // Cambiar esta condicion
+                resultado.innerHTML = '<a href="' + url + '" target="_blank">Ir a ' + url + '</a>';
+                resultado.innerHTML += '<br>URL valida';
+            } else {
+                resultado.textContent = 'Error: URL no permitida (solo http/https)';
+            }
+        }
+
+        // EJERCICIO 3: CSRF
+        var csrfToken = '';
+
+        function generarToken() {
+            // Genera un token CSRF aleatorio y muestralo en el input
+            // Guardalo en la variable csrfToken
+        }
+
+        function ejercicio3() {
+            var resultado = document.getElementById('resultado-ej3');
+            var tokenInput = document.getElementById('csrf-token-input').value;
+            var cuenta = document.getElementById('cuenta-destino').value;
+            var monto = document.getElementById('monto').value;
+
+            // Verifica que tokenInput coincida con csrfToken
+            // Si coincide: "Transferencia de $[monto] a cuenta [cuenta] exitosa"
+            // Si no: "Error: CSRF detected - token invalido"
+
+            if (true) { // Cambiar condicion
+                resultado.textContent = 'Transferencia exitosa';
+                resultado.style.background = '#d4edda';
+            } else {
+                resultado.textContent = 'Error: CSRF detected - token invalido';
+                resultado.style.background = '#f8d7da';
+            }
+        }
+
+        // ================================
+        // --- FIN ---
+        // ================================
+    </script>
+</body>
+</html>

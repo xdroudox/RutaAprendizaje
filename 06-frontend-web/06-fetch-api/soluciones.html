@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Solucion 6 - Fetch API</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f5f5f5; color: #333; }
+        h1 { border-bottom: 3px solid #27ae60; padding-bottom: 10px; }
+        .ejercicio { background: white; border-radius: 8px; padding: 20px; margin: 20px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .ejercicio h2 { color: #2c3e50; margin-top: 0; }
+        .solucion { background: #d4edda; border-left: 4px solid #28a745; padding: 10px; margin: 10px 0; font-weight: bold; }
+        .explicacion { background: #e8f5e9; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .codigo { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 5px; font-family: 'Consolas', monospace; white-space: pre; overflow-x: auto; }
+        hr { border: 0; border-top: 1px solid #ddd; margin: 30px 0; }
+        .btn { background: #3498db; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+        .btn:hover { background: #2980b9; }
+        .resultado { background: #fafafa; padding: 15px; border-radius: 4px; border: 1px solid #ddd; margin: 10px 0; min-height: 50px; font-family: 'Consolas', monospace; font-size: 13px; white-space: pre-wrap; }
+        .card { border: 1px solid #ddd; padding: 10px; margin: 5px 0; border-radius: 4px; background: white; }
+        .card h3 { margin: 0 0 5px 0; }
+        .card p { margin: 0; color: #666; }
+    </style>
+</head>
+<body>
+    <h1>> SOLUCION 6: Fetch API</h1>
+    <p>Soluciones completas para consumo de APIs con fetch.</p>
+
+    <hr>
+
+    <!-- SOLUCION 1 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 1: GET - Obtener posts</h2>
+        <div class="solucion">SOLUCION</div>
+        <div class="codigo">
+function ejercicio1() {
+    var resultado = document.getElementById('resultado-ej1-sol');
+    resultado.textContent = 'Cargando...';
+
+    fetch('https://jsonplaceholder.typicode.com/posts')
+        .then(function(respuesta) {
+            return respuesta.json();
+        })
+        .then(function(posts) {
+            var primeros5 = posts.slice(0, 5);
+            resultado.innerHTML = '';
+            primeros5.forEach(function(post) {
+                var card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = '&lt;h3&gt;' + post.title + '&lt;/h3&gt;&lt;p&gt;' + post.body + '&lt;/p&gt;';
+                resultado.appendChild(card);
+            });
+        })
+        .catch(function(error) {
+            resultado.textContent = 'Error: ' + error.message;
+        });
+}
+        </div>
+        <div class="explicacion">
+            <strong>Explicacion:</strong>
+            <code>fetch(url)</code> inicia la peticion GET.
+            <code>.then(r => r.json())</code> convierte la respuesta a objeto JS.
+            <code>slice(0, 5)</code> toma los primeros 5 elementos.
+            <code>forEach</code> itera y crea elementos HTML para cada post.
+            <code>.catch</code> maneja errores de red.
+        </div>
+        <button class="btn" onclick="solucion1()">Cargar posts</button>
+        <div class="resultado" id="resultado-ej1-sol">Los posts apareceran aqui...</div>
+    </div>
+
+    <hr>
+
+    <!-- SOLUCION 2 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 2: POST - Crear un recurso</h2>
+        <div class="solucion">SOLUCION</div>
+        <div class="codigo">
+function ejercicio2() {
+    var resultado = document.getElementById('resultado-ej2-sol');
+    var title = document.getElementById('input-title-sol').value.trim();
+    var body = document.getElementById('input-body-sol').value.trim();
+
+    if (!title || !body) {
+        resultado.textContent = 'Completa el titulo y el cuerpo del post.';
+        return;
+    }
+
+    resultado.textContent = 'Creando post...';
+
+    fetch('https://jsonplaceholder.typicode.com/posts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: title, body: body, userId: 1 })
+    })
+        .then(function(r) { return r.json(); })
+        .then(function(datos) {
+            resultado.innerHTML = 'Post creado exitosamente!&lt;br&gt;&lt;br&gt;' +
+                JSON.stringify(datos, null, 2);
+        })
+        .catch(function(error) {
+            resultado.textContent = 'Error: ' + error.message;
+        });
+}
+        </div>
+        <div class="explicacion">
+            <strong>Explicacion:</strong>
+            El segundo parametro de <code>fetch</code> incluye <code>method: 'POST'</code>,
+            <code>headers</code> con Content-Type, y <code>body</code> con los datos serializados a JSON.
+            JSONPlaceholder simula la creacion y devuelve el objeto con un id (101).
+        </div>
+        <div style="margin: 10px 0;">
+            <input type="text" id="input-title-sol" placeholder="Titulo del post" value="Mi nuevo post" style="width: 100%; padding: 8px; margin-bottom: 8px; box-sizing: border-box;">
+            <textarea id="input-body-sol" placeholder="Cuerpo del post" style="width: 100%; padding: 8px; height: 80px; box-sizing: border-box;">Este es el contenido del post creado con fetch API.</textarea>
+            <button class="btn" onclick="solucion2()">Crear post</button>
+        </div>
+        <div class="resultado" id="resultado-ej2-sol">La respuesta del servidor aparecera aqui...</div>
+    </div>
+
+    <hr>
+
+    <!-- SOLUCION 3 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 3: GET con manejo de errores</h2>
+        <div class="solucion">SOLUCION</div>
+        <div class="codigo">
+async function ejercicio3() {
+    var resultado = document.getElementById('resultado-ej3-sol');
+    var postId = document.getElementById('input-post-id-sol').value || '1';
+
+    resultado.textContent = 'Buscando post #' + postId + '...';
+
+    try {
+        var respuesta = await fetch('https://jsonplaceholder.typicode.com/posts/' + postId);
+
+        if (!respuesta.ok) {
+            throw new Error('Post no encontrado (status ' + respuesta.status + ')');
+        }
+
+        var post = await respuesta.json();
+        resultado.innerHTML = '&lt;div class="card"&gt;&lt;h3&gt;' + post.title + '&lt;/h3&gt;' +
+            '&lt;p&gt;' + post.body + '&lt;/p&gt;' +
+            '&lt;small&gt;Post #' + post.id + ' | User #' + post.userId + '&lt;/small&gt;&lt;/div&gt;';
+    } catch (error) {
+        resultado.innerHTML = '&lt;div style="color: #e74c3c;"&gt;Error: ' + error.message + '&lt;/div&gt;';
+    }
+}
+        </div>
+        <div class="explicacion">
+            <strong>Explicacion:</strong>
+            <code>async/await</code> simplifica el codigo asincrono.
+            <code>respuesta.ok</code> verifica si el status esta entre 200-299.
+            Si no es ok, se lanza un error con <code>throw</code>.
+            El <code>try/catch</code> captura tanto errores HTTP como errores de red.
+        </div>
+        <div>
+            <label>ID del post a buscar:</label>
+            <input type="number" id="input-post-id-sol" value="1" min="1" style="width: 80px; padding: 8px;">
+            <button class="btn" onclick="solucion3()">Buscar post</button>
+        </div>
+        <div class="resultado" id="resultado-ej3-sol">El resultado aparecera aqui...</div>
+    </div>
+
+    <script>
+        var API_URL = 'https://jsonplaceholder.typicode.com';
+
+        // Solucion 1
+        function solucion1() {
+            var resultado = document.getElementById('resultado-ej1-sol');
+            resultado.textContent = 'Cargando...';
+            fetch(API_URL + '/posts')
+                .then(function(r) { return r.json(); })
+                .then(function(posts) {
+                    var primeros5 = posts.slice(0, 5);
+                    resultado.innerHTML = '';
+                    primeros5.forEach(function(post) {
+                        var card = document.createElement('div');
+                        card.className = 'card';
+                        card.innerHTML = '<h3>' + post.title + '</h3><p>' + post.body + '</p>';
+                        resultado.appendChild(card);
+                    });
+                })
+                .catch(function(error) {
+                    resultado.textContent = 'Error: ' + error.message;
+                });
+        }
+
+        // Solucion 2
+        function solucion2() {
+            var resultado = document.getElementById('resultado-ej2-sol');
+            var title = document.getElementById('input-title-sol').value.trim();
+            var body = document.getElementById('input-body-sol').value.trim();
+            if (!title || !body) {
+                resultado.textContent = 'Completa el titulo y el cuerpo del post.';
+                return;
+            }
+            resultado.textContent = 'Creando post...';
+            fetch(API_URL + '/posts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title: title, body: body, userId: 1 })
+            })
+                .then(function(r) { return r.json(); })
+                .then(function(datos) {
+                    resultado.innerHTML = 'Post creado exitosamente!<br><br>' + JSON.stringify(datos, null, 2);
+                })
+                .catch(function(error) {
+                    resultado.textContent = 'Error: ' + error.message;
+                });
+        }
+
+        // Solucion 3
+        async function solucion3() {
+            var resultado = document.getElementById('resultado-ej3-sol');
+            var postId = document.getElementById('input-post-id-sol').value || '1';
+            resultado.textContent = 'Buscando post #' + postId + '...';
+            try {
+                var respuesta = await fetch(API_URL + '/posts/' + postId);
+                if (!respuesta.ok) {
+                    throw new Error('Post no encontrado (status ' + respuesta.status + ')');
+                }
+                var post = await respuesta.json();
+                resultado.innerHTML = '<div class="card"><h3>' + post.title + '</h3><p>' + post.body + '</p><small>Post #' + post.id + ' | User #' + post.userId + '</small></div>';
+            } catch (error) {
+                resultado.innerHTML = '<div style="color: #e74c3c;">Error: ' + error.message + '</div>';
+            }
+        }
+    </script>
+</body>
+</html>

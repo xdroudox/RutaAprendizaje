@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Solucion 1 - HTML Semantico</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; background: #f5f5f5; color: #333; }
+        h1 { border-bottom: 3px solid #27ae60; padding-bottom: 10px; }
+        .ejercicio { background: white; border-radius: 8px; padding: 20px; margin: 20px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .ejercicio h2 { color: #2c3e50; margin-top: 0; }
+        .solucion { background: #d4edda; border-left: 4px solid #28a745; padding: 10px; margin: 10px 0; font-weight: bold; }
+        .explicacion { background: #e8f5e9; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .codigo { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 5px; font-family: 'Consolas', monospace; white-space: pre; overflow-x: auto; }
+        hr { border: 0; border-top: 1px solid #ddd; margin: 30px 0; }
+        .demo-box { background: #fafafa; border: 1px solid #ddd; padding: 15px; border-radius: 4px; margin: 10px 0; }
+        /* Estilos para la demostracion */
+        header, nav, main, section, article, aside, footer, figure { border: 1px dashed #999; padding: 8px; margin: 4px 0; }
+    </style>
+</head>
+<body>
+    <h1>> SOLUCION 1: HTML Semantico</h1>
+    <p>Aqui estan las soluciones completas y funcionales. Abre el inspector del navegador para ver el codigo.</p>
+
+    <hr>
+
+    <!-- SOLUCION 1 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 1: Estructura semantica basica</h2>
+        <div class="solucion">SOLUCION: Reemplazar divs por etiquetas semanticas</div>
+        <div class="explicacion">
+            <strong>Explicacion:</strong>
+            Cada div con clase especifica se reemplazo por su equivalente semantico:
+            <ul>
+                <li>div.cabecera -> &lt;header&gt;</li>
+                <li>div.menu -> &lt;nav&gt;</li>
+                <li>div.contenido-principal -> &lt;main&gt;</li>
+                <li>div.seccion-bienvenida -> &lt;section&gt;</li>
+                <li>div.articulo-destacado -> &lt;article&gt;</li>
+                <li>div.pie-pagina -> &lt;footer&gt;</li>
+            </ul>
+        </div>
+        <div class="demo-box">
+            <header>
+                <h1>Mi Sitio Web</h1>
+                <nav>
+                    <a href="#">Inicio</a> |
+                    <a href="#">Blog</a> |
+                    <a href="#">Contacto</a>
+                </nav>
+            </header>
+            <main>
+                <section>
+                    <h2>Bienvenido</h2>
+                    <p>Este es un sitio de ejemplo para aprender HTML semantico.</p>
+                </section>
+                <article>
+                    <h3>Articulo: HTML Semantico</h3>
+                    <p>El HTML semantico mejora la accesibilidad y el SEO de tu sitio web.</p>
+                    <p>Usa etiquetas como &lt;article&gt;, &lt;section&gt;, &lt;nav&gt; para dar significado.</p>
+                </article>
+            </main>
+            <footer>
+                <p>&copy; 2025 Mi Sitio Web. Todos los derechos reservados.</p>
+            </footer>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- SOLUCION 2 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 2: Agregar aside y mejorar accesibilidad</h2>
+        <div class="solucion">SOLUCION: Agregar aside con aria-label y alt en imagenes</div>
+        <div class="explicacion">
+            <strong>Explicacion:</strong>
+            Se agrego un &lt;aside&gt; con aria-label="Categorias del blog" dentro de &lt;main&gt;.
+            Las imagenes tienen alt descriptivo. El nav tiene role="navigation" y aria-label.
+        </div>
+        <div class="demo-box">
+            <header>
+                <h1>Mi Sitio Web (accesible)</h1>
+                <nav role="navigation" aria-label="Menu principal">
+                    <a href="#">Inicio</a> |
+                    <a href="#">Blog</a> |
+                    <a href="#">Contacto</a>
+                </nav>
+            </header>
+            <main>
+                <section aria-label="Seccion de bienvenida">
+                    <h2>Bienvenido</h2>
+                    <p>Este es un sitio accesible con semantica correcta.</p>
+                    <img src="https://via.placeholder.com/200x100" alt="Banner de bienvenida con paisaje">
+                </section>
+                <aside aria-label="Lista de categorias del blog">
+                    <h3>Categorias</h3>
+                    <ul>
+                        <li><a href="#">HTML</a></li>
+                        <li><a href="#">CSS</a></li>
+                        <li><a href="#">JavaScript</a></li>
+                        <li><a href="#">Accesibilidad</a></li>
+                    </ul>
+                </aside>
+                <article>
+                    <h3>Articulo: Accesibilidad Web</h3>
+                    <p>La accesibilidad web asegura que las personas con discapacidad puedan usar los sitios.</p>
+                </article>
+            </main>
+            <footer>
+                <p>&copy; 2025 Mi Sitio Web Accesible</p>
+            </footer>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- SOLUCION 3 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 3: Blog completo con figure, time y article</h2>
+        <div class="solucion">SOLUCION: Estructura completa de blog con figure y time</div>
+        <div class="explicacion">
+            <strong>Explicacion:</strong>
+            Se creo una estructura de blog completa con:
+            <ul>
+                <li>Header con logo y nav</li>
+                <li>Main con section de intro y 2 articles</li>
+                <li>Cada article tiene figure con img + figcaption y time</li>
+                <li>Aside con enlaces relacionados</li>
+                <li>Footer con copyright</li>
+            </ul>
+        </div>
+        <div class="demo-box">
+            <header>
+                <h1>Mi Blog Personal</h1>
+                <nav>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="display: inline; margin-right: 10px;"><a href="#">Inicio</a></li>
+                        <li style="display: inline; margin-right: 10px;"><a href="#">Blog</a></li>
+                        <li style="display: inline; margin-right: 10px;"><a href="#">Acerca de</a></li>
+                        <li style="display: inline;"><a href="#">Contacto</a></li>
+                    </ul>
+                </nav>
+            </header>
+            <main>
+                <section>
+                    <h2>Ultimos Articulos</h2>
+                    <article>
+                        <header>
+                            <h3>Aprendiendo HTML Semantico</h3>
+                            <p>Publicado el <time datetime="2025-03-10">10 de Marzo de 2025</time></p>
+                        </header>
+                        <figure>
+                            <img src="https://via.placeholder.com/400x200/3498db/ffffff" alt="Diagrama de etiquetas semanticas HTML5" style="max-width: 100%;">
+                            <figcaption>Etiquetas semanticas principales de HTML5</figcaption>
+                        </figure>
+                        <p>El HTML semantico es fundamental para crear sitios web accesibles y bien estructurados. En este articulo exploramos las etiquetas mas importantes como header, nav, main, article, section, aside y footer.</p>
+                    </article>
+                    <article>
+                        <header>
+                            <h3>Introduccion a CSS Grid</h3>
+                            <p>Publicado el <time datetime="2025-02-28">28 de Febrero de 2025</time></p>
+                        </header>
+                        <figure>
+                            <img src="https://via.placeholder.com/400x200/e74c3c/ffffff" alt="Ejemplo de layout con CSS Grid" style="max-width: 100%;">
+                            <figcaption>Layout de 3 columnas creado con CSS Grid</figcaption>
+                        </figure>
+                        <p>CSS Grid es una herramienta poderosa para crear layouts bidimensionales. A diferencia de Flexbox que trabaja en una dimension, Grid permite controlar filas y columnas simultaneamente.</p>
+                    </article>
+                </section>
+                <aside>
+                    <h3>Articulos Recientes</h3>
+                    <ul>
+                        <li><a href="#">Aprendiendo HTML Semantico</a></li>
+                        <li><a href="#">Introduccion a CSS Grid</a></li>
+                        <li><a href="#">JavaScript DOM Manipulation</a></li>
+                    </ul>
+                    <h3>Categorias</h3>
+                    <ul>
+                        <li><a href="#">HTML (5)</a></li>
+                        <li><a href="#">CSS (3)</a></li>
+                        <li><a href="#">JavaScript (7)</a></li>
+                    </ul>
+                </aside>
+            </main>
+            <footer>
+                <p>&copy; 2025 Mi Blog Personal. Todos los derechos reservados.</p>
+                <nav aria-label="Enlaces legales">
+                    <a href="#">Aviso Legal</a> |
+                    <a href="#">Privacidad</a> |
+                    <a href="#">Cookies</a>
+                </nav>
+            </footer>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 2 - CSS Flexbox y Grid</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; max-width: 1000px; margin: 0 auto; padding: 20px; background: #f5f5f5; color: #333; }
+        h1 { border-bottom: 3px solid #2c3e50; padding-bottom: 10px; }
+        .ejercicio { background: white; border-radius: 8px; padding: 20px; margin: 20px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .ejercicio h2 { color: #2c3e50; margin-top: 0; }
+        .pista { background: #fff3cd; border-left: 4px solid #ffc107; padding: 10px; margin: 10px 0; }
+        .codigo { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 5px; font-family: 'Consolas', monospace; white-space: pre; overflow-x: auto; }
+        hr { border: 0; border-top: 1px solid #ddd; margin: 30px 0; }
+        .item { background: #3498db; color: white; padding: 20px; text-align: center; border-radius: 4px; font-weight: bold; }
+        .item:nth-child(even) { background: #2ecc71; }
+    </style>
+</head>
+<body>
+    <h1>> EJERCICIO 2: CSS Flexbox y Grid</h1>
+    <p>Edita las secciones de CSS marcadas con "TU CODIGO AQUI" para completar los ejercicios. Recarga el navegador para ver los cambios.</p>
+
+    <hr>
+
+    <!-- EJERCICIO 1: Flexbox -->
+    <div class="ejercicio" id="ejercicio1">
+        <h2>Ejercicio 1: Centrar con Flexbox</h2>
+        <p>El contenedor gris debe centrar el item rojo tanto horizontal como verticalmente usando Flexbox.</p>
+        <div class="pista">PISTA: Usa display: flex, justify-content: center, align-items: center. El contenedor tiene 300px de alto.</div>
+
+        <div class="contenedor-flex" style="background: #ddd; height: 300px;">
+            <!-- NO MODIFIQUES EL HTML -->
+            <div style="background: #e74c3c; color: white; padding: 20px; border-radius: 8px;">
+                Centrame!
+            </div>
+        </div>
+
+        <p>Edita el CSS en la seccion "EJERCICIO 1":</p>
+    </div>
+
+    <hr>
+
+    <!-- EJERCICIO 2: Flexbox wrap -->
+    <div class="ejercicio" id="ejercicio2">
+        <h2>Ejercicio 2: Galeria responsiva con Flexbox</h2>
+        <p>Crea una galeria de 6 items que se distribuyan en filas. En pantalla grande deben verse 3 por fila, en pantalla mediana 2, en pantalla chica 1.</p>
+        <p>Usa flex-wrap y flex-basis (o width) en lugar de media queries para que sea intrinsecamente responsivo.</p>
+        <div class="pista">PISTA: flex-wrap: wrap + cada item con flex: 1 1 200px (grow, shrink, basis). Con gap para separacion.</div>
+
+        <div class="galeria" style="background: #eee; padding: 10px; min-height: 200px;">
+            <!-- NO MODIFIQUES EL HTML -->
+            <div class="item">Item 1</div>
+            <div class="item">Item 2</div>
+            <div class="item">Item 3</div>
+            <div class="item">Item 4</div>
+            <div class="item">Item 5</div>
+            <div class="item">Item 6</div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- EJERCICIO 3: Grid -->
+    <div class="ejercicio" id="ejercicio3">
+        <h2>Ejercicio 3: Layout completo con Grid</h2>
+        <p>Crea un layout de pagina completo usando CSS Grid con las siguientes areas:</p>
+        <ul>
+            <li>HEADER: ocupa todo el ancho, 80px de alto</li>
+            <li>SIDEBAR: columna izquierda, 200px de ancho</li>
+            <li>MAIN: columna central (ocupa el espacio restante)</li>
+            <li>ASIDE: columna derecha, 200px de ancho</li>
+            <li>FOOTER: ocupa todo el ancho, 60px de alto</li>
+        </ul>
+        <div class="pista">PISTA: Usa grid-template-columns: 200px 1fr 200px y grid-template-rows: 80px 1fr 60px. Asigna grid-area a cada hijo.</div>
+
+        <div class="grid-layout" style="background: #eee; min-height: 400px; margin-top: 10px;">
+            <!-- NO MODIFIQUES EL ORDEN NI EL HTML -->
+            <div style="background: #9b59b6; color: white; padding: 15px;">HEADER</div>
+            <div style="background: #e67e22; color: white; padding: 15px;">SIDEBAR</div>
+            <div style="background: #1abc9c; color: white; padding: 15px;">MAIN - Contenido principal</div>
+            <div style="background: #e74c3c; color: white; padding: 15px;">ASIDE</div>
+            <div style="background: #34495e; color: white; padding: 15px;">FOOTER</div>
+        </div>
+    </div>
+
+    <style>
+        /* ================================ */
+        /* --- TU CODIGO AQUI (CSS) ---     */
+        /* Edita las reglas segun las pistas */
+        /* ================================ */
+
+        /* EJERCICIO 1: Centrar con Flexbox */
+        .contenedor-flex {
+            /* Agrega aqui las propiedades flexbox */
+        }
+
+        /* EJERCICIO 2: Galeria responsiva */
+        .galeria {
+            display: flex;
+            /* Agrega aqui las propiedades para que funcione el wrap */
+            /* Pista: flex-wrap, gap */
+        }
+        .galeria .item {
+            /* Pista: flex: 1 1 200px */
+        }
+
+        /* EJERCICIO 3: Layout Grid */
+        .grid-layout {
+            display: grid;
+            /* Agrega grid-template-columns, grid-template-rows, grid-template-areas */
+            /* gap: 10px */
+        }
+        /* Asigna grid-area a cada hijo (usa nth-child o clases) */
+
+        /* ================================ */
+        /* --- FIN ---                      */
+        /* ================================ */
+    </style>
+</body>
+</html>

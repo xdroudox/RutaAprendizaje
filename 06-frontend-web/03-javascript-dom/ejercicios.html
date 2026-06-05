@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 3 - JavaScript DOM</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f5f5f5; color: #333; }
+        h1 { border-bottom: 3px solid #2c3e50; padding-bottom: 10px; }
+        .ejercicio { background: white; border-radius: 8px; padding: 20px; margin: 20px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .ejercicio h2 { color: #2c3e50; margin-top: 0; }
+        .pista { background: #fff3cd; border-left: 4px solid #ffc107; padding: 10px; margin: 10px 0; }
+        .codigo { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 5px; font-family: 'Consolas', monospace; white-space: pre; overflow-x: auto; }
+        hr { border: 0; border-top: 1px solid #ddd; margin: 30px 0; }
+        .btn { background: #3498db; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+        .btn:hover { background: #2980b9; }
+        .destacado { background: #ffeaa7; font-weight: bold; }
+        .card { border: 1px solid #ddd; padding: 10px; margin: 5px 0; border-radius: 4px; }
+        .card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+    <h1>> EJERCICIO 3: JavaScript DOM</h1>
+    <p>Completa las funciones JavaScript en la seccion "TU CODIGO AQUI". Recarga la pagina y prueba los botones.</p>
+
+    <hr>
+
+    <!-- EJERCICIO 1 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 1: Manipular texto y estilos</h2>
+        <p>Al hacer clic en el boton, debe cambiar el texto del parrafo y aplicar la clase "destacado".</p>
+        <div class="pista">PISTA: Usa document.getElementById(), .textContent, .classList.add()</div>
+
+        <p id="parrafo-ej1">Texto original - haz clic en el boton para cambiarme</p>
+        <button class="btn" onclick="ejercicio1()">Cambiar texto y destacar</button>
+    </div>
+
+    <hr>
+
+    <!-- EJERCICIO 2 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 2: Crear y agregar elementos</h2>
+        <p>Al hacer clic en "Agregar elemento", se debe crear un nuevo div con la clase "card" y texto "Elemento #N" (donde N es el numero secuencial) y agregarlo al contenedor.</p>
+        <p>El boton "Limpiar" debe eliminar todos los elementos agregados.</p>
+        <div class="pista">PISTA: document.createElement(), .textContent, .classList.add(), .appendChild(). Para limpiar, usa innerHTML = '' en el contenedor.</div>
+
+        <div id="contenedor-ej2" style="min-height: 50px; margin: 10px 0;">
+            <!-- Los nuevos elementos se agregan aqui -->
+        </div>
+        <button class="btn" onclick="ejercicio2()">Agregar elemento</button>
+        <button class="btn" onclick="limpiarEj2()" style="background: #e74c3c;">Limpiar</button>
+    </div>
+
+    <hr>
+
+    <!-- EJERCICIO 3 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 3: Lista interactiva</h2>
+        <p>Crea una lista de tareas (to-do list) completa:</p>
+        <ul>
+            <li>Al hacer clic en "Agregar", lee el valor del input y crea un nuevo elemento li en la lista</li>
+            <li>Cada li debe tener un boton "Eliminar" que al hacer clic elimine ese li</li>
+            <li>Al hacer clic en un li (no en el boton), alterna la clase "completada" (tachar el texto)</li>
+        </ul>
+        <div class="pista">PISTA: Usa createElement, textContent, appendChild, addEventListener. Para el boton eliminar, usa event.target.parentElement.remove().</div>
+
+        <div>
+            <input type="text" id="input-tarea" placeholder="Nueva tarea..." style="padding: 8px; width: 250px;">
+            <button class="btn" onclick="agregarTarea()">Agregar Tarea</button>
+        </div>
+        <ul id="lista-tareas" style="list-style: none; padding: 0; margin-top: 10px;">
+            <!-- Las tareas aparecen aqui -->
+        </ul>
+    </div>
+
+    <script>
+        // ================================
+        // --- TU CODIGO AQUI ---
+        // ================================
+
+        // EJERCICIO 1: Cambiar texto y agregar clase
+        function ejercicio1() {
+            var parrafo = document.getElementById('parrafo-ej1');
+            // Cambia el texto del parrafo
+            // Agrega la clase 'destacado'
+        }
+
+        // EJERCICIO 2: Crear elementos dinamicamente
+        var contadorEj2 = 0;
+
+        function ejercicio2() {
+            var contenedor = document.getElementById('contenedor-ej2');
+            contadorEj2++;
+            // Crea un nuevo div con clase 'card' y texto "Elemento #N"
+            // Agregalo al contenedor
+        }
+
+        function limpiarEj2() {
+            var contenedor = document.getElementById('contenedor-ej2');
+            // Limpia todo el contenido del contenedor
+            contadorEj2 = 0;
+        }
+
+        // EJERCICIO 3: Lista de tareas interactiva
+        function agregarTarea() {
+            var input = document.getElementById('input-tarea');
+            var lista = document.getElementById('lista-tareas');
+            var texto = input.value.trim();
+            if (texto === '') return;
+
+            // Crea un elemento li con el texto de la tarea
+            // Agrega un boton "Eliminar" dentro del li
+            // Al hacer clic en el li, alterna la clase "completada"
+            // Agrega el li a la lista
+            // Limpia el input
+
+            // Funcionalidad extra (opcional): si haces clic en el li, alterna clase "completada"
+        }
+
+        // ================================
+        // --- FIN ---
+        // ================================
+    </script>
+
+    <style>
+        /* Estilos para ejercicio 3 */
+        #lista-tareas li {
+            padding: 10px;
+            margin: 5px 0;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #lista-tareas li:hover {
+            background: #f0f0f0;
+        }
+        .completada {
+            text-decoration: line-through;
+            color: #999;
+            background: #e8f5e9 !important;
+        }
+        .btn-eliminar {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .btn-eliminar:hover {
+            background: #c0392b;
+        }
+    </style>
+</body>
+</html>

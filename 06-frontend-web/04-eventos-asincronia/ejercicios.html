@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 4 - Eventos y Asincronia</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f5f5f5; color: #333; }
+        h1 { border-bottom: 3px solid #2c3e50; padding-bottom: 10px; }
+        .ejercicio { background: white; border-radius: 8px; padding: 20px; margin: 20px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .ejercicio h2 { color: #2c3e50; margin-top: 0; }
+        .pista { background: #fff3cd; border-left: 4px solid #ffc107; padding: 10px; margin: 10px 0; }
+        .codigo { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 5px; font-family: 'Consolas', monospace; white-space: pre; overflow-x: auto; }
+        hr { border: 0; border-top: 1px solid #ddd; margin: 30px 0; }
+        .btn { background: #3498db; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+        .btn:hover { background: #2980b9; }
+        .caja { width: 100px; height: 100px; background: #e74c3c; border-radius: 8px; transition: all 0.3s; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+        .log { background: #1e1e1e; color: #0f0; padding: 10px; border-radius: 4px; font-family: 'Consolas', monospace; height: 150px; overflow-y: auto; font-size: 13px; }
+    </style>
+</head>
+<body>
+    <h1>> EJERCICIO 4: Eventos y Asincronia</h1>
+    <p>Completa las funciones en la seccion "TU CODIGO AQUI" y recarga para probar.</p>
+
+    <hr>
+
+    <!-- EJERCICIO 1 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 1: Eventos de raton</h2>
+        <p>La caja roja debe reaccionar a los siguientes eventos:</p>
+        <ul>
+            <li>Al hacer clic: cambiar el color de fondo a azul y el texto a "Click!"</li>
+            <li>Al pasar el raton (mouseenter): agrandar la caja (scale 1.2) y texto "Hover!"</li>
+            <li>Al sacar el raton (mouseleave): restaurar tamaño original y texto "Fuera!"</li>
+        </ul>
+        <div class="pista">PISTA: Usa element.addEventListener('click', fn), element.addEventListener('mouseenter', fn), etc.</div>
+
+        <div class="caja" id="caja-ej1" style="background: #e74c3c;">Click</div>
+        <div class="log" id="log-ej1">[Log] Los eventos apareceran aqui...</div>
+    </div>
+
+    <hr>
+
+    <!-- EJERCICIO 2 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 2: setTimeout y setInterval</h2>
+        <p>
+            Al hacer clic en "Iniciar cuenta regresiva", debe mostrar numeros del 5 al 1 en el display,
+            uno por segundo (usando setInterval). Al llegar a 0, detener el intervalo y mostrar "Despegue!".
+            El boton "Detener" debe cancelar el intervalo.
+        </p>
+        <div class="pista">PISTA: Usa setInterval con 1000ms. Detenlo con clearInterval cuando llegue a 0.</div>
+
+        <div>
+            <div style="font-size: 48px; font-weight: bold; text-align: center; padding: 20px;" id="display-cuenta">-</div>
+            <button class="btn" onclick="iniciarCuenta()">Iniciar cuenta regresiva</button>
+            <button class="btn" onclick="detenerCuenta()" style="background: #e74c3c;">Detener</button>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- EJERCICIO 3 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 3: Promises y async/await</h2>
+        <p>Simula una operacion asincrona. Al hacer clic en "Iniciar operacion":</p>
+        <ul>
+            <li>Mostrar "Cargando..." durante 2 segundos (simula con setTimeout dentro de una Promise)</li>
+            <li>Luego resolver la Promise y mostrar "Operacion completada!"</li>
+            <li>Si hay error, mostrar "Error en la operacion"</li>
+        </ul>
+        <p>Implementa la funcion usando async/await con try/catch.</p>
+        <div class="pista">PISTA: Crea una funcion que retorne new Promise(resolve => setTimeout(resolve, 2000)). Usa async/await.</div>
+
+        <div>
+            <div style="padding: 15px; border: 1px solid #ddd; border-radius: 4px; margin: 10px 0; min-height: 50px; display: flex; align-items: center; justify-content: center;" id="display-operacion">
+                Presiona el boton para iniciar
+            </div>
+            <button class="btn" onclick="iniciarOperacion()">Iniciar operacion</button>
+            <button class="btn" onclick="toggleErrorMode()" id="btn-error-mode" style="background: #95a5a6;">Modo error: OFF</button>
+        </div>
+    </div>
+
+    <script>
+        // ================================
+        // --- TU CODIGO AQUI ---
+        // ================================
+
+        // EJERCICIO 1: Eventos de raton
+        var caja1 = document.getElementById('caja-ej1');
+        var log1 = document.getElementById('log-ej1');
+
+        function logMsg(msg) {
+            log1.innerHTML += '> ' + msg + '<br>';
+            log1.scrollTop = log1.scrollHeight;
+        }
+
+        // Agrega aqui los event listeners para click, mouseenter, mouseleave
+        // Pista: caja1.addEventListener('click', function() { ... });
+
+        // EJERCICIO 2: setTimeout y setInterval
+        var intervaloCuenta = null;
+        var contador = 5;
+        var display = document.getElementById('display-cuenta');
+
+        function iniciarCuenta() {
+            // Si ya hay un intervalo corriendo, no iniciar otro
+            if (intervaloCuenta) return;
+
+            contador = 5;
+            display.textContent = contador;
+
+            // Usa setInterval para contar hacia abajo cada 1 segundo
+            // Cuando llegue a 0, usa clearInterval y muestra "Despegue!"
+        }
+
+        function detenerCuenta() {
+            // Usa clearInterval para detener el intervalo
+            // Restaura el display a "-"
+        }
+
+        // EJERCICIO 3: Promises y async/await
+        var modoError = false;
+
+        function toggleErrorMode() {
+            modoError = !modoError;
+            document.getElementById('btn-error-mode').textContent = 'Modo error: ' + (modoError ? 'ON' : 'OFF');
+            document.getElementById('btn-error-mode').style.background = modoError ? '#e74c3c' : '#95a5a6';
+        }
+
+        // Crea una funcion que retorne una Promise
+        // La promise debe resolverse despues de 2000ms (setTimeout)
+        // Si modoError es true, debe rechazar la promise
+
+        function esperar(ms) {
+            // Crea y retorna una Promise que se resuelve despues de ms milisegundos
+        }
+
+        async function iniciarOperacion() {
+            var displayOp = document.getElementById('display-operacion');
+            displayOp.textContent = 'Cargando...';
+            displayOp.style.background = '#fff3cd';
+
+            try {
+                // Usa await para esperar la funcion esperar()
+                // Si modoError es true, lanza un error
+                displayOp.textContent = 'Operacion completada!';
+                displayOp.style.background = '#d4edda';
+            } catch (error) {
+                displayOp.textContent = 'Error en la operacion';
+                displayOp.style.background = '#f8d7da';
+            }
+        }
+
+        // ================================
+        // --- FIN ---
+        // ================================
+    </script>
+</body>
+</html>

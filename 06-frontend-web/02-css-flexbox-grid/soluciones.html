@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Solucion 2 - CSS Flexbox y Grid</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; max-width: 1000px; margin: 0 auto; padding: 20px; background: #f5f5f5; color: #333; }
+        h1 { border-bottom: 3px solid #27ae60; padding-bottom: 10px; }
+        .ejercicio { background: white; border-radius: 8px; padding: 20px; margin: 20px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .ejercicio h2 { color: #2c3e50; margin-top: 0; }
+        .solucion { background: #d4edda; border-left: 4px solid #28a745; padding: 10px; margin: 10px 0; font-weight: bold; }
+        .explicacion { background: #e8f5e9; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .codigo { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 5px; font-family: 'Consolas', monospace; white-space: pre; overflow-x: auto; }
+        hr { border: 0; border-top: 1px solid #ddd; margin: 30px 0; }
+        .item { background: #3498db; color: white; padding: 20px; text-align: center; border-radius: 4px; font-weight: bold; }
+        .item:nth-child(even) { background: #2ecc71; }
+    </style>
+</head>
+<body>
+    <h1>> SOLUCION 2: CSS Flexbox y Grid</h1>
+    <p>Soluciones completas para los ejercicios de Flexbox y Grid.</p>
+
+    <hr>
+
+    <!-- SOLUCION 1 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 1: Centrar con Flexbox</h2>
+        <div class="solucion">SOLUCION: display:flex + justify-content + align-items</div>
+        <div class="codigo">
+.contenedor-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+        </div>
+        <div class="explicacion">
+            <strong>Explicacion:</strong>
+            <code>display: flex</code> activa flexbox en el contenedor.
+            <code>justify-content: center</code> centra horizontalmente (eje principal).
+            <code>align-items: center</code> centra verticalmente (eje cruzado).
+        </div>
+        <div class="contenedor-flex" style="background: #ddd; height: 300px; display: flex; justify-content: center; align-items: center;">
+            <div style="background: #e74c3c; color: white; padding: 20px; border-radius: 8px;">
+                Centrado!
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- SOLUCION 2 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 2: Galeria responsiva con Flexbox</h2>
+        <div class="solucion">SOLUCION: flex-wrap + flex-basis responsivo</div>
+        <div class="codigo">
+.galeria {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.galeria .item {
+    flex: 1 1 200px;
+}
+        </div>
+        <div class="explicacion">
+            <strong>Explicacion:</strong>
+            <code>flex-wrap: wrap</code> permite que los items bajen a la siguiente fila.
+            <code>flex: 1 1 200px</code> significa: grow=1 (crecen para llenar espacio), shrink=1 (se encogen si hace falta), basis=200px (tamaño base).
+            <code>gap</code> agrega espacio entre items.
+            Si la pantalla es menor a 200px+gap, los items se apilan en una columna.
+        </div>
+        <div class="galeria" style="background: #eee; padding: 10px; min-height: 200px; display: flex; flex-wrap: wrap; gap: 10px;">
+            <div class="item" style="flex: 1 1 200px;">Item 1</div>
+            <div class="item" style="flex: 1 1 200px;">Item 2</div>
+            <div class="item" style="flex: 1 1 200px;">Item 3</div>
+            <div class="item" style="flex: 1 1 200px;">Item 4</div>
+            <div class="item" style="flex: 1 1 200px;">Item 5</div>
+            <div class="item" style="flex: 1 1 200px;">Item 6</div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- SOLUCION 3 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 3: Layout completo con Grid</h2>
+        <div class="solucion">SOLUCION: grid-template-columns/rows + grid-area</div>
+        <div class="codigo">
+.grid-layout {
+    display: grid;
+    grid-template-columns: 200px 1fr 200px;
+    grid-template-rows: 80px 1fr 60px;
+    grid-template-areas:
+        "header  header  header"
+        "sidebar main    aside"
+        "footer  footer  footer";
+    gap: 4px;
+    height: 400px;
+}
+.grid-layout > div:nth-child(1) { grid-area: header; }
+.grid-layout > div:nth-child(2) { grid-area: sidebar; }
+.grid-layout > div:nth-child(3) { grid-area: main; }
+.grid-layout > div:nth-child(4) { grid-area: aside; }
+.grid-layout > div:nth-child(5) { grid-area: footer; }
+        </div>
+        <div class="explicacion">
+            <strong>Explicacion:</strong>
+            <code>grid-template-columns: 200px 1fr 200px</code> crea 3 columnas: sidebar fija, main flexible, aside fijo.
+            <code>grid-template-rows: 80px 1fr 60px</code> header 80px, contenido flexible, footer 60px.
+            <code>grid-template-areas</code> nombra las regiones del layout.
+            Cada hijo usa <code>grid-area</code> para asignarse a una region.
+            El orden en el HTML no importa porque la posicion la define grid-area.
+        </div>
+        <div class="grid-layout" style="background: #eee; min-height: 400px; margin-top: 10px; display: grid; grid-template-columns: 200px 1fr 200px; grid-template-rows: 80px 1fr 60px; grid-template-areas: 'header header header' 'sidebar main aside' 'footer footer footer'; gap: 4px;">
+            <div style="background: #9b59b6; color: white; padding: 15px; grid-area: header;">HEADER</div>
+            <div style="background: #e67e22; color: white; padding: 15px; grid-area: sidebar;">SIDEBAR</div>
+            <div style="background: #1abc9c; color: white; padding: 15px; grid-area: main;">MAIN - Contenido principal</div>
+            <div style="background: #e74c3c; color: white; padding: 15px; grid-area: aside;">ASIDE</div>
+            <div style="background: #34495e; color: white; padding: 15px; grid-area: footer;">FOOTER</div>
+        </div>
+    </div>
+</body>
+</html>

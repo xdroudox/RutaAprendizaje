@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Solucion 7 - Seguridad Web</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f5f5f5; color: #333; }
+        h1 { border-bottom: 3px solid #27ae60; padding-bottom: 10px; }
+        .ejercicio { background: white; border-radius: 8px; padding: 20px; margin: 20px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .ejercicio h2 { color: #2c3e50; margin-top: 0; }
+        .solucion { background: #d4edda; border-left: 4px solid #28a745; padding: 10px; margin: 10px 0; font-weight: bold; }
+        .explicacion { background: #e8f5e9; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .codigo { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 5px; font-family: 'Consolas', monospace; white-space: pre; overflow-x: auto; }
+        hr { border: 0; border-top: 1px solid #ddd; margin: 30px 0; }
+        .btn { background: #3498db; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+        .btn:hover { background: #2980b9; }
+        .resultado { background: #fafafa; padding: 10px; border-radius: 4px; border: 1px solid #ddd; margin: 10px 0; min-height: 30px; }
+    </style>
+</head>
+<body>
+    <h1>> SOLUCION 7: Seguridad Web</h1>
+    <p>Soluciones completas para los ejercicios de seguridad web.</p>
+
+    <hr>
+
+    <!-- SOLUCION 1 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 1: Prevenir XSS (Cross-Site Scripting)</h2>
+        <div class="solucion">SOLUCION: Usar textContent en lugar de innerHTML</div>
+        <div class="codigo">
+function ejercicio1() {
+    var input = document.getElementById('input-xss-sol');
+    var resultado = document.getElementById('resultado-ej1-sol');
+    var texto = input.value;
+
+    // SEGURO: textContent no interpreta HTML
+    resultado.textContent = 'Contenido: ' + texto;
+}
+        </div>
+        <div class="explicacion">
+            <strong>Explicacion:</strong>
+            <code>innerHTML</code> interpreta el string como HTML y ejecuta cualquier script incrustado.
+            <code>textContent</code> trata todo como texto plano, escapando caracteres HTML automaticamente.
+            Si el usuario escribe <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code>:
+            - innerHTML: ejecuta el script
+            - textContent: muestra el texto literal en pantalla
+        </div>
+        <div>
+            <input type="text" id="input-xss-sol" placeholder="Escribe algo..." style="width: 250px; padding: 8px;" value='<script>alert("XSS")</script>'>
+            <button class="btn" onclick="solucion1()">Mostrar texto (seguro)</button>
+        </div>
+        <div class="resultado" id="resultado-ej1-sol">El resultado se mostrara aqui...</div>
+    </div>
+
+    <hr>
+
+    <!-- SOLUCION 2 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 2: Sanitizar entrada del usuario</h2>
+        <div class="solucion">SOLUCION: Validar URL antes de usarla</div>
+        <div class="codigo">
+function ejercicio2() {
+    var input = document.getElementById('input-url-sol');
+    var resultado = document.getElementById('resultado-ej2-sol');
+    var url = input.value.trim();
+
+    var urlLower = url.toLowerCase();
+
+    if (urlLower.startsWith('https://') || urlLower.startsWith('http://')) {
+        if (urlLower.includes('javascript:') || urlLower.includes('data:')) {
+            resultado.textContent = 'Error: URL no permitida (contiene protocolo peligroso)';
+            resultado.style.background = '#f8d7da';
+        } else {
+            resultado.innerHTML = '&lt;a href="' + url + '" target="_blank"&gt;Ir a ' + url + '&lt;/a&gt;&lt;br&gt;URL valida y segura';
+            resultado.style.background = '#d4edda';
+        }
+    } else {
+        resultado.textContent = 'Error: URL debe comenzar con http:// o https://';
+        resultado.style.background = '#f8d7da';
+    }
+}
+        </div>
+        <div class="explicacion">
+            <strong>Explicacion:</strong>
+            Se verifica que la URL comience con http:// o https:// (protocolos seguros).
+            Adicionalmente, se bloquean protocolos peligrosos como javascript: (ejecuta codigo) y data: (puede contener payloads).
+            Siempre usa <code>startsWith()</code> para validar el inicio de la URL, no solo <code>includes()</code>.
+        </div>
+        <div>
+            <input type="text" id="input-url-sol" placeholder="https://ejemplo.com" style="width: 350px; padding: 8px;" value="https://www.google.com">
+            <button class="btn" onclick="solucion2()">Ir al sitio</button>
+        </div>
+        <div class="resultado" id="resultado-ej2-sol">Resultado...</div>
+    </div>
+
+    <hr>
+
+    <!-- SOLUCION 3 -->
+    <div class="ejercicio">
+        <h2>Ejercicio 3: Simular CSRF y su prevencion</h2>
+        <div class="solucion">SOLUCION: Token CSRF aleatorio + verificacion</div>
+        <div class="codigo">
+var csrfTokenSol = '';
+
+function generarToken() {
+    csrfTokenSol = Math.random().toString(36).substring(2, 15) +
+                   Math.random().toString(36).substring(2, 15);
+    document.getElementById('csrf-token-input-sol').value = csrfTokenSol;
+}
+
+function ejercicio3() {
+    var resultado = document.getElementById('resultado-ej3-sol');
+    var tokenInput = document.getElementById('csrf-token-input-sol').value;
+    var cuenta = document.getElementById('cuenta-destino-sol').value;
+    var monto = document.getElementById('monto-sol').value;
+
+    if (tokenInput === csrfTokenSol) {
+        resultado.textContent = 'Transferencia de $' + monto +
+            ' a cuenta ' + cuenta + ' exitosa (token CSRF valido)';
+        resultado.style.background = '#d4edda';
+    } else {
+        resultado.textContent = 'Error: CSRF detected - token invalido';
+        resultado.style.background = '#f8d7da';
+    }
+}
+        </div>
+        <div class="explicacion">
+            <strong>Explicacion:</strong>
+            Se genera un token CSRF aleatorio usando <code>Math.random().toString(36)</code> (base36: numeros + letras).
+            El token se almacena en una variable y se muestra al usuario.
+            Al enviar el formulario, se compara el token enviado con el almacenado.
+            Si no coinciden, significa que la peticion podria venir de otro sitio (CSRF).
+            En produccion, el token se genera en el servidor y se asocia a la sesion del usuario.
+        </div>
+        <div id="csrf-form-sol">
+            <div style="margin: 10px 0;">
+                <label>Cuenta destino: <input type="text" id="cuenta-destino-sol" value="12345" style="padding: 8px; width: 200px;"></label>
+            </div>
+            <div style="margin: 10px 0;">
+                <label>Monto: <input type="number" id="monto-sol" value="1000" style="padding: 8px; width: 150px;"></label>
+            </div>
+            <div style="margin: 10px 0;">
+                <label>Token CSRF: <input type="text" id="csrf-token-input-sol" placeholder="Genera un token primero..." style="padding: 8px; width: 250px;"></label>
+            </div>
+            <button class="btn" onclick="solucion3()">Enviar transferencia</button>
+            <button class="btn" onclick="generarTokenSol()" style="background: #27ae60;">Generar token CSRF</button>
+        </div>
+        <div class="resultado" id="resultado-ej3-sol">Resultado...</div>
+    </div>
+
+    <script>
+        // Solucion 1
+        function solucion1() {
+            var input = document.getElementById('input-xss-sol');
+            var resultado = document.getElementById('resultado-ej1-sol');
+            resultado.textContent = 'Contenido: ' + input.value;
+        }
+
+        // Solucion 2
+        function solucion2() {
+            var input = document.getElementById('input-url-sol');
+            var resultado = document.getElementById('resultado-ej2-sol');
+            var url = input.value.trim();
+            var urlLower = url.toLowerCase();
+            if (urlLower.startsWith('https://') || urlLower.startsWith('http://')) {
+                if (urlLower.includes('javascript:') || urlLower.includes('data:')) {
+                    resultado.textContent = 'Error: URL no permitida (contiene protocolo peligroso)';
+                    resultado.style.background = '#f8d7da';
+                } else {
+                    resultado.innerHTML = '<a href="' + url + '" target="_blank">Ir a ' + url + '</a><br>URL valida y segura';
+                    resultado.style.background = '#d4edda';
+                }
+            } else {
+                resultado.textContent = 'Error: URL debe comenzar con http:// o https://';
+                resultado.style.background = '#f8d7da';
+            }
+        }
+
+        // Solucion 3
+        var csrfTokenSol = '';
+        function generarTokenSol() {
+            csrfTokenSol = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            document.getElementById('csrf-token-input-sol').value = csrfTokenSol;
+        }
+        function solucion3() {
+            var resultado = document.getElementById('resultado-ej3-sol');
+            var tokenInput = document.getElementById('csrf-token-input-sol').value;
+            var cuenta = document.getElementById('cuenta-destino-sol').value;
+            var monto = document.getElementById('monto-sol').value;
+            if (tokenInput === csrfTokenSol) {
+                resultado.textContent = 'Transferencia de $' + monto + ' a cuenta ' + cuenta + ' exitosa (token CSRF valido)';
+                resultado.style.background = '#d4edda';
+            } else {
+                resultado.textContent = 'Error: CSRF detected - token invalido';
+                resultado.style.background = '#f8d7da';
+            }
+        }
+    </script>
+</body>
+</html>
