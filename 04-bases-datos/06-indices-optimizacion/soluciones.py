@@ -1,128 +1,121 @@
-import sys, sqlite3
-
+"""
+SOLUCIONES - Indices y Optimizacion
+Ejecuta desde raiz: python scripts/runner.py 4 6 [ejercicio]
+"""
+import sys
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-def get_db():
+def ejercicio_1():
+    """Crea un indice y analiza su efecto con EXPLAIN QUERY PLAN"""
+    import sqlite3
     conn = sqlite3.connect(":memory:")
-    conn.row_factory = sqlite3.Row
-    return conn
-
-def mostrar_resultados(conn, query):
-    try:
-        cur = conn.execute(query)
-        filas = cur.fetchall()
-        if not filas:
-            print("(Sin resultados)")
-            return
-        headers = [d[0] for d in cur.description]
-        print(" | ".join(h for h in headers))
-        print("-" * 40)
-        for f in filas:
-            print(" | ".join(str(f[h]) for h in headers))
-    except Exception as e:
-        print("ERROR:", e)
-
-def solucion_1():
-    print("=" * 50)
-    print("SOLUCION 1: CREATE INDEX y EXPLAIN")
-    print("=" * 50)
-    conn = get_db()
-    conn.executescript("""
-        CREATE TABLE ventas (
+    c = conn.cursor()
+    c.executescript("""
+        CREATE TABLE productos (
             id INTEGER PRIMARY KEY,
-            producto TEXT,
-            cantidad INTEGER,
-            total REAL
+            nombre TEXT NOT NULL,
+            categoria TEXT NOT NULL,
+            precio REAL NOT NULL
         );
-        INSERT INTO ventas VALUES (1, 'Laptop', 2, 2400.00);
-        INSERT INTO ventas VALUES (2, 'Mouse', 10, 250.00);
-        INSERT INTO ventas VALUES (3, 'Monitor', 3, 900.00);
-        INSERT INTO ventas VALUES (4, 'Laptop', 1, 1200.00);
-        INSERT INTO ventas VALUES (5, 'Teclado', 5, 225.00);
     """)
-    print("SIN INDICE:")
-    cur = conn.execute("EXPLAIN QUERY PLAN SELECT * FROM ventas WHERE producto = 'Laptop';")
-    for f in cur.fetchall():
-        print(f["detail"])
+    categorias = ['Electronica', 'Hogar', 'Deportes', 'Jugueteria']
+    for i in range(1, 1001):
+        cat = categorias[i % len(categorias)]
+        c.execute("INSERT INTO productos VALUES (?, ?, ?, ?)",
+                  (i, f'Producto{i}', cat, round(i * 1.5, 2)))
+    conn.commit()
+    print(">>> Sin indice (EXPLAIN):")
+    for row in c.execute("EXPLAIN QUERY PLAN SELECT * FROM productos WHERE categoria = 'Electronica'"):
+        print(f"  {row}")
     print()
-    conn.execute("CREATE INDEX idx_producto ON ventas(producto);")
-    print("CON INDICE:")
-    cur = conn.execute("EXPLAIN QUERY PLAN SELECT * FROM ventas WHERE producto = 'Laptop';")
-    for f in cur.fetchall():
-        print(f["detail"])
+    c.execute("CREATE INDEX idx_categoria ON productos(categoria)")
+    print(">>> Con indice (EXPLAIN):")
+    for row in c.execute("EXPLAIN QUERY PLAN SELECT * FROM productos WHERE categoria = 'Electronica'"):
+        print(f"  {row}")
 
-def solucion_2():
-    print("=" * 50)
-    print("SOLUCION 2: Indices compuestos")
-    print("=" * 50)
-    conn = get_db()
-    conn.executescript("""
+def ejercicio_2():
+    """Compara velocidad de una misma consulta CON y SIN indice usando time"""
+    import time
+    import sqlite3
+    conn = sqlite3.connect(":memory:")
+    c = conn.cursor()
+    c.executescript("""
+        CREATE TABLE usuarios (
+            id INTEGER PRIMARY KEY,
+            email TEXT NOT NULL,
+            nombre TEXT NOT NULL
+        );
+    """)
+    for i in range(1, 10001):
+        c.execute("INSERT INTO usuarios VALUES (?, ?, ?)",
+                  (i, f'usuario{i}@email.com', f'Nombre{i}'))
+    conn.commit()
+
+    def medir(query):
+        inicio = time.time()
+        c.execute(query)
+        c.fetchall()
+        return time.time() - inicio
+
+    print(">>> Comparacion de velocidad:")
+    print("  Sin indice:")
+    t1 = medir("SELECT * FROM usuarios WHERE email = 'usuario9999@email.com'")
+    print(f"    {t1:.4f} seg")
+    c.execute("CREATE INDEX idx_email ON usuarios(email)")
+    print("  Con indice:")
+    t2 = medir("SELECT * FROM usuarios WHERE email = 'usuario9999@email.com'")
+    print(f"    {t2:.4f} seg")
+    print(f"  Mejora: {t1/t2:.1f}x mas rapido")
+
+def ejercicio_3():
+    """Identifica queries lentas y propone indices para optimizarlas"""
+    import sqlite3
+    conn = sqlite3.connect(":memory:")
+    c = conn.cursor()
+    c.executescript("""
         CREATE TABLE pedidos (
             id INTEGER PRIMARY KEY,
-            cliente_id INTEGER,
-            fecha TEXT,
-            total REAL
+            cliente_id INTEGER NOT NULL,
+            fecha TEXT NOT NULL,
+            total REAL NOT NULL,
+            estado TEXT NOT NULL
         );
-        INSERT INTO pedidos VALUES
-            (1, 1, '2024-01-15', 150.00),
-            (2, 1, '2024-02-10', 75.00),
-            (3, 2, '2024-01-20', 200.00),
-            (4, 3, '2024-03-05', 50.00);
     """)
-    print("SIN INDICE compuesto:")
-    cur = conn.execute("EXPLAIN QUERY PLAN SELECT * FROM pedidos WHERE cliente_id = 1 ORDER BY fecha;")
-    for f in cur.fetchall():
-        print(f["detail"])
+    for i in range(1, 5001):
+        c.execute("INSERT INTO pedidos VALUES (?, ?, ?, ?, ?)",
+                  (i, (i % 100) + 1, f'2024-{(i % 12) + 1:02d}-{(i % 28) + 1:02d}',
+                   round(i * 10.0, 2), ['pendiente', 'enviado', 'entregado'][i % 3]))
+    conn.commit()
+    print(">>> Indices propuestos:")
     print()
-    conn.execute("CREATE INDEX idx_cliente_fecha ON pedidos(cliente_id, fecha);")
-    print("CON INDICE compuesto:")
-    cur = conn.execute("EXPLAIN QUERY PLAN SELECT * FROM pedidos WHERE cliente_id = 1 ORDER BY fecha;")
-    for f in cur.fetchall():
-        print(f["detail"])
-
-def solucion_3():
-    print("=" * 50)
-    print("SOLUCION 3: Cuando (no) indexar")
-    print("=" * 50)
+    c.execute("CREATE INDEX idx_estado ON pedidos(estado)")
+    c.execute("CREATE INDEX idx_cliente ON pedidos(cliente_id)")
+    c.execute("CREATE INDEX idx_fecha ON pedidos(fecha)")
+    print("  CREATE INDEX idx_estado ON pedidos(estado);")
+    print("  CREATE INDEX idx_cliente ON pedidos(cliente_id);")
+    print("  CREATE INDEX idx_fecha ON pedidos(fecha);")
     print()
-    print("1. Tabla 'usuarios' (1M filas), columna 'email' en WHERE.")
-    print("   -> SI, definitivamente. Tabla grande y busqueda exacta.")
-    print()
-    print("2. Tabla 'configuracion' (10 filas), columna 'clave' en WHERE.")
-    print("   -> NO, la tabla es demasiado pequena. Un indice anade")
-    print("      overhead sin beneficio. El escaneo secuencial es casi")
-    print("      instantaneo.")
-    print()
-    print("3. Columna 'activo' (solo 0 o 1) en tabla grande.")
-    print("   -> NO, baja cardinalidad (solo 2 valores). Un indice no")
-    print("      reduce significativamente el escaneo.")
-    print()
-    print("4. Columna 'fecha_creacion' con ORDER BY frecuente.")
-    print("   -> SI, si la tabla es grande y se ordena frecuentemente.")
-    print("      Ayuda tanto en filtros como en ordenamientos.")
-
-def menu():
-    print("SOLUCIONES - INDICES Y OPTIMIZACION")
-    print("1 - CREATE INDEX y EXPLAIN")
-    print("2 - Indices compuestos")
-    print("3 - Cuando (no) indexar")
-
-def main():
-    args = sys.argv[1:]
-    if not args:
-        menu()
-        return
-    num = args[0]
-    if num == "1":
-        solucion_1()
-    elif num == "2":
-        solucion_2()
-    elif num == "3":
-        solucion_3()
-    else:
-        print("Solucion no valida. Usa 1, 2 o 3.")
+    print(">>> Con indices (EXPLAIN):")
+    print("  Query 1 (WHERE estado):")
+    for row in c.execute("EXPLAIN QUERY PLAN SELECT * FROM pedidos WHERE estado = 'pendiente'"):
+        print(f"    {row}")
+    print("  Query 2 (WHERE cliente_id):")
+    for row in c.execute("EXPLAIN QUERY PLAN SELECT * FROM pedidos WHERE cliente_id = 50"):
+        print(f"    {row}")
+    print("  Query 3 (WHERE fecha BETWEEN):")
+    for row in c.execute("EXPLAIN QUERY PLAN SELECT * FROM pedidos WHERE fecha BETWEEN '2024-01-01' AND '2024-03-01'"):
+        print(f"    {row}")
 
 if __name__ == "__main__":
-    main()
+    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    if len(sys.argv) > 1 and sys.argv[1].isdigit():
+        num = int(sys.argv[1]) - 1
+        if 0 <= num < len(ejercicios):
+            print(f">> EJERCICIO {num + 1}: {ejercicios[num].__doc__}")
+            print("-" * 40)
+            ejercicios[num]()
+    else:
+        for i, ej in enumerate(ejercicios, 1):
+            print(f"  {i}. {ej.__doc__}")

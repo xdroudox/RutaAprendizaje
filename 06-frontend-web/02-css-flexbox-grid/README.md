@@ -134,4 +134,17 @@ Combinados con Flexbox/Grid, los media queries crean diseños responsivos:
 
 ## Ejercicios
 
-Abre `ejercicios.html` en tu navegador y completa los 3 ejercicios.
+### Ejercicio 1: Centrar elemento con Flexbox
+Usa display:flex, justify-content:center y align-items:center para centrar un elemento.
+**Ejecuta:** `python scripts/runner.py 6 2 1`
+**O abre directo:** `06-frontend-web/02-css-flexbox-grid/ejercicios.html`
+
+### Ejercicio 2: Galeria responsiva con Flexbox wrap
+Crea una galeria responsiva con flex-wrap y flex-basis que se adapte a diferentes pantallas.
+**Ejecuta:** `python scripts/runner.py 6 2 2`
+**O abre directo:** `06-frontend-web/02-css-flexbox-grid/ejercicios.html`
+
+### Ejercicio 3: Layout completo con CSS Grid
+Crea un layout de pagina completo con grid-template-columns, grid-template-rows y grid-area.
+**Ejecuta:** `python scripts/runner.py 6 2 3`
+**O abre directo:** `06-frontend-web/02-css-flexbox-grid/ejercicios.html`

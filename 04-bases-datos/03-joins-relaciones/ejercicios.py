@@ -1,133 +1,116 @@
-import sys, sqlite3
-
+"""
+EJERCICIOS - Joins y Relaciones
+Ejecuta desde raiz: python scripts/runner.py 4 3 [ejercicio]
+"""
+import sys
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-def get_db():
-    conn = sqlite3.connect(":memory:")
-    conn.row_factory = sqlite3.Row
-    return conn
-
 def ejercicio_1():
-    print("=" * 50)
-    print("EJERCICIO 1: INNER JOIN")
-    print("=" * 50)
-    conn = get_db()
-    conn.executescript("""
+    """Escribe un INNER JOIN para mostrar pedidos con datos del cliente"""
+    import sqlite3
+    conn = sqlite3.connect(":memory:")
+    c = conn.cursor()
+    c.executescript("""
         CREATE TABLE clientes (
             id INTEGER PRIMARY KEY,
-            nombre TEXT,
-            ciudad TEXT
+            nombre TEXT NOT NULL,
+            ciudad TEXT NOT NULL
         );
-        INSERT INTO clientes VALUES (1, 'Ana', 'Madrid'), (2, 'Luis', 'Barcelona'), (3, 'Maria', 'Valencia');
         CREATE TABLE pedidos (
             id INTEGER PRIMARY KEY,
-            cliente_id INTEGER,
-            total REAL,
+            cliente_id INTEGER NOT NULL,
+            producto TEXT NOT NULL,
+            total REAL NOT NULL,
             FOREIGN KEY (cliente_id) REFERENCES clientes(id)
         );
-        INSERT INTO pedidos VALUES (1, 1, 150.00), (2, 1, 75.00), (3, 2, 200.00);
+        INSERT INTO clientes VALUES (1, 'Ana', 'Madrid'), (2, 'Juan', 'Barcelona'), (3, 'Maria', 'Valencia');
+        INSERT INTO pedidos VALUES (1, 1, 'Laptop', 999.99), (2, 2, 'Mouse', 25.50), (3, 1, 'Teclado', 45.00);
     """)
-    print("Tablas: clientes (3 registros), pedidos (3 registros)")
-    print()
-    print("TAREA: Escribe un INNER JOIN que muestre el nombre del")
-    print("cliente y el total de cada pedido.")
-    print()
-    print("PISTA: SELECT c.nombre, p.total FROM clientes c")
-    print("  INNER JOIN pedidos p ON c.id = p.cliente_id;")
+    conn.commit()
+    print("=== Pedidos con datos del cliente ===")
+    print("id_pedido | producto | total  | cliente  | ciudad")
+    print("----------|----------|--------|----------|--------")
+    # ==== ESCRIBE TU CONSULTA SQL AQUI ====
+    # query = "SELECT ... FROM pedidos INNER JOIN clientes ON ..."
+    # c.execute(query)
+    # for row in c.fetchall():
+    #     print(row)
+    pass
 
 def ejercicio_2():
-    print("=" * 50)
-    print("EJERCICIO 2: LEFT JOIN (clientes sin pedidos)")
-    print("=" * 50)
-    conn = get_db()
-    conn.executescript("""
+    """Escribe un LEFT JOIN para mostrar todos los clientes aunque no tengan pedidos"""
+    import sqlite3
+    conn = sqlite3.connect(":memory:")
+    c = conn.cursor()
+    c.executescript("""
         CREATE TABLE clientes (
             id INTEGER PRIMARY KEY,
-            nombre TEXT
+            nombre TEXT NOT NULL
         );
-        INSERT INTO clientes VALUES (1, 'Ana'), (2, 'Luis'), (3, 'Maria');
         CREATE TABLE pedidos (
             id INTEGER PRIMARY KEY,
-            cliente_id INTEGER,
-            producto TEXT,
+            cliente_id INTEGER NOT NULL,
+            producto TEXT NOT NULL,
             FOREIGN KEY (cliente_id) REFERENCES clientes(id)
         );
+        INSERT INTO clientes VALUES (1, 'Ana'), (2, 'Juan'), (3, 'Maria'), (4, 'Carlos');
         INSERT INTO pedidos VALUES (1, 1, 'Laptop'), (2, 2, 'Mouse');
     """)
-    print("Cliente 'Maria' (id=3) no tiene pedidos.")
-    print()
-    print("TAREA: Escribe un LEFT JOIN que muestre TODOS los")
-    print("clientes, incluso los que no tienen pedidos.")
-    print("Los clientes sin pedidos deben mostrar NULL en producto.")
-    print()
-    print("PISTA: LEFT JOIN ... ON ...")
+    conn.commit()
+    print("=== Todos los clientes (con o sin pedidos) ===")
+    print("cliente | producto")
+    print("--------|---------")
+    print("(Carlos no tiene pedidos, debe aparecer con NULL)")
+    # ==== ESCRIBE TU CONSULTA SQL AQUI ====
+    # query = "SELECT ... FROM clientes LEFT JOIN pedidos ON ..."
+    # c.execute(query)
+    # for row in c.fetchall():
+    #     print(row)
+    pass
 
 def ejercicio_3():
-    print("=" * 50)
-    print("EJERCICIO 3: Muchos a Muchos")
-    print("=" * 50)
-    conn = get_db()
-    conn.executescript("""
+    """Escribe una consulta muchos-a-muchos: estudiantes y sus cursos"""
+    import sqlite3
+    conn = sqlite3.connect(":memory:")
+    c = conn.cursor()
+    c.executescript("""
         CREATE TABLE estudiantes (
             id INTEGER PRIMARY KEY,
-            nombre TEXT
+            nombre TEXT NOT NULL
         );
-        INSERT INTO estudiantes VALUES (1, 'Ana'), (2, 'Luis'), (3, 'Maria');
         CREATE TABLE cursos (
             id INTEGER PRIMARY KEY,
-            nombre TEXT
+            nombre TEXT NOT NULL
         );
-        INSERT INTO cursos VALUES (1, 'Matematicas'), (2, 'Historia'), (3, 'Fisica');
+        CREATE TABLE inscripciones (
+            estudiante_id INTEGER,
+            curso_id INTEGER,
+            PRIMARY KEY (estudiante_id, curso_id),
+            FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id),
+            FOREIGN KEY (curso_id) REFERENCES cursos(id)
+        );
+        INSERT INTO estudiantes VALUES (1, 'Ana'), (2, 'Juan'), (3, 'Maria');
+        INSERT INTO cursos VALUES (1, 'Matematicas'), (2, 'Historia'), (3, 'Programacion');
+        INSERT INTO inscripciones VALUES (1, 1), (1, 3), (2, 1), (2, 2), (3, 2), (3, 3);
     """)
-    print("Tablas: estudiantes (3) y cursos (3).")
-    print("Falta la tabla intermedia estudiante_curso.")
-    print()
-    print("TAREA: Crea la tabla intermedia e inserta datos para que:")
-    print("- Ana curse Matematicas y Fisica")
-    print("- Luis curse Historia")
-    print("- Maria curse Matematicas y Historia")
-    print("Luego escribe un JOIN triple que muestre: estudiante, curso")
-    print()
-    print("PISTA: estudiante_curso(estudiante_id, curso_id) + dos INNER JOINs")
-
-pistas = {
-    "1": "SELECT c.nombre, p.total FROM clientes c INNER JOIN pedidos p ON c.id = p.cliente_id;",
-    "2": "SELECT c.nombre, p.producto FROM clientes c LEFT JOIN pedidos p ON c.id = p.cliente_id;",
-    "3": "CREATE TABLE estudiante_curso (estudiante_id INTEGER, curso_id INTEGER, PRIMARY KEY (estudiante_id, curso_id));\nINSERT INTO estudiante_curso VALUES (1,1),(1,3),(2,2),(3,1),(3,2);\nSELECT e.nombre AS estudiante, c.nombre AS curso FROM estudiantes e INNER JOIN estudiante_curso ec ON e.id = ec.estudiante_id INNER JOIN cursos c ON ec.curso_id = c.id;"
-}
-
-def menu():
-    print("=" * 50)
-    print("JOINS Y RELACIONES - EJERCICIOS")
-    print("=" * 50)
-    print("1 - INNER JOIN")
-    print("2 - LEFT JOIN")
-    print("3 - Muchos a Muchos")
-    print()
-    print("Usa: python ejercicios.py <numero>")
-    print("     python ejercicios.py <numero> -p  (pista)")
-
-def main():
-    args = sys.argv[1:]
-    if not args:
-        menu()
-        return
-    num = args[0]
-    mostrar_pista = "-p" in args
-    if mostrar_pista and num in pistas:
-        print("=== PISTA ===")
-        print(pistas[num])
-        print()
-    if num == "1":
-        ejercicio_1()
-    elif num == "2":
-        ejercicio_2()
-    elif num == "3":
-        ejercicio_3()
-    else:
-        print("Ejercicio no valido. Usa 1, 2 o 3.")
+    conn.commit()
+    print("=== Estudiantes con sus cursos (relacion muchos-a-muchos) ===")
+    # ==== ESCRIBE TU CONSULTA SQL AQUI ====
+    # Usa INNER JOIN entre las 3 tablas
+    # for row in c.fetchall():
+    #     print(f"  {row[0]} -> {row[1]}")
+    pass
 
 if __name__ == "__main__":
-    main()
+    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    if len(sys.argv) > 1 and sys.argv[1].isdigit():
+        num = int(sys.argv[1]) - 1
+        if 0 <= num < len(ejercicios):
+            print(f">> EJERCICIO {num + 1}: {ejercicios[num].__doc__}")
+            print("-" * 40)
+            ejercicios[num]()
+    else:
+        for i, ej in enumerate(ejercicios, 1):
+            print(f"  {i}. {ej.__doc__}")

@@ -7,18 +7,10 @@
 - **Pipeline**: secuencia de etapas (build, test, deploy).
 - **GitHub Actions**: plataforma CI/CD integrada en GitHub.
 
-## Estructura de un workflow YAML
+## Ejercicios
 
-```yaml
-name: CI
-on: [push, pull_request]
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Instalar dependencias
-        run: pip install -r requirements.txt
-      - name: Ejecutar tests
-        run: pytest
-```
+1. **Workflow basico** - Escribe un workflow YAML con build y test.
+2. **Agregar linting** - Anade un paso de linting al workflow.
+3. **Deploy a produccion** - Crea un pipeline completo con CI/CD.
+
+**Ejecuta:** `python scripts/runner.py 10 03 [ejercicio]`

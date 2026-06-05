@@ -135,4 +135,17 @@ Usaremos JSONPlaceholder para los ejercicios:
 
 ## Ejercicios
 
-Abre `ejercicios.html` en tu navegador y completa los 3 ejercicios.
+### Ejercicio 1: GET request con fetch
+Usa fetch() para obtener los primeros 5 posts de JSONPlaceholder y muestralos en pantalla.
+**Ejecuta:** `python scripts/runner.py 6 6 1`
+**O abre directo:** `06-frontend-web/06-fetch-api/ejercicios.html`
+
+### Ejercicio 2: POST request con JSON body
+Envia un POST a JSONPlaceholder con los datos del formulario usando method, headers y body.
+**Ejecuta:** `python scripts/runner.py 6 6 2`
+**O abre directo:** `06-frontend-web/06-fetch-api/ejercicios.html`
+
+### Ejercicio 3: Manejar errores de fetch con catch
+Usa async/await con try/catch y verifica respuesta.ok para manejar errores HTTP y de red.
+**Ejecuta:** `python scripts/runner.py 6 6 3`
+**O abre directo:** `06-frontend-web/06-fetch-api/ejercicios.html`

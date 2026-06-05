@@ -107,4 +107,17 @@ HTML semantico significa usar etiquetas que describen el significado del conteni
 
 ## Ejercicios
 
-Abre `ejercicios.html` en tu navegador y completa los 3 ejercicios.
+### Ejercicio 1: Estructura HTML semantica basica
+Reemplaza los `<div>` por etiquetas semanticas: header, nav, main, section, article, footer.
+**Ejecuta:** `python scripts/runner.py 6 1 1`
+**O abre directo:** `06-frontend-web/01-html-semantico/ejercicios.html`
+
+### Ejercicio 2: Agregar aside y mejorar accesibilidad
+Agrega un `<aside>` con contenido complementario y atributos de accesibilidad (role, aria-label, alt).
+**Ejecuta:** `python scripts/runner.py 6 1 2`
+**O abre directo:** `06-frontend-web/01-html-semantico/ejercicios.html`
+
+### Ejercicio 3: Blog completo con figure, time y article
+Crea la estructura completa de un blog usando header, nav, main, article, section, aside, figure, time, footer.
+**Ejecuta:** `python scripts/runner.py 6 1 3`
+**O abre directo:** `06-frontend-web/01-html-semantico/ejercicios.html`

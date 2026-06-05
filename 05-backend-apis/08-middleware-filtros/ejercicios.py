@@ -1,90 +1,57 @@
+"""
+EJERCICIOS - Middleware y Filtros
+Ejecuta desde raiz: python scripts/runner.py 5 8 [ejercicio]
+"""
 import sys
-
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
 def ejercicio_1():
-    print("=" * 50)
-    print("EJERCICIO 1: Middleware de logging")
-    print("=" * 50)
-    print()
-    print("TAREA: Implementa una funcion logging_middleware(peticion)")
-    print("que imprima la hora, el metodo y la ruta de la peticion,")
-    print("y luego retorne None para continuar el pipeline.")
-    print()
-    print("La peticion es un diccionario:")
-    print('  {"metodo": "GET", "ruta": "/api/usuarios", "headers": {}}')
-    print()
-    print("PISTA: import time; print(f'[{time.ctime()}] {peticion[\"metodo\"]} {peticion[\"ruta\"]}'); return None")
+    """Funcion middleware que logee requests"""
+    request = {"method": "GET", "path": "/api/usuarios", "headers": {}}
+    # Crea una funcion middleware() que imprima el metodo y la ruta
+    # y devuelva el request sin modificar
+    # ==== ESCRIBE TU RESPUESTA AQUI ====
+    pass
 
 def ejercicio_2():
-    print("=" * 50)
-    print("EJERCICIO 2: Middleware de autenticacion")
-    print("=" * 50)
-    print()
-    print("TAREA: Implementa auth_middleware(peticion) que:")
-    print("  1. Verifique si existe el header 'Authorization'")
-    print("  2. Si no existe, retorne {'status': 401, 'body': 'No autorizado'}")
-    print("  3. Si existe pero no empieza con 'Bearer ', retorne 401")
-    print("  4. Si existe y es valido, retorne None")
-    print()
-    print('PISTA: if "Authorization" not in peticion["headers"]: return {"status": 401, "body": "No autorizado"}')
+    """Middleware de autenticacion que revisa token"""
+    request = {"method": "GET", "path": "/api/usuarios", "headers": {"Authorization": "Bearer token_valido"}}
+    # Crea un middleware que verifique que exista el header Authorization
+    # Si no existe, imprime "Acceso denegado"
+    # Si existe, imprime "Token valido" y continua
+    # ==== ESCRIBE TU RESPUESTA AQUI ====
+    pass
 
 def ejercicio_3():
-    print("=" * 50)
-    print("EJERCICIO 3: Pipeline de middlewares")
-    print("=" * 50)
-    print()
-    print("TAREA: Implementa la funcion procesar_peticion(peticion) que")
-    print("ejecute dos middlewares en orden:")
-    print("  1. auth_middleware (del ejercicio 2)")
-    print("  2. logging_middleware (del ejercicio 1)")
-    print()
-    print("Si un middleware retorna un dict (respuesta), deten el pipeline")
-    print("y devuelve esa respuesta. Si todos retornan None, devuelve:")
-    print('  {"status": 200, "body": "Recurso servido"}')
-    print()
-    print("Prueba con peticion CON y SIN token de autorizacion.")
-    print()
-    print("PISTA: for mw in [auth_middleware, logging_middleware]: resultado = mw(peticion); if resultado: return resultado")
+    """Pipeline de middlewares"""
+    def logging_mw(req):
+        print(f"[LOG] {req['method']} {req['path']}")
+        return req
 
-pistas = {
-    "1": "import time; def logging_middleware(p): print(f'[{time.ctime()}] {p[\"metodo\"]} {p[\"ruta\"]}'); return None",
-    "2": "def auth_middleware(p): h = p['headers']; token = h.get('Authorization'); if not token: return {'status': 401, 'body': 'No autorizado'}; return None",
-    "3": "def procesar_peticion(p): for mw in [auth_middleware, logging_middleware]: r = mw(p); if r: return r; return {'status': 200, 'body': 'Recurso servido'}"
-}
+    def auth_mw(req):
+        if "Authorization" in req["headers"]:
+            print("[AUTH] Token presente")
+            return req
+        else:
+            print("[AUTH] Acceso denegado")
+            return None
 
-def menu():
-    print("=" * 50)
-    print("MIDDLEWARE Y FILTROS - EJERCICIOS")
-    print("=" * 50)
-    print("1 - Middleware de logging")
-    print("2 - Middleware de autenticacion")
-    print("3 - Pipeline de middlewares")
-    print()
-    print("Usa: python ejercicios.py <numero>")
-    print("     python ejercicios.py <numero> -p  (pista)")
-
-def main():
-    args = sys.argv[1:]
-    if not args:
-        menu()
-        return
-    num = args[0]
-    mostrar_pista = "-p" in args
-    if mostrar_pista and num in pistas:
-        print("=== PISTA ===")
-        print(pistas[num])
-        print()
-    if num == "1":
-        ejercicio_1()
-    elif num == "2":
-        ejercicio_2()
-    elif num == "3":
-        ejercicio_3()
-    else:
-        print("Ejercicio no valido. Usa 1, 2 o 3.")
+    # Crea una funcion run_pipeline(request, middlewares) que ejecute
+    # cada middleware en orden. Si alguno devuelve None, detiene el pipeline.
+    # ==== ESCRIBE TU RESPUESTA AQUI ====
+    pass
 
 if __name__ == "__main__":
-    main()
+    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    if len(sys.argv) > 1 and sys.argv[1].isdigit():
+        num = int(sys.argv[1]) - 1
+        if 0 <= num < len(ejercicios):
+            print(f">> EJERCICIO {num + 1}: {ejercicios[num].__doc__}")
+            print("-" * 40)
+            ejercicios[num]()
+    else:
+        print("EJERCICIOS:")
+        for i, ej in enumerate(ejercicios, 1):
+            print(f"  {i}. {ej.__doc__}")

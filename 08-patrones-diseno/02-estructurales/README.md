@@ -1,118 +1,47 @@
 # Patrones Estructurales
 
-Los patrones estructurales explican como ensamblar objetos y clases en estructuras mas grandes, manteniendo flexibilidad y eficiencia.
+Definen relaciones entre objetos y clases.
 
 ## Adapter
 
-**Intencion:** Convertir la interfaz de una clase en otra interfaz que el cliente espera. Permite que clases con interfaces incompatibles trabajen juntas.
+Convierte una interfaz en otra que el cliente espera.
 
-**Problema:** Tienes una clase existente con una interfaz que no coincide con la que necesita tu sistema.
-
-**Estructura:**
-- Target (interfaz que el cliente espera)
-- Adaptee (clase existente con interfaz incompatible)
-- Adapter (convierte la interfaz del Adaptee al Target)
-
-**Cuando usar:**
-- Cuando quieres usar una clase existente pero su interfaz no es compatible
-- Cuando quieres crear una clase reutilizable que coopere con clases no relacionadas
-
-**Ejemplo:**
 ```java
-interface ConectorEU { void conectar(); }
-class EnchufeEU implements ConectorEU {
-    public void conectar() { System.out.println("Conectado a 220V"); }
-}
-interface ConectorUS { void plugIn(); }
-class AdaptadorEUaUS implements ConectorUS {
-    private ConectorEU enchufe;
-    public AdaptadorEUaUS(ConectorEU e) { this.enchufe = e; }
-    public void plugIn() { enchufe.conectar(); }
+interface EnchufeAmericano { void plugIn(); }
+class Adaptador implements EnchufeAmericano {
+    private EnchufeEuropeo e;
+    public void plugIn() { e.conectar(); }
 }
 ```
 
 ## Decorator
 
-**Intencion:** Anadir responsabilidades adicionales a un objeto de forma dinamica. Proporciona una alternativa flexible a la herencia para extender funcionalidad.
+Anade responsabilidades a objetos dinamicamente.
 
-**Problema:** Necesitas anadir funcionalidad a objetos individuales, no a toda la clase.
-
-**Estructura:**
-- Component (interfaz base)
-- ConcreteComponent (objeto base al que anadir funcionalidad)
-- Decorator (mantiene referencia al Component y anade comportamiento)
-- ConcreteDecorators (implementaciones especificas)
-
-**Cuando usar:**
-- Para anadir responsabilidades a objetos individualmente sin afectar a otros
-- Cuando la herencia no es practica por la cantidad de combinaciones
-
-**Ejemplo:**
 ```java
-interface Cafe { double costo(); String descripcion(); }
-class CafeSimple implements Cafe {
-    public double costo() { return 2.0; }
-    public String descripcion() { return "Cafe simple"; }
-}
-abstract class CafeDecorator implements Cafe {
-    protected Cafe cafe;
-    public CafeDecorator(Cafe c) { this.cafe = c; }
-}
-class Leche extends CafeDecorator {
-    public Leche(Cafe c) { super(c); }
-    public double costo() { return cafe.costo() + 0.5; }
-    public String descripcion() { return cafe.descripcion() + ", leche"; }
-}
+Bebida cafe = new Leche(new Azucar(new CafeSimple()));
 ```
 
 ## Proxy
 
-**Intencion:** Proporcionar un sustituto o representante de otro objeto para controlar el acceso a el.
+Controla el acceso a un objeto.
 
-**Problema:** Necesitas controlar el acceso a un objeto, ya sea por seguridad, pereza (lazy loading), o logging.
-
-**Estructura:**
-- Subject (interfaz comun)
-- RealSubject (objeto real)
-- Proxy (controla el acceso al RealSubject)
-
-**Cuando usar:**
-- Control de acceso a recursos sensibles
-- Inicializacion perezosa de objetos pesados
-- Logging o auditoria de operaciones
-
-**Ejemplo:**
 ```java
-interface Acceso { void acceder(String usuario); }
-class AccesoReal implements Acceso {
-    public void acceder(String u) { System.out.println(u + " accedio"); }
-}
-class ProxyAcceso implements Acceso {
-    private AccesoReal real = new AccesoReal();
-    public void acceder(String usuario) {
-        if (usuario.equals("admin")) {
-            real.acceder(usuario);
-        } else {
-            System.out.println("Acceso denegado a " + usuario);
-        }
+class ProxyDocumento implements Documento {
+    public void mostrar() {
+        if ("admin".equals(rol)) doc.mostrar();
+        else System.out.println("Acceso denegado");
     }
 }
 ```
 
-## Facade
+## Ejercicios
 
-**Intencion:** Proporcionar una interfaz simplificada a un conjunto de interfaces de un subsistema.
+1. **Adapter - convertir interfaz EnchufeEuropeo a EnchufeAmericano**
+   **Ejecuta:** `python scripts/runner.py 8 2 1`
 
-**Problema:** Un sistema complejo con muchas clases dificiles de usar requiere una interfaz sencilla.
+2. **Decorator - agregar extras a Cafe (Leche, Azucar)**
+   **Ejecuta:** `python scripts/runner.py 8 2 2`
 
-**Cuando usar:**
-- Cuando quieres proporcionar una interfaz simple a un subsistema complejo
-- Cuando quieres desacoplar el cliente del subsistema
-
-## Ejecuta
-
-```
-javac Ejercicios.java && java Ejercicios 1
-javac Ejercicios.java && java Ejercicios 1 -p
-javac Ejercicios.java && java Ejercicios -s 1
-```
+3. **Proxy - control de acceso a Documento**
+   **Ejecuta:** `python scripts/runner.py 8 2 3`

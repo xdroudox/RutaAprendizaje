@@ -2,13 +2,47 @@
 
 ## Teoria
 
-### Generics
+### Colecciones
 
-Los genericos permiten crear clases, interfaces y metodos que operan con tipos parametrizados. Proporcionan seguridad de tipos en tiempo de compilacion.
+Las colecciones son estructuras de datos que almacenan y manipulan grupos de objetos.
+
+#### ArrayList
+
+Lista redimensionable que permite elementos duplicados.
 
 ```java
-// Clase generica
-public class Caja<T> {
+import java.util.ArrayList;
+
+ArrayList<String> nombres = new ArrayList<>();
+nombres.add("Ana");
+nombres.add("Luis");
+System.out.println(nombres.get(0)); // Ana
+System.out.println(nombres.size()); // 2
+```
+
+#### HashMap
+
+Estructura que almacena pares clave-valor. Las claves son unicas.
+
+```java
+import java.util.HashMap;
+import java.util.Map;
+
+HashMap<String, Integer> agenda = new HashMap<>();
+agenda.put("Ana", 123456789);
+System.out.println(agenda.get("Ana"));
+
+for (Map.Entry<String, Integer> e : agenda.entrySet()) {
+    System.out.println(e.getKey() + ": " + e.getValue());
+}
+```
+
+### Genericos (<T>)
+
+Los genericos permiten crear clases, interfaces y metodos que trabajan con tipos parametrizados.
+
+```java
+class Caja<T> {
     private T contenido;
 
     public void guardar(T contenido) {
@@ -20,97 +54,32 @@ public class Caja<T> {
     }
 }
 
-// Uso
-Caja<String> cajaString = new Caja<>();
-cajaString.guardar("Hola");
-String texto = cajaString.obtener();
-```
-
-### Metodo generico
-
-```java
-public static <T> void imprimirArray(T[] array) {
-    for (T elemento : array) {
-        System.out.println(elemento);
-    }
-}
-```
-
-### Wildcards
-
-```java
-List<?> listaComodin;          // cualquier tipo
-List<? extends Number> nums;   // Number o subclases
-List<? super Integer> enteros; // Integer o superclases
-```
-
-### Colecciones principales
-
-```java
-import java.util.*;
-
-// List: permite duplicados, ordenada
-List<String> lista = new ArrayList<>();
-lista.add("Java");
-lista.add("Python");
-lista.get(0); // "Java"
-
-// Set: no permite duplicados
-Set<String> conjunto = new HashSet<>();
-conjunto.add("A");
-conjunto.add("B");
-conjunto.add("A"); // Ignorado
-
-// Map: clave-valor
-Map<String, Integer> mapa = new HashMap<>();
-mapa.put("Juan", 25);
-mapa.put("Ana", 30);
-mapa.get("Juan"); // 25
-```
-
-### Colecciones - Metodos utiles
-
-```java
-Collections.sort(lista);             // Ordenar
-Collections.reverse(lista);          // Invertir
-Collections.shuffle(lista);          // Aleatorizar
-Collections.max(lista);              // Maximo
-Collections.min(lista);              // Minimo
-Collections.frequency(lista, "A");   // Frecuencia
-Collections.disjoint(lista1, lista2); // Sin elementos en comun
-```
-
-### Iteracion
-
-```java
-// for-each
-for (String s : lista) {
-    System.out.println(s);
-}
-
-// forEach con lambda (Java 8+)
-lista.forEach(s -> System.out.println(s));
-lista.forEach(System.out::println);
-
-// Map entry
-for (Map.Entry<String, Integer> entry : mapa.entrySet()) {
-    System.out.println(entry.getKey() + ": " + entry.getValue());
-}
+Caja<String> caja = new Caja<>();
+caja.guardar("Hola");
+String texto = caja.obtener();
 ```
 
 ## Ejercicios
 
-### Ejercicio 1: ArrayList de estudiantes
-Crea un programa que gestione una lista de estudiantes. Cada estudiante tiene nombre y nota. Usa ArrayList para almacenarlos. Implementa: agregar, listar, calcular promedio, mostrar el de mayor nota.
+### Ejercicio 1: ArrayList de nombres
+Crea un ArrayList<String>, agrega nombres y muestralos.
 
-### Ejercicio 2: HashMap de contactos
-Crea una agenda telefonica usando HashMap<String, String> (nombre -> telefono). Implementa: anadir contacto, buscar por nombre, eliminar contacto, listar todos.
+**Ejecuta:** `python scripts/runner.py 2 8 1`
 
-### Ejercicio 3: Clase generica Par
-Crea una clase generica `Par<K, V>` que almacene un par clave-valor. Incluye metodos getClave(), getValor(), setClave(), setValor(). En el main, crea un Par<String, Integer> y un Par<Integer, String>.
+### Ejercicio 2: HashMap agenda telefonica
+Crea una agenda con HashMap<String, Integer> y recorrela.
 
-### Ejecuta los ejercicios
+**Ejecuta:** `python scripts/runner.py 2 8 2`
+
+### Ejercicio 3: Clase generica Caja<T>
+Crea una clase generica que guarde y devuelva cualquier tipo.
+
+**Ejecuta:** `python scripts/runner.py 2 8 3`
+
+## Soluciones
 
 ```bash
-javac Ejercicios.java && java Ejercicios
+python scripts/runner.py 2 8 1 -s
+python scripts/runner.py 2 8 2 -s
+python scripts/runner.py 2 8 3 -s
 ```

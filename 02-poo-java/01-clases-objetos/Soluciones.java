@@ -1,8 +1,13 @@
+/**
+ * SOLUCIONES - Clases y Objetos
+ * Ejecuta: python scripts/runner.py 2 1 [ejercicio] -s
+ */
 public class Soluciones {
+
     public static void main(String[] args) {
         if (args.length > 0) {
-            int n = Integer.parseInt(args[0]);
-            switch (n) {
+            int num = Integer.parseInt(args[0]);
+            switch (num) {
                 case 1: solucion_1(); break;
                 case 2: solucion_2(); break;
                 case 3: solucion_3(); break;
@@ -15,105 +20,78 @@ public class Soluciones {
 
     static void solucion_1() {
         System.out.println("=== SOLUCION 1: Clase Persona ===");
-        System.out.println("public class Persona {");
+        System.out.println("class Persona {");
         System.out.println("    String nombre;");
         System.out.println("    int edad;");
-        System.out.println("    String dni;");
         System.out.println();
-        System.out.println("    public Persona(String nombre, int edad, String dni) {");
+        System.out.println("    Persona(String nombre, int edad) {");
         System.out.println("        this.nombre = nombre;");
         System.out.println("        this.edad = edad;");
-        System.out.println("        this.dni = dni;");
         System.out.println("    }");
         System.out.println();
         System.out.println("    void mostrarDatos() {");
         System.out.println("        System.out.println(\"Nombre: \" + nombre);");
         System.out.println("        System.out.println(\"Edad: \" + edad);");
-        System.out.println("        System.out.println(\"DNI: \" + dni);");
-        System.out.println("    }");
-        System.out.println();
-        System.out.println("    public static void main(String[] args) {");
-        System.out.println("        Persona p1 = new Persona(\"Ana\", 25, \"12345678A\");");
-        System.out.println("        Persona p2 = new Persona(\"Luis\", 30, \"87654321B\");");
-        System.out.println("        p1.mostrarDatos();");
-        System.out.println("        p2.mostrarDatos();");
         System.out.println("    }");
         System.out.println("}");
         System.out.println();
-        System.out.println("Explicacion: La clase Persona define el molde. Cada objeto es una instancia.");
-        System.out.println("El constructor inicializa los atributos. this distingue parametro de atributo.");
+        System.out.println("// En el main:");
+        System.out.println("Persona p1 = new Persona(\"Ana\", 25);");
+        System.out.println("Persona p2 = new Persona(\"Luis\", 30);");
+        System.out.println("p1.mostrarDatos();");
+        System.out.println("p2.mostrarDatos();");
+        System.out.println();
+        System.out.println("Explicacion: La clase define el molde. new crea objetos.");
+        System.out.println("this.nombre distingue el atributo del parametro.");
     }
 
     static void solucion_2() {
         System.out.println("=== SOLUCION 2: Clase Rectangulo ===");
-        System.out.println("public class Rectangulo {");
+        System.out.println("class Rectangulo {");
         System.out.println("    double base;");
         System.out.println("    double altura;");
         System.out.println();
-        System.out.println("    public Rectangulo(double base, double altura) {");
+        System.out.println("    Rectangulo(double base, double altura) {");
         System.out.println("        this.base = base;");
         System.out.println("        this.altura = altura;");
         System.out.println("    }");
         System.out.println();
-        System.out.println("    double calcularArea() {");
+        System.out.println("    double area() {");
         System.out.println("        return base * altura;");
-        System.out.println("    }");
-        System.out.println();
-        System.out.println("    double calcularPerimetro() {");
-        System.out.println("        return 2 * (base + altura);");
-        System.out.println("    }");
-        System.out.println();
-        System.out.println("    boolean esCuadrado() {");
-        System.out.println("        return base == altura;");
-        System.out.println("    }");
-        System.out.println();
-        System.out.println("    public static void main(String[] args) {");
-        System.out.println("        Rectangulo r = new Rectangulo(5, 5);");
-        System.out.println("        System.out.println(\"Area: \" + r.calcularArea());");
-        System.out.println("        System.out.println(\"Perimetro: \" + r.calcularPerimetro());");
-        System.out.println("        System.out.println(\"Es cuadrado: \" + r.esCuadrado());");
         System.out.println("    }");
         System.out.println("}");
         System.out.println();
-        System.out.println("Explicacion: Metodos calcularArea y calcularPerimetro usan formulas matematicas.");
-        System.out.println("esCuadrado compara base con altura usando ==.");
+        System.out.println("// En el main:");
+        System.out.println("Rectangulo r = new Rectangulo(5, 3);");
+        System.out.println("System.out.println(\"Area: \" + r.area());");
+        System.out.println();
+        System.out.println("Explicacion: area() es un metodo que calcula y retorna un valor.");
     }
 
     static void solucion_3() {
-        System.out.println("=== SOLUCION 3: Clase CuentaBancaria ===");
-        System.out.println("public class CuentaBancaria {");
-        System.out.println("    String titular;");
-        System.out.println("    double saldo;");
-        System.out.println("    String numeroCuenta;");
+        System.out.println("=== SOLUCION 3: Clase Libro ===");
+        System.out.println("class Libro {");
+        System.out.println("    String titulo;");
+        System.out.println("    String autor;");
+        System.out.println("    int paginas;");
         System.out.println();
-        System.out.println("    public CuentaBancaria(String titular) {");
-        System.out.println("        this.titular = titular;");
-        System.out.println("        this.saldo = 0.0;");
-        System.out.println("        this.numeroCuenta = \"ES\" + (int)(Math.random() * 1000000000);");
+        System.out.println("    Libro(String titulo, String autor, int paginas) {");
+        System.out.println("        this.titulo = titulo;");
+        System.out.println("        this.autor = autor;");
+        System.out.println("        this.paginas = paginas;");
         System.out.println("    }");
         System.out.println();
-        System.out.println("    void depositar(double cantidad) {");
-        System.out.println("        saldo += cantidad;");
-        System.out.println("        System.out.println(\"Depositado: \" + cantidad);");
-        System.out.println("    }");
-        System.out.println();
-        System.out.println("    void retirar(double cantidad) {");
-        System.out.println("        if (cantidad <= saldo) {");
-        System.out.println("            saldo -= cantidad;");
-        System.out.println("            System.out.println(\"Retirado: \" + cantidad);");
-        System.out.println("        } else {");
-        System.out.println("            System.out.println(\"Saldo insuficiente\");");
-        System.out.println("        }");
-        System.out.println("    }");
-        System.out.println();
-        System.out.println("    void mostrarInfo() {");
-        System.out.println("        System.out.println(\"Titular: \" + titular);");
-        System.out.println("        System.out.println(\"Cuenta: \" + numeroCuenta);");
-        System.out.println("        System.out.println(\"Saldo: \" + saldo);");
+        System.out.println("    boolean esLargo() {");
+        System.out.println("        return paginas > 300;");
         System.out.println("    }");
         System.out.println("}");
         System.out.println();
-        System.out.println("Explicacion: El constructor genera un numero de cuenta aleatorio.");
-        System.out.println("retirar verifica fondos antes de decrementar el saldo.");
+        System.out.println("// En el main:");
+        System.out.println("Libro l1 = new Libro(\"Don Quijote\", \"Cervantes\", 500);");
+        System.out.println("Libro l2 = new Libro(\"Platero\", \"Jimenez\", 150);");
+        System.out.println("System.out.println(l1.titulo + \" es largo? \" + l1.esLargo());");
+        System.out.println("System.out.println(l2.titulo + \" es largo? \" + l2.esLargo());");
+        System.out.println();
+        System.out.println("Explicacion: esLargo() retorna boolean. paginas > 300 es una expresion logica.");
     }
 }

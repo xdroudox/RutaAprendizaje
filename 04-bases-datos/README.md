@@ -36,11 +36,15 @@ Cada modulo contiene:
 - `ejercicios.py` -- Ejercicios practicos con SQLite en memoria
 - `soluciones.py` -- Soluciones a los ejercicios
 
-Ejecutar un ejercicio:
+Ejecutar desde raiz:
 
-    python ejercicios.py 1
-    python ejercicios.py 1 -p   (con pista)
-    python soluciones.py 1
+    python scripts/runner.py 4 [modulo] [ejercicio]
+
+Ejemplos:
+
+    python scripts/runner.py 4 1 1
+    python scripts/runner.py 4 2 2
+    python scripts/runner.py 4 7 1
 
 ## Requisitos
 

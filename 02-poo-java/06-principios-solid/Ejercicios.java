@@ -1,113 +1,65 @@
-import java.util.Scanner;
-
+/**
+ * EJERCICIOS - Principios SOLID
+ * Ejecuta desde raiz: python scripts/runner.py 2 6 [ejercicio]
+ */
 public class Ejercicios {
+
     public static void main(String[] args) {
-        if (args.length == 0) {
-            menu();
-        } else if (args[0].equals("-s") && args.length > 1) {
-            mostrarSolucion(Integer.parseInt(args[1]));
-        } else {
+        if (args.length > 0) {
             int num = Integer.parseInt(args[0]);
-            if (args.length > 1 && args[1].equals("-p")) {
-                mostrarPista(num);
-            } else {
-                ejecutarEjercicio(num);
+            switch (num) {
+                case 1: ejercicio_1(); break;
+                case 2: ejercicio_2(); break;
+                case 3: ejercicio_3(); break;
+                default: System.out.println("Ejercicio no encontrado");
             }
-        }
-    }
-
-    static void menu() {
-        Scanner sc = new Scanner(System.in);
-        while (true) {
-            System.out.println("=== MENU - Principios SOLID ===");
-            System.out.println("1. SRP - Refactorizar Pedido");
-            System.out.println("2. OCP - Sistema de descuentos");
-            System.out.println("3. DIP - Sistema de notificaciones");
-            System.out.println("0. Salir");
-            System.out.print("Selecciona un ejercicio: ");
-            String opt = sc.nextLine();
-            if (opt.equals("0")) break;
-            try {
-                int n = Integer.parseInt(opt);
-                ejecutarEjercicio(n);
-            } catch (NumberFormatException e) {
-                System.out.println("Opcion invalida");
-            }
-        }
-        sc.close();
-    }
-
-    static void ejecutarEjercicio(int n) {
-        switch (n) {
-            case 1: ejercicio_1(); break;
-            case 2: ejercicio_2(); break;
-            case 3: ejercicio_3(); break;
-            default: System.out.println("Ejercicio no encontrado");
+        } else {
+            System.out.println("EJERCICIOS:");
+            System.out.println("1. SRP: Separar Reporte en Reporte + Impresora");
+            System.out.println("2. OCP: Sistema de descuentos con interface Descuento");
+            System.out.println("3. DIP: Depender de interface BaseDatos, no de implementacion");
         }
     }
 
     static void ejercicio_1() {
-        System.out.println(">> EJERCICIO 1: SRP - Refactorizar Pedido");
-        System.out.println("La clase Pedido viola SRP porque hace demasiadas cosas.");
-        System.out.println("Refactoriza en al menos 3 clases:");
-        System.out.println("  - Pedido: solo datos y calculo de total");
-        System.out.println("  - PedidoDAO: persistencia en BD");
-        System.out.println("  - FacturaService: imprimir factura y enviar email");
+        System.out.println(">> EJERCICIO 1: SRP - Single Responsibility Principle");
+        System.out.println("-".repeat(40));
+        System.out.println("Imagina una clase Reporte que tiene dos responsabilidades:");
+        System.out.println("  - Contener los datos del reporte (titulo, contenido)");
+        System.out.println("  - Imprimir el reporte en consola");
+        System.out.println("Refactoriza separando en dos clases:");
+        System.out.println("  - Reporte: solo con atributos titulo y contenido, getters");
+        System.out.println("  - Impresora: con metodo estatico imprimir(Reporte r)");
+        System.out.println("En el main, crea un Reporte y pasalo a Impresora.imprimir().");
         System.out.println();
-        System.out.println("PISTA: Separa cada responsabilidad en una clase distinta.");
-        System.out.println("// --- TU CODIGO AQUI ---");
+        System.out.println("// ==== ESCRIBE TU RESPUESTA AQUI ====");
     }
 
     static void ejercicio_2() {
-        System.out.println(">> EJERCICIO 2: OCP - Sistema de descuentos");
-        System.out.println("Crea un sistema de descuentos que cumpla OCP.");
-        System.out.println("Define una interfaz Descuento con metodo aplicar(double monto).");
-        System.out.println("Implementa: DescuentoNormal (0%), DescuentoPremium (10%), DescuentoVIP (25%).");
-        System.out.println("Crea una clase CalculadoraDescuento que acepte cualquier Descuento.");
+        System.out.println(">> EJERCICIO 2: OCP - Open/Closed Principle");
+        System.out.println("-".repeat(40));
+        System.out.println("Crea una interface Descuento con metodo double aplicar(double precio).");
+        System.out.println("Crea DescuentoPorcentaje que aplique un % de descuento.");
+        System.out.println("Crea DescuentoFijo que reste una cantidad fija.");
+        System.out.println("Crea clase CalculadoraPrecio con metodo calcular(double precio, Descuento d)");
+        System.out.println("que aplique el descuento y retorne el precio final.");
+        System.out.println("En el main, prueba ambos descuentos.");
         System.out.println();
-        System.out.println("PISTA: 'interface Descuento { double aplicar(double monto); }'");
-        System.out.println("// --- TU CODIGO AQUI ---");
+        System.out.println("// ==== ESCRIBE TU RESPUESTA AQUI ====");
     }
 
     static void ejercicio_3() {
-        System.out.println(">> EJERCICIO 3: DIP - Sistema de notificaciones");
-        System.out.println("Crea un sistema que cumpla DIP:");
-        System.out.println("  - Interfaz Notificador con metodo void enviar(String mensaje)");
-        System.out.println("  - EmailNotificador implementa Notificador");
-        System.out.println("  - SMSNotificador implementa Notificador");
-        System.out.println("  - ServicioNotificacion recibe un Notificador por constructor (inyeccion)");
-        System.out.println("En el main, prueba con ambos tipos.");
+        System.out.println(">> EJERCICIO 3: DIP - Dependency Inversion Principle");
+        System.out.println("-".repeat(40));
+        System.out.println("Crea una interface BaseDatos con metodo void guardar(String dato).");
+        System.out.println("Crea BaseDatosMySQL que implemente BaseDatos e imprima");
+        System.out.println("\"Guardado en MySQL: \" + dato.");
+        System.out.println("Crea BaseDatosArchivo que implemente BaseDatos e imprima");
+        System.out.println("\"Guardado en archivo: \" + dato.");
+        System.out.println("Crea Servicio que reciba BaseDatos en su constructor");
+        System.out.println("y tenga un metodo procesar(String dato) que llame a guardar().");
+        System.out.println("En el main, crea un Servicio con cada implementacion.");
         System.out.println();
-        System.out.println("PISTA: La clase de alto nivel depende de la abstraccion, no de la implementacion.");
-        System.out.println("// --- TU CODIGO AQUI ---");
-    }
-
-    static void mostrarPista(int n) {
-        String[][] pistas = {
-            {
-                "Pista 1: Pedido: atributos, calcularTotal().",
-                "Pista 2: PedidoDAO: guardar(Pedido p), obtener(int id).",
-                "Pista 3: FacturaService: imprimir(Pedido p), enviarEmail(Pedido p)."
-            },
-            {
-                "Pista 1: 'interface Descuento { double aplicar(double monto); }'",
-                "Pista 2: 'class DescuentoVIP implements Descuento'",
-                "Pista 3: 'class CalculadoraDescuento { double calcular(Descuento d, double monto) { return d.aplicar(monto); } }'"
-            },
-            {
-                "Pista 1: 'interface Notificador { void enviar(String msg); }'",
-                "Pista 2: 'class EmailNotificador implements Notificador'",
-                "Pista 3: 'class ServicioNotificacion { private Notificador n; public ServicioNotificacion(Notificador n) { this.n = n; } }'"
-            }
-        };
-        if (n >= 1 && n <= pistas.length) {
-            for (String p : pistas[n - 1]) {
-                System.out.println(p);
-            }
-        }
-    }
-
-    static void mostrarSolucion(int n) {
-        Soluciones.main(new String[]{String.valueOf(n)});
+        System.out.println("// ==== ESCRIBE TU RESPUESTA AQUI ====");
     }
 }

@@ -1,79 +1,28 @@
 # Middleware y Filtros
 
-El middleware es software que actua como intermediario entre una peticion
-entrante y el manejador final de la aplicacion. Se ejecuta en orden secuencial
-formando un pipeline.
+Middleware es software que se ejecuta entre la peticion y la respuesta del servidor, formando un pipeline de procesamiento.
 
 ## Concepto
+Cada middleware recibe la request, puede procesarla, modificarla, o rechazarla, y pasa el control al siguiente middleware o al manejador final.
 
+## Ejemplos comunes
+- **Logging:** registra cada peticion
+- **Autenticacion:** verifica tokens antes de procesar
+- **CORS:** permite peticiones de otros origenes
+- **Compresion:** comprime respuestas
+
+## Pipeline tipico
 ```
-Peticion -> Middleware1 -> Middleware2 -> ... -> Manejador -> Respuesta
-                                        |
-                                    Middleware3 (despues)
-```
-
-Cada middleware puede:
-- Ejecutar codigo antes de pasar la peticion al siguiente
-- Modificar la peticion o la respuesta
-- Detener el pipeline (por ejemplo, si no hay autenticacion)
-- Ejecutar codigo despues de que se genere la respuesta
-
-## Middleware de Logging
-
-```python
-import time
-
-def logging_middleware(peticion):
-    inicio = time.time()
-    print(f"[{time.ctime()}] {peticion['metodo']} {peticion['ruta']}")
-    # Pasar al siguiente
-    respuesta = {"status": 200, "body": "OK"}
-    duracion = time.time() - inicio
-    print(f"[{time.ctime()}] Completado en {duracion:.3f}s")
-    return respuesta
+Request -> Logger -> Auth -> CORS -> Handler -> Response
 ```
 
-## Middleware de Autenticacion
+## Ejercicios
 
-```python
-def auth_middleware(peticion):
-    if "Authorization" not in peticion["headers"]:
-        return {"status": 401, "body": "No autorizado"}
-    token = peticion["headers"]["Authorization"]
-    if not token.startswith("Bearer "):
-        return {"status": 401, "body": "Token invalido"}
-    return None  # Continua al siguiente middleware
-```
+1. **Middleware de logging** - Funcion que recibe un request y lo imprime en consola.
+   **Ejecuta:** `python scripts/runner.py 5 8 1`
 
-## Middleware CORS
+2. **Middleware de autenticacion** - Funcion que revisa un token en los headers.
+   **Ejecuta:** `python scripts/runner.py 5 8 2`
 
-```python
-def cors_middleware(respuesta):
-    respuesta["headers"]["Access-Control-Allow-Origin"] = "*"
-    respuesta["headers"]["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE"
-    return respuesta
-```
-
-## Pipeline completo
-
-```python
-def procesar_peticion(peticion):
-    # Pipeline de middlewares
-    for middleware in [auth_middleware, logging_middleware]:
-        resultado = middleware(peticion)
-        if resultado:  # middleware detuvo el pipeline
-            return resultado
-    # Manejador final
-    return {"status": 200, "body": "Recurso servido"}
-```
-
-## Tipos de middleware comun
-
-- Logging: registrar peticiones y tiempos
-- Autenticacion: verificar tokens
-- CORS: permitir origenes cruzados
-- Compresion: comprimir respuestas
-- Rate limiting: limitar peticiones por IP
-- Body parsing: analizar cuerpos JSON/XML
-
-Ejecuta: python ejercicios.py 1
+3. **Pipeline de middlewares** - Componer una lista de funciones middleware en secuencia.
+   **Ejecuta:** `python scripts/runner.py 5 8 3`

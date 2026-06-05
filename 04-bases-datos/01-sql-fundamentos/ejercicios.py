@@ -1,124 +1,114 @@
-import sys, sqlite3
-
+"""
+EJERCICIOS - SQL Fundamentos
+Ejecuta desde raiz: python scripts/runner.py 4 1 [ejercicio]
+"""
+import sys
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-def get_db():
-    conn = sqlite3.connect(":memory:")
-    conn.row_factory = sqlite3.Row
-    return conn
-
 def ejercicio_1():
-    print("=" * 50)
-    print("EJERCICIO 1: CREATE TABLE e INSERT")
-    print("=" * 50)
-    conn = get_db()
-    conn.executescript("""
-        CREATE TABLE productos (
+    """Escribe una consulta SELECT que muestre los usuarios mayores de 25"""
+    import sqlite3
+    conn = sqlite3.connect(":memory:")
+    c = conn.cursor()
+    c.executescript("""
+        CREATE TABLE usuarios (
             id INTEGER PRIMARY KEY,
-            nombre TEXT,
-            precio REAL,
-            stock INTEGER
+            nombre TEXT NOT NULL,
+            edad INTEGER NOT NULL
         );
-        INSERT INTO productos VALUES (1, 'Laptop', 1200.00, 10);
-        INSERT INTO PRODUCTOS VALUES (2, 'Mouse', 25.50, 50);
-        INSERT INTO PRODUCTOS VALUES (3, 'Teclado', 45.00, 30);
+        INSERT INTO usuarios VALUES (1, 'Ana', 25);
+        INSERT INTO usuarios VALUES (2, 'Juan', 30);
+        INSERT INTO usuarios VALUES (3, 'Maria', 22);
+        INSERT INTO usuarios VALUES (4, 'Carlos', 28);
+        INSERT INTO usuarios VALUES (5, 'Laura', 19);
     """)
-    print("Tabla 'productos' creada con 3 registros.")
+    conn.commit()
+    print("=== Tabla: usuarios ===")
+    print("id | nombre | edad")
+    print("---|--------|-----")
+    for row in c.execute("SELECT * FROM usuarios"):
+        print(f" {row[0]}  | {row[1]:6s} | {row[2]}")
     print()
-    print("TAREA: Escribe un INSERT para agregar un nuevo producto")
-    print("con id=4, nombre='Monitor', precio=300.00, stock=15")
-    print()
-    print("PISTA: INSERT INTO productos VALUES (...)")
+    # ==== ESCRIBE TU CONSULTA SQL AQUI ====
+    # query = "SELECT * FROM usuarios WHERE ..."
+    # c.execute(query)
+    # for row in c.fetchall():
+    #     print(row)
+    pass
 
 def ejercicio_2():
-    print("=" * 50)
-    print("EJERCICIO 2: SELECT con WHERE")
-    print("=" * 50)
-    conn = get_db()
-    conn.executescript("""
-        CREATE TABLE empleados (
+    """Escribe un INSERT INTO para agregar un nuevo producto"""
+    import sqlite3
+    conn = sqlite3.connect(":memory:")
+    c = conn.cursor()
+    c.executescript("""
+        CREATE TABLE productos (
             id INTEGER PRIMARY KEY,
-            nombre TEXT,
-            salario REAL,
-            departamento TEXT
+            nombre TEXT NOT NULL,
+            precio REAL NOT NULL,
+            stock INTEGER DEFAULT 0
         );
-        INSERT INTO empleados VALUES (1, 'Ana', 45000, 'Ventas');
-        INSERT INTO empleados VALUES (2, 'Luis', 52000, 'TI');
-        INSERT INTO empleados VALUES (3, 'Maria', 48000, 'Ventas');
-        INSERT INTO empleados VALUES (4, 'Carlos', 55000, 'TI');
-        INSERT INTO empleados VALUES (5, 'Sofia', 39000, 'RH');
+        INSERT INTO productos VALUES (1, 'Laptop', 999.99, 10);
+        INSERT INTO productos VALUES (2, 'Mouse', 25.50, 50);
+        INSERT INTO productos VALUES (3, 'Teclado', 45.00, 30);
     """)
-    print("Tabla 'empleados' creada con 5 registros.")
+    conn.commit()
+    print("=== Productos actuales ===")
+    for row in c.execute("SELECT * FROM productos"):
+        print(row)
     print()
-    print("TAREA: Escribe un SELECT que muestre los empleados")
-    print("del departamento 'Ventas' con salario mayor a 46000.")
-    print()
-    print("PISTA: WHERE departamento = ... AND salario > ...")
+    print("Agrega un nuevo producto (id=4, nombre='Monitor', precio=299.99, stock=15)")
+    # ==== ESCRIBE TU CONSULTA SQL AQUI ====
+    # query = "INSERT INTO productos VALUES (...)"
+    # c.execute(query)
+    # conn.commit()
+    # for row in c.execute("SELECT * FROM productos"):
+    #     print(row)
+    pass
 
 def ejercicio_3():
-    print("=" * 50)
-    print("EJERCICIO 3: ORDER BY y LIMIT")
-    print("=" * 50)
-    conn = get_db()
-    conn.executescript("""
-        CREATE TABLE estudiantes (
+    """Escribe un UPDATE para aumentar precio y un DELETE para eliminar un registro"""
+    import sqlite3
+    conn = sqlite3.connect(":memory:")
+    c = conn.cursor()
+    c.executescript("""
+        CREATE TABLE productos (
             id INTEGER PRIMARY KEY,
-            nombre TEXT,
-            nota REAL,
-            ciudad TEXT
+            nombre TEXT NOT NULL,
+            precio REAL NOT NULL,
+            stock INTEGER DEFAULT 0
         );
-        INSERT INTO estudiantes VALUES (1, 'Pedro', 8.5, 'Madrid');
-        INSERT INTO estudiantes VALUES (2, 'Laura', 9.2, 'Barcelona');
-        INSERT INTO estudiantes VALUES (3, 'Diego', 7.8, 'Madrid');
-        INSERT INTO estudiantes VALUES (4, 'Elena', 9.5, 'Barcelona');
-        INSERT INTO estudiantes VALUES (5, 'Jorge', 6.5, 'Valencia');
-        INSERT INTO estudiantes VALUES (6, 'Clara', 8.0, 'Valencia');
+        INSERT INTO productos VALUES (1, 'Laptop', 999.99, 10);
+        INSERT INTO productos VALUES (2, 'Mouse', 25.50, 50);
+        INSERT INTO productos VALUES (3, 'Teclado', 45.00, 30);
+        INSERT INTO productos VALUES (4, 'Monitor', 299.99, 15);
     """)
-    print("Tabla 'estudiantes' creada con 6 registros.")
+    conn.commit()
+    print("=== Productos actuales ===")
+    for row in c.execute("SELECT * FROM productos"):
+        print(row)
     print()
-    print("TAREA: Escribe un SELECT que muestre los 3 estudiantes")
-    print("con mayor nota, ordenados de mayor a menor.")
+    print("1. Actualiza el precio del 'Mouse' a 30.00")
+    print("2. Elimina el producto con id=3 ('Teclado')")
     print()
-    print("PISTA: ORDER BY nota DESC LIMIT 3")
-
-pistas = {
-    "1": "INSERT INTO productos VALUES (4, 'Monitor', 300.00, 15);",
-    "2": "SELECT * FROM empleados WHERE departamento = 'Ventas' AND salario > 46000;",
-    "3": "SELECT * FROM estudiantes ORDER BY nota DESC LIMIT 3;"
-}
-
-def menu():
-    print("=" * 50)
-    print("SQL FUNDAMENTOS - EJERCICIOS")
-    print("=" * 50)
-    print("1 - CREATE TABLE e INSERT")
-    print("2 - SELECT con WHERE")
-    print("3 - ORDER BY y LIMIT")
-    print()
-    print("Usa: python ejercicios.py <numero>")
-    print("     python ejercicios.py <numero> -p  (pista)")
-
-def main():
-    args = sys.argv[1:]
-    if not args:
-        menu()
-        return
-    num = args[0]
-    mostrar_pista = "-p" in args
-    if mostrar_pista and num in pistas:
-        print("=== PISTA ===")
-        print(pistas[num])
-        print()
-    if num == "1":
-        ejercicio_1()
-    elif num == "2":
-        ejercicio_2()
-    elif num == "3":
-        ejercicio_3()
-    else:
-        print("Ejercicio no valido. Usa 1, 2 o 3.")
+    # ==== ESCRIBE TU CONSULTA SQL AQUI ====
+    # c.execute("UPDATE productos SET precio = ... WHERE ...")
+    # c.execute("DELETE FROM productos WHERE ...")
+    # conn.commit()
+    # for row in c.execute("SELECT * FROM productos ORDER BY id"):
+    #     print(row)
+    pass
 
 if __name__ == "__main__":
-    main()
+    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    if len(sys.argv) > 1 and sys.argv[1].isdigit():
+        num = int(sys.argv[1]) - 1
+        if 0 <= num < len(ejercicios):
+            print(f">> EJERCICIO {num + 1}: {ejercicios[num].__doc__}")
+            print("-" * 40)
+            ejercicios[num]()
+    else:
+        for i, ej in enumerate(ejercicios, 1):
+            print(f"  {i}. {ej.__doc__}")

@@ -1,52 +1,31 @@
 # Normalizacion
 
-La normalizacion es el proceso de organizar datos para reducir redundancia
-y evitar anomalias.
+## Contenido
+- Primera Forma Normal (1NF): atomicidad de columnas
+- Segunda Forma Normal (2NF): eliminar dependencias parciales
+- Tercera Forma Normal (3NF): eliminar dependencias transitivas
+- BCNF y desnormalizacion
 
-## Primera Forma Normal (1NF)
+## Ejercicios
 
-- Cada celda contiene un solo valor (atomo)
-- No hay grupos repetitivos
-- Cada fila es unica
+| #  | Ejercicio                                                       |
+|----|-----------------------------------------------------------------|
+| 1  | Identificar violacion 1NF (columna con multiples valores)       |
+| 2  | Normalizar a 2NF (eliminar dependencias parciales)              |
+| 3  | Normalizar a 3NF (eliminar dependencias transitivas)            |
 
-Antes (no 1NF):
-| id | nombre | telefonos          |
-|----|--------|--------------------|
-| 1  | Ana    | 123, 456           |
+## Comandos
 
-Despues (1NF):
-| id | nombre | telefono |
-|----|--------|----------|
-| 1  | Ana    | 123      |
-| 1  | Ana    | 456      |
+```bash
+python scripts/runner.py 4 2 1
+python scripts/runner.py 4 2 2
+python scripts/runner.py 4 2 3
+```
 
-## Segunda Forma Normal (2NF)
+## Resumen Formas Normales
 
-- Esta en 1NF
-- Todos los atributos no clave dependen de la clave completa
-- (Aplica solo en tablas con clave compuesta)
-
-## Tercera Forma Normal (3NF)
-
-- Esta en 2NF
-- No hay dependencias transitivas (atributos no clave que dependen
-  de otros atributos no clave)
-
-Antes (no 3NF):
-| empleado_id | departamento | ciudad_departamento |
-
-La ciudad depende del departamento, no del empleado.
-
-Despues (3NF):
-| empleado_id | departamento |
-| departamento | ciudad_departamento |
-
-## BCNF (Boyce-Codd Normal Form)
-
-- Version mas estricta de 3NF
-- Cada determinante debe ser clave candidata
-
-## Desnormalizacion
-
-A veces se desnormaliza intencionalmente para mejorar rendimiento en
-lecturas, aceptando redundancia controlada.
+| Forma | Regla                                              |
+|-------|----------------------------------------------------|
+| 1NF   | Cada columna debe contener un solo valor atomico   |
+| 2NF   | Cumple 1NF y cada columna no clave depende de la clave completa |
+| 3NF   | Cumple 2NF y no hay dependencias transitivas       |

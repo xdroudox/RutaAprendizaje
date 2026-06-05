@@ -131,4 +131,17 @@ elemento.previousElementSibling;     // Hermano anterior
 
 ## Ejercicios
 
-Abre `ejercicios.html` en tu navegador y completa los 3 ejercicios.
+### Ejercicio 1: Manipular texto y estilos con DOM
+Usa document.getElementById(), .textContent y .classList.add() para cambiar el texto y aplicar estilos.
+**Ejecuta:** `python scripts/runner.py 6 3 1`
+**O abre directo:** `06-frontend-web/03-javascript-dom/ejercicios.html`
+
+### Ejercicio 2: Crear elementos con createElement y appendChild
+Crea nuevos elementos HTML dinamicamente usando createElement, classList.add y appendChild.
+**Ejecuta:** `python scripts/runner.py 6 3 2`
+**O abre directo:** `06-frontend-web/03-javascript-dom/ejercicios.html`
+
+### Ejercicio 3: Lista de tareas interactiva (to-do list)
+Construye una to-do list completa: agregar tareas, eliminar y marcar como completadas.
+**Ejecuta:** `python scripts/runner.py 6 3 3`
+**O abre directo:** `06-frontend-web/03-javascript-dom/ejercicios.html`

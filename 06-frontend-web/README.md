@@ -43,12 +43,26 @@ Cada modulo contiene:
 
 ```
   modulo/
-  +-- README.md       -> Teoria + ejemplos
-  +-- ejercicios.html -> Abre en navegador, edita el codigo
-  +-- soluciones.html -> Solucion explicada
+  +-- README.md        -> Teoria + ejercicios
+  +-- ejercicios.html  -> Abre en navegador, edita el codigo
+  +-- soluciones.html  -> Solucion explicada
+  +-- ejercicios.py    -> Instrucciones desde terminal
+  +-- soluciones.py    -> Soluciones desde terminal
 ```
 
-Para los modulos con ejercicios:
+### Usando el runner (recomendado)
+
+Desde la raiz del proyecto:
+
+```
+python scripts/runner.py 6        -> Lista modulos
+python scripts/runner.py 6 1      -> Lista ejercicios del modulo
+python scripts/runner.py 6 1 1    -> Ejecuta ejercicio 1
+python scripts/runner.py 6 1 1 -s -> Ver solucion
+```
+
+### Manualmente
+
 1. Abre README.md y lee la teoria
 2. Abre ejercicios.html en tu navegador (doble clic)
 3. Edita el archivo HTML para resolver los ejercicios

@@ -1,77 +1,58 @@
-import sys, json, os
-
+"""
+SOLUCIONES - JSON y XML
+Ejecuta desde raiz: python scripts/runner.py 5 3 1 -s
+"""
+import sys
+import json
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-def solucion_1():
-    print("=" * 50)
-    print("SOLUCION 1: Serializar un diccionario a JSON")
-    print("=" * 50)
-    producto = {
-        "id": 101,
-        "nombre": "Teclado mecanico",
-        "precio": 89.99,
-        "disponible": True,
-        "colores": ["negro", "blanco", "rojo"]
+def ejercicio_1():
+    """Convertir diccionario a JSON con json.dumps()"""
+    usuario = {
+        "id": 1,
+        "nombre": "Ana",
+        "email": "ana@ejemplo.com",
+        "activo": True,
+        "tags": ["admin", "user"]
     }
-    json_str = json.dumps(producto, indent=2)
-    print("JSON generado:")
+    json_str = json.dumps(usuario, indent=2, ensure_ascii=False)
+    print("JSON resultante:")
     print(json_str)
 
-def solucion_2():
-    print("=" * 50)
-    print("SOLUCION 2: Deserializar JSON a diccionario")
-    print("=" * 50)
-    json_str = '{"usuarios": [{"id": 1, "nombre": "Ana"}, {"id": 2, "nombre": "Luis"}, {"id": 3, "nombre": "Maria"}]}'
+def ejercicio_2():
+    """Parsear string JSON a diccionario con json.loads()"""
+    json_str = '{"id": 1, "nombre": "Ana", "email": "ana@ejemplo.com", "activo": true}'
     datos = json.loads(json_str)
-    print("Diccionario completo:")
-    print(datos)
-    print()
-    print("Nombre del usuario con id=2:", datos["usuarios"][1]["nombre"])
+    print(f"Nombre: {datos['nombre']}")
+    print(f"Email: {datos['email']}")
+    print(f"Activo: {datos['activo']}")
 
-def solucion_3():
-    print("=" * 50)
-    print("SOLUCION 3: Guardar y leer JSON de archivo")
-    print("=" * 50)
-    tareas = [
-        {"id": 1, "titulo": "Estudiar Python", "completada": False},
-        {"id": 2, "titulo": "Hacer ejercicios", "completada": True},
-        {"id": 3, "titulo": "Leer documentacion", "completada": False}
-    ]
-    archivo = "tareas.json"
-    with open(archivo, "w", encoding="utf-8") as f:
-        json.dump(tareas, f, indent=2)
-    print("JSON guardado en", archivo)
-    print()
-    with open(archivo, "r", encoding="utf-8") as f:
-        datos_leidos = json.load(f)
-    print("Datos leidos del archivo:")
-    for t in datos_leidos:
-        estado = "Completada" if t["completada"] else "Pendiente"
-        print(f"  [{t['id']}] {t['titulo']} - {estado}")
-    os.remove(archivo)
-
-def menu():
-    print("SOLUCIONES - JSON Y XML")
-    print("1 - Serializar un diccionario a JSON")
-    print("2 - Deserializar JSON a diccionario")
-    print("3 - Guardar y leer JSON de archivo")
-
-def main():
-    args = sys.argv[1:]
-    if not args:
-        menu()
-        return
-    num = args[0]
-    if num == "1":
-        solucion_1()
-    elif num == "2":
-        solucion_2()
-    elif num == "3":
-        solucion_3()
+def ejercicio_3():
+    """Leer JSON de archivo y extraer datos"""
+    import os
+    ruta = os.path.join(os.path.dirname(__file__), "datos.json")
+    if os.path.exists(ruta):
+        with open(ruta, "r", encoding="utf-8") as f:
+            datos = json.load(f)
+        print("Contenido del archivo JSON:")
+        print(json.dumps(datos, indent=2, ensure_ascii=False))
+        if isinstance(datos, list):
+            print(f"\nTotal de registros: {len(datos)}")
     else:
-        print("Solucion no valida. Usa 1, 2 o 3.")
+        print(f"Archivo no encontrado: {ruta}")
+        print("Crea un archivo datos.json en este directorio para probar.")
 
 if __name__ == "__main__":
-    main()
+    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    if len(sys.argv) > 1 and sys.argv[1].isdigit():
+        num = int(sys.argv[1]) - 1
+        if 0 <= num < len(ejercicios):
+            print(f">> SOLUCION {num + 1}: {ejercicios[num].__doc__}")
+            print("-" * 40)
+            ejercicios[num]()
+    else:
+        print("SOLUCIONES:")
+        for i, ej in enumerate(ejercicios, 1):
+            print(f"  {i}. {ej.__doc__}")

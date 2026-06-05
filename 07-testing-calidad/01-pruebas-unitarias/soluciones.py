@@ -1,172 +1,70 @@
 """
 SOLUCIONES - Pruebas Unitarias
-Ejecuta: python soluciones.py [numero]
-
-Uso:
-  python soluciones.py    -> Menu
-  python soluciones.py 1  -> Solucion del ejercicio 1
+Ejecuta desde raiz: python scripts/runner.py 7 1 [ejercicio]
 """
-
 import sys
-
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
+def ejercicio_1():
+    """Solucion: funcion es_par() con assert"""
+    def es_par(n):
+        return n % 2 == 0
+    assert es_par(2) == True
+    assert es_par(0) == True
+    assert es_par(3) == False
+    assert es_par(-2) == True
+    assert es_par(-3) == False
+    print("def es_par(n):")
+    print("    return n % 2 == 0")
+    print()
+    print("Pruebas superadas: es_par funciona correctamente.")
 
-class Calculadora:
-    def sumar(self, a, b):
-        return a + b
+def ejercicio_2():
+    """Solucion: funcion sumar_lista() con pruebas"""
+    def sumar_lista(numeros):
+        return sum(numeros)
+    assert sumar_lista([]) == 0
+    assert sumar_lista([1, 2, 3]) == 6
+    assert sumar_lista([-1, 1]) == 0
+    assert sumar_lista([5]) == 5
+    print("def sumar_lista(numeros):")
+    print("    return sum(numeros)")
+    print()
+    print("Pruebas superadas: sumar_lista funciona correctamente.")
 
-    def restar(self, a, b):
-        return a - b
-
-    def multiplicar(self, a, b):
-        return a * b
-
-    def dividir(self, a, b):
-        if b == 0:
-            raise ZeroDivisionError("No se puede dividir por cero")
-        return a / b
-
-
-def solucion_1():
-    print("=" * 50)
-    print("SOLUCION 1: Pruebas basicas con assert")
-    print("=" * 50)
+def ejercicio_3():
+    """Solucion: funciones test_* con pytest"""
+    print("Crea un archivo test_pruebas.py con:")
     print()
-    print("Pruebas unitarias usando solo assert de Python:")
-    print()
-    print("```python")
-    print("calc = Calculadora()")
-    print()
-    print("def test_sumar():")
-    print("    assert calc.sumar(2, 3) == 5")
-    print()
-    print("def test_restar():")
-    print("    assert calc.restar(10, 4) == 6")
-    print()
-    print("def test_multiplicar():")
-    print("    assert calc.multiplicar(3, 4) == 12")
-    print()
-    print("def test_dividir():")
-    print("    assert calc.dividir(10, 2) == 5.0")
-    print()
-    print("test_sumar()")
-    print("test_restar()")
-    print("test_multiplicar()")
-    print("test_dividir()")
-    print("print('Todas las pruebas pasaron')")
-    print("```")
-    print()
-    print("Salida esperada:")
-    print("  Todas las pruebas pasaron")
-    print()
-    print("Nota: Si una asercion falla, se lanza AssertionError")
-    print("y el programa se detiene. Por eso pytest es mejor:"),
-    print("ejecuta todas las pruebas y reporta cuales fallaron.")
-
-
-def solucion_2():
-    print("=" * 50)
-    print("SOLUCION 2: Fixtures con pytest")
-    print("=" * 50)
-    print()
-    print("Fixture y pruebas con pytest:")
-    print()
-    print("```python")
     print("import pytest")
     print()
-    print("@pytest.fixture")
-    print("def calculadora():")
-    print("    return Calculadora()")
+    print("def es_par(n):")
+    print("    return n % 2 == 0")
     print()
-    print("def test_suma_con_fixture(calculadora):")
-    print("    assert calculadora.sumar(5, 7) == 12")
+    print("def sumar_lista(numeros):")
+    print("    return sum(numeros)")
     print()
-    print("def test_resta_con_fixture(calculadora):")
-    print("    assert calculadora.restar(20, 8) == 12")
+    print("def test_es_par():")
+    print("    assert es_par(2) == True")
+    print("    assert es_par(3) == False")
+    print("    assert es_par(0) == True")
     print()
-    print("def test_multiplicacion_con_fixture(calculadora):")
-    print("    assert calculadora.multiplicar(6, 7) == 42")
-    print("```")
+    print("def test_sumar_lista():")
+    print("    assert sumar_lista([]) == 0")
+    print("    assert sumar_lista([1, 2, 3]) == 6")
     print()
-    print("Scope de fixtures:")
-    print("  - function (default): se ejecuta antes de cada prueba")
-    print("  - class: una vez por clase")
-    print("  - module: una vez por modulo")
-    print("  - session: una vez por sesion de pytest")
-    print()
-    print("@pytest.fixture(scope='module')")
-    print("def calculadora():")
-    print("    return Calculadora()")
-
-
-def solucion_3():
-    print("=" * 50)
-    print("SOLUCION 3: Probar excepciones")
-    print("=" * 50)
-    print()
-    print("Pruebas de excepciones con pytest.raises:")
-    print()
-    print("```python")
-    print("import pytest")
-    print()
-    print("def test_division_por_cero():")
-    print("    calc = Calculadora()")
-    print("    with pytest.raises(ZeroDivisionError):")
-    print("        calc.dividir(10, 0)")
-    print()
-    print("def test_mensaje_error():")
-    print("    calc = Calculadora()")
-    print("    with pytest.raises(ZeroDivisionError, match='No se puede dividir por cero'):")
-    print("        calc.dividir(10, 0)")
-    print("```")
-    print()
-    print("Otra forma: capturar la excepcion para inspeccionarla:")
-    print()
-    print("```python")
-    print("def test_excepcion_capturada():")
-    print("    calc = Calculadora()")
-    print("    with pytest.raises(ZeroDivisionError) as exc_info:")
-    print("        calc.dividir(10, 0)")
-    print("    assert str(exc_info.value) == 'No se puede dividir por cero'")
-    print("```")
-
-
-def menu():
-    while True:
-        print()
-        print("=" * 50)
-        print("SOLUCIONES - Pruebas Unitarias")
-        print("=" * 50)
-        print("1. Pruebas basicas con assert")
-        print("2. Fixtures con pytest")
-        print("3. Probar excepciones")
-        print("0. Salir")
-        print()
-
-        opcion = input("Ver solucion: ")
-
-        soluciones = {"1": solucion_1, "2": solucion_2, "3": solucion_3}
-
-        if opcion in soluciones:
-            soluciones[opcion]()
-            input("Presiona ENTER para continuar...")
-        elif opcion == "0":
-            print("Sigue asi!")
-            break
-        else:
-            print("Opcion invalida")
-
-
-def main():
-    args = sys.argv[1:]
-    if args and args[0].isdigit():
-        [solucion_1, solucion_2, solucion_3][int(args[0]) - 1]()
-    else:
-        menu()
-
+    print("Ejecuta: pytest test_pruebas.py -v")
 
 if __name__ == "__main__":
-    main()
+    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    if len(sys.argv) > 1 and sys.argv[1].isdigit():
+        num = int(sys.argv[1]) - 1
+        if 0 <= num < len(ejercicios):
+            print(f">> EJERCICIO {num + 1}: {ejercicios[num].__doc__}")
+            print("-" * 40)
+            ejercicios[num]()
+    else:
+        for i, ej in enumerate(ejercicios, 1):
+            print(f"  {i}. {ej.__doc__}")

@@ -1,134 +1,100 @@
-import sys, sqlite3
-
+"""
+SOLUCIONES - Subconsultas y Vistas
+Ejecuta desde raiz: python scripts/runner.py 4 4 [ejercicio]
+"""
+import sys
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-def get_db():
+def ejercicio_1():
+    """Escribe una subconsulta en WHERE: empleados con salario mayor al promedio"""
+    import sqlite3
     conn = sqlite3.connect(":memory:")
-    conn.row_factory = sqlite3.Row
-    return conn
-
-def mostrar_resultados(conn, query):
-    try:
-        cur = conn.execute(query)
-        filas = cur.fetchall()
-        if not filas:
-            print("(Sin resultados)")
-            return
-        headers = [d[0] for d in cur.description]
-        print(" | ".join(h for h in headers))
-        print("-" * 40)
-        for f in filas:
-            print(" | ".join(str(f[h]) for h in headers))
-    except Exception as e:
-        print("ERROR:", e)
-
-def solucion_1():
-    print("=" * 50)
-    print("SOLUCION 1: Subconsulta en WHERE")
-    print("=" * 50)
-    conn = get_db()
-    conn.executescript("""
+    c = conn.cursor()
+    c.executescript("""
         CREATE TABLE empleados (
             id INTEGER PRIMARY KEY,
-            nombre TEXT,
-            salario REAL,
-            departamento TEXT
+            nombre TEXT NOT NULL,
+            salario REAL NOT NULL,
+            departamento TEXT NOT NULL
         );
         INSERT INTO empleados VALUES
-            (1, 'Ana', 45000, 'Ventas'),
-            (2, 'Luis', 52000, 'TI'),
-            (3, 'Maria', 48000, 'Ventas'),
-            (4, 'Carlos', 55000, 'TI'),
-            (5, 'Sofia', 39000, 'RH');
+            (1, 'Ana', 50000, 'Ventas'),
+            (2, 'Juan', 60000, 'TI'),
+            (3, 'Maria', 45000, 'Ventas'),
+            (4, 'Carlos', 70000, 'TI'),
+            (5, 'Laura', 55000, 'RRHH');
     """)
-    query = "SELECT * FROM empleados WHERE salario > (SELECT AVG(salario) FROM empleados);"
-    print("Consulta ejecutada:")
-    print(query)
-    print()
-    mostrar_resultados(conn, query)
-    print()
-    cur = conn.execute("SELECT AVG(salario) FROM empleados;")
-    avg = cur.fetchone()[0]
-    print(f"Salario promedio: {avg:.2f}")
+    conn.commit()
+    print(">>> Empleados con salario mayor al promedio:")
+    query = "SELECT * FROM empleados WHERE salario > (SELECT AVG(salario) FROM empleados)"
+    c.execute(query)
+    for row in c.fetchall():
+        print(f"  {row[0]:<3} {row[1]:<8} ${row[2]:>6}  {row[3]}")
 
-def solucion_2():
-    print("=" * 50)
-    print("SOLUCION 2: Subconsulta en SELECT")
-    print("=" * 50)
-    conn = get_db()
-    conn.executescript("""
-        CREATE TABLE clientes (
+def ejercicio_2():
+    """Escribe una subconsulta en FROM: usa una subconsulta como tabla temporal"""
+    import sqlite3
+    conn = sqlite3.connect(":memory:")
+    c = conn.cursor()
+    c.executescript("""
+        CREATE TABLE ventas (
             id INTEGER PRIMARY KEY,
-            nombre TEXT
+            producto TEXT NOT NULL,
+            cantidad INTEGER NOT NULL,
+            total REAL NOT NULL,
+            fecha TEXT NOT NULL
         );
-        INSERT INTO clientes VALUES (1, 'Ana'), (2, 'Luis'), (3, 'Maria');
-        CREATE TABLE pedidos (
-            id INTEGER PRIMARY KEY,
-            cliente_id INTEGER,
-            total REAL
-        );
-        INSERT INTO pedidos VALUES (1, 1, 150), (2, 1, 75), (3, 2, 200), (4, 3, 50);
+        INSERT INTO ventas VALUES
+            (1, 'Laptop', 2, 1999.98, '2024-01-15'),
+            (2, 'Mouse', 5, 127.50, '2024-01-15'),
+            (3, 'Laptop', 1, 999.99, '2024-02-10'),
+            (4, 'Teclado', 3, 135.00, '2024-02-10'),
+            (5, 'Mouse', 2, 51.00, '2024-03-05');
     """)
-    query = """
-        SELECT nombre,
-            (SELECT COUNT(*) FROM pedidos WHERE pedidos.cliente_id = clientes.id) AS total_pedidos
-        FROM clientes;
-    """
-    print("Consulta ejecutada:")
-    print(query.strip())
-    print()
-    mostrar_resultados(conn, query)
+    conn.commit()
+    print(">>> Total vendido por producto (usando subconsulta en FROM):")
+    query = """SELECT producto, total_vendido
+               FROM (SELECT producto, SUM(total) as total_vendido FROM ventas GROUP BY producto)
+               ORDER BY total_vendido DESC"""
+    c.execute(query)
+    for row in c.fetchall():
+        print(f"  {row[0]:<10} ${row[1]:>7.2f}")
 
-def solucion_3():
-    print("=" * 50)
-    print("SOLUCION 3: VIEW")
-    print("=" * 50)
-    conn = get_db()
-    conn.executescript("""
-        CREATE TABLE productos (
+def ejercicio_3():
+    """Crea una VIEW y consultala para obtener empleados de TI con salario alto"""
+    import sqlite3
+    conn = sqlite3.connect(":memory:")
+    c = conn.cursor()
+    c.executescript("""
+        CREATE TABLE empleados (
             id INTEGER PRIMARY KEY,
-            nombre TEXT,
-            categoria TEXT,
-            precio REAL
+            nombre TEXT NOT NULL,
+            salario REAL NOT NULL,
+            departamento TEXT NOT NULL
         );
-        INSERT INTO productos VALUES
-            (1, 'Laptop', 'Electronica', 1200),
-            (2, 'Mouse', 'Electronica', 25),
-            (3, 'Camisa', 'Ropa', 35),
-            (4, 'Pantalon', 'Ropa', 50),
-            (5, 'Tablet', 'Electronica', 300);
-        CREATE VIEW productos_electronica AS
-            SELECT * FROM productos
-            WHERE categoria = 'Electronica' AND precio > 100;
+        INSERT INTO empleados VALUES
+            (1, 'Ana', 50000, 'Ventas'),
+            (2, 'Juan', 60000, 'TI'),
+            (3, 'Maria', 45000, 'Ventas'),
+            (4, 'Carlos', 70000, 'TI'),
+            (5, 'Laura', 55000, 'TI');
     """)
-    query = "SELECT * FROM productos_electronica;"
-    print("VIEW creada. Consulta ejecutada:")
-    print(query)
-    print()
-    mostrar_resultados(conn, query)
-
-def menu():
-    print("SOLUCIONES - SUBCONSULTAS Y VISTAS")
-    print("1 - Subconsulta en WHERE")
-    print("2 - Subconsulta en SELECT")
-    print("3 - VIEW")
-
-def main():
-    args = sys.argv[1:]
-    if not args:
-        menu()
-        return
-    num = args[0]
-    if num == "1":
-        solucion_1()
-    elif num == "2":
-        solucion_2()
-    elif num == "3":
-        solucion_3()
-    else:
-        print("Solucion no valida. Usa 1, 2 o 3.")
+    conn.commit()
+    print(">>> Vista 'empleados_ti' (solo TI con salario >= 55000):")
+    c.execute("CREATE VIEW empleados_ti AS SELECT * FROM empleados WHERE departamento = 'TI' AND salario >= 55000")
+    for row in c.execute("SELECT * FROM empleados_ti"):
+        print(f"  {row[0]:<3} {row[1]:<8} ${row[2]:>6}  {row[3]}")
 
 if __name__ == "__main__":
-    main()
+    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    if len(sys.argv) > 1 and sys.argv[1].isdigit():
+        num = int(sys.argv[1]) - 1
+        if 0 <= num < len(ejercicios):
+            print(f">> EJERCICIO {num + 1}: {ejercicios[num].__doc__}")
+            print("-" * 40)
+            ejercicios[num]()
+    else:
+        for i, ej in enumerate(ejercicios, 1):
+            print(f"  {i}. {ej.__doc__}")

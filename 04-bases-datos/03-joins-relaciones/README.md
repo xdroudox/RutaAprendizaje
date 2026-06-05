@@ -1,58 +1,38 @@
 # Joins y Relaciones
 
-## FOREIGN KEY
+## Contenido
+- INNER JOIN: registros que coinciden en ambas tablas
+- LEFT / RIGHT JOIN: todos los registros de una tabla con datos de la otra
+- Relaciones uno-a-muchos y muchos-a-muchos
+- FOREIGN KEY e integridad referencial
 
-Una clave foranea relaciona dos tablas.
+## Ejercicios
 
-```sql
-CREATE TABLE pedidos (
-    id INTEGER PRIMARY KEY,
-    cliente_id INTEGER,
-    FOREIGN KEY (cliente_id) REFERENCES clientes(id)
-);
+| #  | Ejercicio                                                      |
+|----|----------------------------------------------------------------|
+| 1  | INNER JOIN (pedidos + clientes)                                |
+| 2  | LEFT JOIN (todos los clientes aunque no tengan pedidos)        |
+| 3  | Relacion muchos-a-muchos (estudiantes-cursos con tabla intermedia) |
+
+## Comandos
+
+```bash
+python scripts/runner.py 4 3 1
+python scripts/runner.py 4 3 2
+python scripts/runner.py 4 3 3
 ```
 
-## INNER JOIN
-
-Combina filas de dos tablas donde hay coincidencia.
+## Resumen Joins
 
 ```sql
-SELECT c.nombre, p.total
-FROM clientes c
-INNER JOIN pedidos p ON c.id = p.cliente_id;
-```
+-- Solo registros con correspondencia en ambas tablas
+SELECT * FROM pedidos INNER JOIN clientes ON pedidos.cliente_id = clientes.id;
 
-## LEFT JOIN
+-- Todos los de la izquierda, NULL si no hay correspondencia
+SELECT * FROM clientes LEFT JOIN pedidos ON clientes.id = pedidos.cliente_id;
 
-Devuelve todas las filas de la tabla izquierda, incluso si no hay
-coincidencia en la derecha (NULL donde no hay match).
-
-```sql
-SELECT c.nombre, p.total
-FROM clientes c
-LEFT JOIN pedidos p ON c.id = p.cliente_id;
-```
-
-## RIGHT JOIN
-
-Similar a LEFT JOIN pero con la tabla derecha como base.
-(SQLite no soporta RIGHT JOIN directamente, se simula con LEFT JOIN
-invirtiendo el orden.)
-
-## Relacion Uno a Muchos
-
-Un cliente tiene muchos pedidos. Un pedido pertenece a un cliente.
-Se implementa con FK en la tabla muchos (pedidos).
-
-## Relacion Muchos a Muchos
-
-Estudiantes y cursos: un estudiante puede tomar muchos cursos y un curso
-tiene muchos estudiantes. Requiere una tabla intermedia (junction table).
-
-```sql
-CREATE TABLE estudiante_curso (
-    estudiante_id INTEGER,
-    curso_id INTEGER,
-    PRIMARY KEY (estudiante_id, curso_id)
-);
+-- Muchos-a-muchos con tabla intermedia
+SELECT * FROM estudiantes e
+JOIN inscripciones i ON e.id = i.estudiante_id
+JOIN cursos c ON i.curso_id = c.id;
 ```

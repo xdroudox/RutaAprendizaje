@@ -1,87 +1,31 @@
-# Arboles (Trees)
+# Arboles
 
-## Arbol Binario (Binary Tree)
+Un arbol es una estructura jerarquica con nodos conectados por aristas. Un arbol binario de busqueda (BST) tiene la propiedad: izquierda < raiz < derecha.
 
-Cada nodo tiene **maximo 2 hijos**: izquierdo y derecho.
+- **Nodo**: Contiene un valor y referencias a hijos
+- **Raiz**: Nodo superior del arbol
+- **Hoja**: Nodo sin hijos
+- **BST**: Binary Search Tree - insercion y busqueda O(log n) promedio
 
-```
-        10
-       /  \
-      5    15
-     / \     \
-    3   7     20
-```
-
-```python
-class Node:
-    def __init__(self, value):
-        self.value = value
-        self.left = None
-        self.right = None
-```
-
-## Arbol Binario de Busqueda (BST)
-
-Propiedad: izquierda < raiz < derecha para todos los nodos.
-
-```
-        10
-       /  \
-      5    15
-     / \     \
-    3   7     20
-```
-
-- Busqueda: O(log n) promedio, O(n) peor caso
-- Insercion: O(log n) promedio
-- In-order traversal devuelve valores ordenados
-
-## Recorridos (Traversals)
-
-### In-order (izquierda - raiz - derecha)
-```python
-def inorder(node):
-    if node:
-        inorder(node.left)
-        print(node.value)
-        inorder(node.right)
-# Resultado: 3, 5, 7, 10, 15, 20
-```
-
-### Pre-order (raiz - izquierda - derecha)
-```python
-def preorder(node):
-    if node:
-        print(node.value)
-        preorder(node.left)
-        preorder(node.right)
-# Resultado: 10, 5, 3, 7, 15, 20
-```
-
-### Post-order (izquierda - derecha - raiz)
-```python
-def postorder(node):
-    if node:
-        postorder(node.left)
-        postorder(node.right)
-        print(node.value)
-# Resultado: 3, 7, 5, 20, 15, 10
-```
-
-## Tipos de arboles
-
-- **BST:** Valores ordenados, busqueda eficiente
-- **AVL:** Balanceado automaticamente
-- **Heap:** Max/Min en raiz (usado en priority queues)
-- **Trie:** Arbol de prefijos (autocompletado)
+Recorridos: inorder (izquierdo, raiz, derecho), preorder (raiz, izquierdo, derecho), postorder (izquierdo, derecho, raiz).
 
 ## Ejercicios
 
-### 1. Implementar un BST
-Crea la clase BinarySearchTree con metodos insert y search.
+### Ejercicio 1: NodoArbol y BST con insert
+Implementa la clase NodoArbol y la clase BST con el metodo insert.
+**Ejecuta:** `python scripts/runner.py 3 4 1`
 
-### 2. Recorridos del arbol
-Implementa las funciones inorder, preorder y postorder para un BST.
+### Ejercicio 2: Recorrido inorder
+Implementa el recorrido inorder que imprime los valores ordenados.
+**Ejecuta:** `python scripts/runner.py 3 4 2`
 
-### 3. Minimo y maximo en BST
-Encuentra el valor minimo y maximo en un arbol binario de busqueda.
+### Ejercicio 3: Buscar en BST
+Implementa la busqueda de un valor en un arbol binario de busqueda.
+**Ejecuta:** `python scripts/runner.py 3 4 3`
+
+## Soluciones
+```bash
+python scripts/runner.py 3 4 1 -s
+python scripts/runner.py 3 4 2 -s
+python scripts/runner.py 3 4 3 -s
+```

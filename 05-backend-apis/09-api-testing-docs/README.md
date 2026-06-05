@@ -1,87 +1,26 @@
 # API Testing y Documentacion
 
-## curl
+Probar y documentar APIs es esencial para mantener calidad y facilitar la integracion.
 
-Curl es una herramienta de linea de comandos para hacer peticiones HTTP.
+## Herramientas de testing
+- **http.client:** modulo nativo de Python para hacer requests
+- **curl:** herramienta de linea de comandos
+- **Postman:** GUI para probar APIs
 
-```bash
-curl https://jsonplaceholder.typicode.com/posts/1
-curl -X POST https://jsonplaceholder.typicode.com/posts \
-  -H "Content-Type: application/json" \
-  -d '{"title": "foo", "body": "bar", "userId": 1}'
-```
+## Documentacion OpenAPI/Swagger
+Formato estandar YAML/JSON para describir:
+- Endpoints disponibles
+- Metodos HTTP
+- Parametros y schemas
+- Respuestas esperadas
 
-## http.client (Python)
+## Ejercicios
 
-```python
-import http.client, json
+1. **Construir request GET con http.client** - Hacer una peticion GET a una API publica.
+   **Ejecuta:** `python scripts/runner.py 5 9 1`
 
-conn = http.client.HTTPSConnection("jsonplaceholder.typicode.com")
+2. **Validar status code y body** - Verificar que la respuesta tenga el formato esperado.
+   **Ejecuta:** `python scripts/runner.py 5 9 2`
 
-# GET
-conn.request("GET", "/posts/1")
-resp = conn.getresponse()
-print(resp.status, json.loads(resp.read()))
-
-# POST
-payload = json.dumps({"title": "foo", "body": "bar", "userId": 1})
-conn.request("POST", "/posts", body=payload, headers={"Content-Type": "application/json"})
-resp = conn.getresponse()
-print(resp.status, json.loads(resp.read()))
-
-conn.close()
-```
-
-## Postman
-
-Postman es una GUI para probar APIs. Permite:
-- Crear colecciones de peticiones
-- Guardar variables de entorno
-- Escribir tests automatizados
-- Generar documentacion
-- Compartir colecciones con el equipo
-
-## Swagger / OpenAPI
-
-OpenAPI es un estandar para documentar APIs REST. Se escribe en YAML o JSON.
-
-```yaml
-openapi: 3.0.0
-info:
-  title: API de Usuarios
-  version: 1.0.0
-paths:
-  /usuarios:
-    get:
-      summary: Lista todos los usuarios
-      responses:
-        '200':
-          description: Lista de usuarios
-          content:
-            application/json:
-              schema:
-                type: array
-    post:
-      summary: Crea un nuevo usuario
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                nombre:
-                  type: string
-                email:
-                  type: string
-```
-
-## Buenas practicas de testing
-
-1. Probar todos los codigos de estado (200, 201, 400, 401, 404, 500)
-2. Probar casos borde (datos vacios, IDs inexistentes)
-3. Probar autenticacion (con y sin token)
-4. Validar estructura de la respuesta
-5. Automatizar tests cuando sea posible
-
-Ejecuta: python ejercicios.py 1
+3. **Escribir documentacion OpenAPI** - Crear un dict con la estructura de una API.
+   **Ejecuta:** `python scripts/runner.py 5 9 3`

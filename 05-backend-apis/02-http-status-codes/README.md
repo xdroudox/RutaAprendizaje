@@ -1,71 +1,21 @@
 # HTTP Status Codes
 
-Los codigos de estado HTTP indican el resultado de una peticion. Se agrupan
-en 5 familias.
+Los codigos de estado HTTP indican el resultado de una peticion.
 
-## Familia 1xx: Informativos
+## Familias
+- **1xx (Informativos):** 100 Continue, 101 Switching Protocols
+- **2xx (Exito):** 200 OK, 201 Created, 204 No Content
+- **3xx (Redireccion):** 301 Moved Permanently, 302 Found, 304 Not Modified
+- **4xx (Error cliente):** 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found, 409 Conflict
+- **5xx (Error servidor):** 500 Internal Server Error, 502 Bad Gateway, 503 Service Unavailable
 
-| Codigo | Significado |
-|--------|-------------|
-| 100    | Continue |
-| 101    | Switching Protocols |
+## Ejercicios
 
-## Familia 2xx: Exito
+1. **Clasificar codigos en familias** - Dado un codigo, identificar su familia (1xx, 2xx, 3xx, 4xx, 5xx).
+   **Ejecuta:** `python scripts/runner.py 5 2 1`
 
-| Codigo | Significado | Ejemplo |
-|--------|-------------|---------|
-| 200    | OK | GET exitoso |
-| 201    | Created | POST que crea un recurso |
-| 204    | No Content | DELETE exitoso sin cuerpo |
+2. **Elegir status code correcto** - Dado un escenario, seleccionar el codigo HTTP apropiado.
+   **Ejecuta:** `python scripts/runner.py 5 2 2`
 
-## Familia 3xx: Redireccion
-
-| Codigo | Significado | Ejemplo |
-|--------|-------------|---------|
-| 301    | Moved Permanently | URL cambio permanente |
-| 302    | Found (redireccion temporal) | Mantenimiento |
-| 304    | Not Modified | Cache valida |
-
-## Familia 4xx: Errores del cliente
-
-| Codigo | Significado | Ejemplo |
-|--------|-------------|---------|
-| 400    | Bad Request | JSON mal formado |
-| 401    | Unauthorized | Falta token |
-| 403    | Forbidden | Sin permisos |
-| 404    | Not Found | Recurso inexistente |
-| 405    | Method Not Allowed | POST en ruta solo GET |
-| 409    | Conflict | Duplicado |
-| 429    | Too Many Requests | Rate limit excedido |
-
-## Familia 5xx: Errores del servidor
-
-| Codigo | Significado | Ejemplo |
-|--------|-------------|---------|
-| 500    | Internal Server Error | Error inesperado |
-| 502    | Bad Gateway | Proxy recibe respuesta invalida |
-| 503    | Service Unavailable | Servidor saturado |
-| 504    | Gateway Timeout | Proxy timeout |
-
-## Como elegir el codigo correcto
-
-- GET exitoso -> 200
-- POST que crea -> 201
-- DELETE exitoso -> 204 (sin cuerpo)
-- Datos invalidos -> 400
-- No autenticado -> 401
-- No autorizado -> 403
-- Recurso no existe -> 404
-- Error del servidor -> 500
-
-```python
-import http.client
-
-conn = http.client.HTTPSConnection("httpbin.org")
-conn.request("GET", "/status/404")
-resp = conn.getresponse()
-print(f"Estado: {resp.status} {resp.reason}")
-conn.close()
-```
-
-Ejecuta: python ejercicios.py 1
+3. **Manejar errores HTTP** - Usar if/elif para actuar segun el codigo de estado.
+   **Ejecuta:** `python scripts/runner.py 5 2 3`

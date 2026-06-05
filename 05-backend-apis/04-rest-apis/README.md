@@ -1,61 +1,28 @@
 # REST APIs
 
-REST (Representational State Transfer) es un estilo arquitectonico para
-disenar APIs web. Se basa en recursos identificados por URLs y operaciones
-definidas por metodos HTTP.
+REST (Representational State Transfer) es un estilo arquitectonico para disenar APIs web.
 
 ## Principios REST
+- Recursos identificados por URLs (ej: `/api/usuarios`)
+- Operaciones via metodos HTTP
+- Stateless: cada request contiene toda la informacion necesaria
+- Representaciones: JSON, XML, etc.
 
-1. **Recursos**: Todo es un recurso (usuarios, productos, pedidos)
-2. **URLs descriptivas**: /api/usuarios, /api/productos/123
-3. **Metodos HTTP**: GET, POST, PUT, PATCH, DELETE
-4. **Sin estado (stateless)**: Cada peticion contiene toda la informacion
-5. **Formato multiple**: JSON, XML, etc.
+## CRUD a HTTP
+| Operacion | HTTP  | Idempotente |
+|-----------|-------|-------------|
+| Crear     | POST  | No          |
+| Leer      | GET   | Si          |
+| Actualizar| PUT   | Si          |
+| Eliminar  | DELETE| Si          |
 
-## Mapeo CRUD a HTTP
+## Ejercicios
 
-| Operacion | SQL | HTTP | URL |
-|-----------|-----|------|-----|
-| Create | INSERT | POST | /api/usuarios |
-| Read | SELECT | GET | /api/usuarios/1 |
-| Update (completo) | UPDATE | PUT | /api/usuarios/1 |
-| Update (parcial) | UPDATE | PATCH | /api/usuarios/1 |
-| Delete | DELETE | DELETE | /api/usuarios/1 |
-| Listar | SELECT | GET | /api/usuarios |
+1. **Disenar endpoints REST** - Crear endpoints para un blog (posts, comments, users).
+   **Ejecuta:** `python scripts/runner.py 5 4 1`
 
-## Nombrado de recursos
+2. **Mapear CRUD a metodos HTTP** - Asignar GET/POST/PUT/DELETE a cada operacion.
+   **Ejecuta:** `python scripts/runner.py 5 4 2`
 
-- Plural: /usuarios, /productos
-- Anidado: /usuarios/1/pedidos
-- Sin verbos: NO /getUsuarios, /createUser
-- Consistente: siempre plural
-
-## Idempotencia
-
-Una operacion es idempotente si ejecutarla varias veces produce el mismo
-resultado que ejecutarla una vez.
-
-- GET: idempotente
-- PUT: idempotente (mismo recurso actualizado varias veces = mismo estado)
-- DELETE: idempotente (borrar algo ya borrado no cambia el estado)
-- POST: NO idempotente (crea un nuevo recurso cada vez)
-
-## Stateless
-
-Cada peticion del cliente al servidor debe contener toda la informacion
-necesaria para entender y procesar la peticion. El servidor no almacena
-estado del cliente entre peticiones.
-
-```python
-# Simulacion de endpoints REST
-endpoints = {
-    "GET /api/usuarios": "Listar todos los usuarios",
-    "GET /api/usuarios/1": "Obtener usuario con id=1",
-    "POST /api/usuarios": "Crear nuevo usuario (cuerpo: JSON)",
-    "PUT /api/usuarios/1": "Actualizar usuario completo",
-    "PATCH /api/usuarios/1": "Actualizar parcialmente usuario",
-    "DELETE /api/usuarios/1": "Eliminar usuario"
-}
-```
-
-Ejecuta: python ejercicios.py 1
+3. **Identificar endpoints idempotentes** - Determinar que endpoints son idempotentes y por que.
+   **Ejecuta:** `python scripts/runner.py 5 4 3`

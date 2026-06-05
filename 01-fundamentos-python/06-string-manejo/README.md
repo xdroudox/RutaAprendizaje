@@ -1,100 +1,49 @@
 # Manejo de Strings
 
-## Slicing (rebanado)
-
-Permite extraer partes de un string.
+Los strings son cadenas de texto. Python ofrece potentes metodos para manipularlos: slicing, conversion de mayusculas/minusculas, separacion, union, reemplazo y formato con f-strings.
 
 ```python
-texto = "Python"
+texto = "Python es genial"
 
-print(texto[0])    # P  (primer caracter)
-print(texto[-1])   # n  (ultimo caracter)
-print(texto[0:3])  # Pyt (del indice 0 al 2)
-print(texto[2:])   # thon (del 2 al final)
-print(texto[:4])   # Pyth (del inicio al 3)
-print(texto[::2])  # Pto (cada 2 caracteres)
-print(texto[::-1]) # nohtyP (invertido)
-```
+# Slicing
+print(texto[0:6])    # Python
+print(texto[::-1])   # laineg se nohtyP (invertido)
 
-Sintaxis: `string[inicio:fin:paso]`
+# Metodos
+print(texto.upper())        # PYTHON ES GENIAL
+print(texto.lower())        # python es genial
+print("  hola  ".strip())   # hola
+print(texto.split())        # ['Python', 'es', 'genial']
+print("-".join(texto.split()))  # Python-es-genial
+print(texto.replace("genial", "poderoso"))  # Python es poderoso
 
-## Metodos de string
-
-```python
-texto = "  Hola Mundo  "
-
-# Cambio de mayusculas/minusculas
-print(texto.upper())       # "  HOLA MUNDO  "
-print(texto.lower())       # "  hola mundo  "
-print(texto.capitalize())  # "  hola mundo  "
-print(texto.title())       # "  Hola Mundo  "
-
-# Limpiar espacios
-print(texto.strip())       # "Hola Mundo" (quita bordes)
-print(texto.lstrip())      # "Hola Mundo  " (quita izquierda)
-print(texto.rstrip())      # "  Hola Mundo" (quita derecha)
-
-# Dividir y unir
-palabras = texto.strip().split()  # ["Hola", "Mundo"]
-print(" ".join(palabras))         # "Hola Mundo"
-
-# Reemplazar
-print(texto.replace("Mundo", "Python"))  # "  Hola Python  "
-
-# Buscar
-print(texto.find("Mundo"))  # 7 (indice donde empieza)
-print("Mundo" in texto)     # True
-print(len(texto))           # 13 (contando espacios)
-```
-
-## Metodos comunes de string
-
-| Metodo | Descripcion | Ejemplo |
-|--------|-------------|---------|
-| `upper()` | Todo mayusculas | `"hola".upper()` -> `"HOLA"` |
-| `lower()` | Todo minusculas | `"HOLA".lower()` -> `"hola"` |
-| `strip()` | Quita espacios bordes | `" hola ".strip()` -> `"hola"` |
-| `split()` | Divide en lista | `"a,b,c".split(",")` -> `["a","b","c"]` |
-| `join()` | Une lista en string | `"-".join(["a","b"])` -> `"a-b"` |
-| `replace()` | Reemplaza texto | `"a b".replace(" ","-")` -> `"a-b"` |
-| `find()` | Busca indice | `"abc".find("b")` -> `1` |
-| `len()` | Longitud | `len("hola")` -> `4` |
-| `count()` | Cuenta ocurrencias | `"ana".count("a")` -> `2` |
-
-## F-strings (formato moderno)
-
-```python
+# f-strings
 nombre = "Ana"
 edad = 25
-precio = 19.99
-
-print(f"Hola, {nombre}")                # Hola, Ana
-print(f"Tienes {edad} anos")            # Tienes 25 anos
-print(f"Precio: ${precio:.2f}")         # Precio: $19.99
-print(f"{'Hola':<10}|")                 # "Hola      |" (alineado izq)
-print(f"{'Hola':>10}|")                 # "      Hola|" (alineado der)
-```
-
-## Formato con .format()
-
-```python
-print("Hola, {} tienes {} anos".format(nombre, edad))
-print("Precio: ${:.2f}".format(precio))
+print(f"Hola, me llamo {nombre} y tengo {edad} anos.")
 ```
 
 ## Ejercicios
 
-### 1. Limpiador de texto
-Pide al usuario una frase con espacios extras y mayusculas irregulares. Limpiala: sin espacios al inicio/final, primera letra mayuscula, el resto minusculas.
+### Ejercicio 1: Mayusculas y minusculas
+Pide al usuario su nombre y muestralo en mayusculas (upper()) y en minusculas (lower()).
 
-**Ejecuta:** `python ejercicios.py 1`
+**Ejecuta:** `python scripts/runner.py 1 6 1`
 
-### 2. Analizador de oraciones
-Pide una oracion y muestra: numero de palabras, cada palabra en mayusculas, la oracion con guiones en vez de espacios.
+### Ejercicio 2: Invertir palabra
+Pide una palabra y muestrala invertida usando slicing con paso negativo [::-1].
 
-**Ejecuta:** `python ejercicios.py 2`
+**Ejecuta:** `python scripts/runner.py 1 6 2`
 
-### 3. Formateador de factura
-Pide nombre del producto, cantidad y precio unitario. Usa f-strings para mostrar una factura formateada con alineacion y 2 decimales.
+### Ejercicio 3: Contar vocales
+Pide una frase y cuenta cuantas vocales (a, e, i, o, u) tiene. Recorre la frase con un bucle for.
 
-**Ejecuta:** `python ejercicios.py 3`
+**Ejecuta:** `python scripts/runner.py 1 6 3`
+
+## Soluciones
+
+```bash
+python scripts/runner.py 1 6 1 -s
+python scripts/runner.py 1 6 2 -s
+python scripts/runner.py 1 6 3 -s
+```

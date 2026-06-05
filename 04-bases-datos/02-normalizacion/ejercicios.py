@@ -1,102 +1,116 @@
-import sys, sqlite3
-
+"""
+EJERCICIOS - Normalizacion
+Ejecuta desde raiz: python scripts/runner.py 4 2 [ejercicio]
+"""
+import sys
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-def get_db():
-    conn = sqlite3.connect(":memory:")
-    conn.row_factory = sqlite3.Row
-    return conn
-
 def ejercicio_1():
-    print("=" * 50)
-    print("EJERCICIO 1: Primera Forma Normal (1NF)")
-    print("=" * 50)
-    print("Tabla no normalizada (viola 1NF):")
-    print("| orden_id | cliente | productos                |")
-    print("|----------|---------|--------------------------|")
-    print("| 1        | Ana     | Laptop, Mouse            |")
-    print("| 2        | Luis    | Teclado                  |")
-    print("| 3        | Maria   | Monitor, Laptop, Mouse   |")
+    """Identifica la violacion de 1NF: columna con multiples valores separados por comas"""
+    import sqlite3
+    conn = sqlite3.connect(":memory:")
+    c = conn.cursor()
+    c.executescript("""
+        CREATE TABLE estudiantes (
+            id INTEGER PRIMARY KEY,
+            nombre TEXT NOT NULL,
+            cursos TEXT NOT NULL
+        );
+        INSERT INTO estudiantes VALUES (1, 'Ana', 'Matematicas,Historia');
+        INSERT INTO estudiantes VALUES (2, 'Juan', 'Ciencias,Arte,Musica');
+        INSERT INTO estudiantes VALUES (3, 'Maria', 'Historia,Ciencias');
+    """)
+    conn.commit()
+    print("=== Tabla actual (1FN violada) ===")
+    print("id | nombre | cursos")
+    print("---|--------|----------------------")
+    for row in c.execute("SELECT * FROM estudiantes"):
+        print(f" {row[0]}  | {row[1]:6s} | {row[2]}")
     print()
-    print("TAREA: Escribe CREATE TABLE para la version 1NF")
-    print("donde cada producto este en una fila separada.")
-    print("Crea tambien la tabla 'ordenes' con orden_id y cliente.")
-    print()
-    print("Ejecuta esta consulta:")
-    print("  SELECT o.orden_id, o.cliente, d.producto")
-    print("  FROM ordenes o JOIN detalle_orden d ON o.orden_id = d.orden_id;")
-    print()
-    print("PISTA: Usa dos tablas: ordenes(orden_id, cliente)")
-    print("y detalle_orden(orden_id, producto)")
+    print("Problema: la columna 'cursos' contiene multiples valores separados por comas.")
+    print("Crea dos tablas normalizadas: estudiantes y cursos, con tabla intermedia.")
+    # ==== ESCRIBE TU RESPUESTA AQUI ====
+    # Define el esquema normalizado a 1FN usando CREATE TABLE
+    pass
 
 def ejercicio_2():
-    print("=" * 50)
-    print("EJERCICIO 2: Tercera Forma Normal (3NF)")
-    print("=" * 50)
-    print("Tabla no normalizada (viola 3NF):")
-    print("| emp_id | nombre | dept_id | dept_nombre | dept_ciudad |")
-    print("|--------|--------|---------|-------------|-------------|")
-    print("| 1      | Ana    | D1      | Ventas      | Madrid      |")
-    print("| 2      | Luis   | D2      | TI          | Barcelona   |")
-    print("| 3      | Pedro  | D1      | Ventas      | Madrid      |")
+    """Normaliza a 2FN: elimina dependencias parciales en una tabla de calificaciones"""
+    import sqlite3
+    conn = sqlite3.connect(":memory:")
+    c = conn.cursor()
+    c.executescript("""
+        CREATE TABLE calificaciones (
+            estudiante_id INTEGER,
+            estudiante_nombre TEXT,
+            curso_id INTEGER,
+            curso_nombre TEXT,
+            profesor TEXT,
+            nota REAL,
+            PRIMARY KEY (estudiante_id, curso_id)
+        );
+        INSERT INTO calificaciones VALUES
+            (1, 'Ana', 101, 'Matematicas', 'Dr. Lopez', 8.5),
+            (1, 'Ana', 102, 'Historia', 'Dra. Perez', 9.0),
+            (2, 'Juan', 101, 'Matematicas', 'Dr. Lopez', 7.5),
+            (2, 'Juan', 103, 'Ciencias', 'Dr. Garcia', 8.0);
+    """)
+    conn.commit()
+    print("=== Tabla actual (2FN violada) ===")
+    print("estudiante_id | estudiante_nombre | curso_id | curso_nombre | profesor    | nota")
+    print("--------------|-------------------|----------|--------------|-------------|------")
+    for row in c.execute("SELECT * FROM calificaciones"):
+        print(f" {row[0]:<13} | {row[1]:<17} | {row[2]:<8} | {row[3]:<12} | {row[4]:<11} | {row[5]}")
     print()
-    print("TAREA: disena dos tablas en 3NF separando empleados de departamentos.")
-    print()
-    print("PISTA: Crea 'departamentos' y 'empleados' con FK a departamentos.")
+    print("Problema: estudiante_nombre depende solo de estudiante_id,")
+    print("curso_nombre y profesor dependen solo de curso_id.")
+    print("Crea tablas separadas: estudiantes, cursos, calificaciones (2FN).")
+    # ==== ESCRIBE TU RESPUESTA AQUI ====
+    pass
 
 def ejercicio_3():
-    print("=" * 50)
-    print("EJERCICIO 3: Desnormalizacion")
-    print("=" * 50)
-    print("Tablas normalizadas:")
-    print("pedidos(id, cliente_id, fecha)")
-    print("clientes(id, nombre, email)")
+    """Normaliza a 3FN: elimina dependencias transitivas en una tabla de pedidos"""
+    import sqlite3
+    conn = sqlite3.connect(":memory:")
+    c = conn.cursor()
+    c.executescript("""
+        CREATE TABLE pedidos (
+            pedido_id INTEGER PRIMARY KEY,
+            cliente_id INTEGER,
+            cliente_nombre TEXT,
+            cliente_ciudad TEXT,
+            producto TEXT,
+            cantidad INTEGER,
+            total REAL
+        );
+        INSERT INTO pedidos VALUES
+            (1, 1, 'Ana', 'Madrid', 'Laptop', 1, 999.99),
+            (2, 2, 'Juan', 'Barcelona', 'Mouse', 2, 51.00),
+            (3, 1, 'Ana', 'Madrid', 'Teclado', 1, 45.00),
+            (4, 3, 'Maria', 'Valencia', 'Monitor', 2, 599.98);
+    """)
+    conn.commit()
+    print("=== Tabla actual (3FN violada) ===")
+    print("pedido_id | cliente_id | cliente_nombre | cliente_ciudad | producto | cantidad | total")
+    print("----------|------------|----------------|----------------|----------|----------|-------")
+    for row in c.execute("SELECT * FROM pedidos"):
+        print(f" {row[0]:<9} | {row[1]:<10} | {row[2]:<14} | {row[3]:<14} | {row[4]:<8} | {row[5]:<8} | {row[6]}")
     print()
-    print("TAREA: disena una tabla desnormalizada 'pedidos_con_cliente'")
-    print("que incluya el nombre del cliente directamente en la tabla")
-    print("de pedidos para evitar JOINs frecuentes.")
-    print()
-    print("PISTA: CREATE TABLE pedidos_con_cliente (id INTEGER, cliente_id INTEGER,")
-    print("  cliente_nombre TEXT, fecha TEXT);")
-
-pistas = {
-    "1": "CREATE TABLE ordenes (orden_id INTEGER PRIMARY KEY, cliente TEXT);\nCREATE TABLE detalle_orden (orden_id INTEGER, producto TEXT, FOREIGN KEY (orden_id) REFERENCES ordenes(orden_id));\nINSERT INTO ordenes VALUES (1,'Ana'),(2,'Luis'),(3,'Maria');\nINSERT INTO detalle_orden VALUES (1,'Laptop'),(1,'Mouse'),(2,'Teclado'),(3,'Monitor'),(3,'Laptop'),(3,'Mouse');",
-    "2": "CREATE TABLE departamentos (dept_id TEXT PRIMARY KEY, nombre TEXT, ciudad TEXT);\nINSERT INTO departamentos VALUES ('D1','Ventas','Madrid'),('D2','TI','Barcelona');\nCREATE TABLE empleados (id INTEGER PRIMARY KEY, nombre TEXT, dept_id TEXT, FOREIGN KEY (dept_id) REFERENCES departamentos(dept_id));\nINSERT INTO empleados VALUES (1,'Ana','D1'),(2,'Luis','D2'),(3,'Pedro','D1');",
-    "3": "CREATE TABLE pedidos_con_cliente (id INTEGER PRIMARY KEY, cliente_id INTEGER, cliente_nombre TEXT, fecha TEXT);\nINSERT INTO pedidos_con_cliente VALUES (1,1,'Ana','2024-01-15'),(2,2,'Luis','2024-01-16');"
-}
-
-def menu():
-    print("=" * 50)
-    print("NORMALIZACION - EJERCICIOS")
-    print("=" * 50)
-    print("1 - Primera Forma Normal (1NF)")
-    print("2 - Tercera Forma Normal (3NF)")
-    print("3 - Desnormalizacion")
-    print()
-    print("Usa: python ejercicios.py <numero>")
-    print("     python ejercicios.py <numero> -p  (pista)")
-
-def main():
-    args = sys.argv[1:]
-    if not args:
-        menu()
-        return
-    num = args[0]
-    mostrar_pista = "-p" in args
-    if mostrar_pista and num in pistas:
-        print("=== PISTA ===")
-        print(pistas[num])
-        print()
-    if num == "1":
-        ejercicio_1()
-    elif num == "2":
-        ejercicio_2()
-    elif num == "3":
-        ejercicio_3()
-    else:
-        print("Ejercicio no valido. Usa 1, 2 o 3.")
+    print("Problema: cliente_nombre y cliente_ciudad dependen de cliente_id")
+    print("(dependencia transitiva a traves de pedido_id -> cliente_id -> datos_cliente).")
+    print("Crea tablas separadas: clientes, pedidos (3FN).")
+    # ==== ESCRIBE TU RESPUESTA AQUI ====
+    pass
 
 if __name__ == "__main__":
-    main()
+    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    if len(sys.argv) > 1 and sys.argv[1].isdigit():
+        num = int(sys.argv[1]) - 1
+        if 0 <= num < len(ejercicios):
+            print(f">> EJERCICIO {num + 1}: {ejercicios[num].__doc__}")
+            print("-" * 40)
+            ejercicios[num]()
+    else:
+        for i, ej in enumerate(ejercicios, 1):
+            print(f"  {i}. {ej.__doc__}")

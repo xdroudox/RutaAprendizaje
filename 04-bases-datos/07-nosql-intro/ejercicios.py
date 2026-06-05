@@ -1,105 +1,99 @@
+"""
+EJERCICIOS - NoSQL Intro
+Ejecuta desde raiz: python scripts/runner.py 4 7 [ejercicio]
+"""
 import sys
-
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
 def ejercicio_1():
-    print("=" * 50)
-    print("EJERCICIO 1: Documento vs Relacional")
-    print("=" * 50)
-    print("Dado el siguiente documento tipo MongoDB:")
+    """Modela un documento MongoDB para un usuario usando un dict anidado"""
+    print("Crea un diccionario que represente un documento MongoDB para un usuario")
+    print("Incluye: nombre, email, direccion (calle, ciudad, pais), intereses (lista)")
     print()
-    print('{')
-    print('  "_id": 1,')
-    print('  "nombre": "Ana",')
-    print('  "direccion": { "ciudad": "Madrid", "cp": "28001" },')
-    print('  "pedidos": [')
-    print('    { "producto": "Laptop", "total": 1200 },')
-    print('    { "producto": "Mouse", "total": 25 }')
-    print('  ]')
-    print('}')
-    print()
-    print("TAREA: Disena las tablas SQL equivalentes para representar")
-    print("esta misma informacion en una base relacional.")
-    print()
-    print("PISTA: Necesitas al menos 2 tablas (usuarios y pedidos).")
+    # ==== ESCRIBE TU RESPUESTA AQUI ====
+    # usuario = {
+    #     "nombre": "Ana Garcia",
+    #     "email": "ana@email.com",
+    #     "direccion": {
+    #         "calle": "Calle Mayor 10",
+    #         "ciudad": "Madrid",
+    #         "pais": "Espana"
+    #     },
+    #     "intereses": ["lectura", "viajes", "fotografia"]
+    # }
+    # import json
+    # print(json.dumps(usuario, indent=2, ensure_ascii=False))
+    pass
 
 def ejercicio_2():
-    print("=" * 50)
-    print("EJERCICIO 2: Filtrar documentos con Python dicts")
-    print("=" * 50)
-    print("Lista de documentos (diccionarios Python):")
+    """Convierte un esquema SQL normalizado a un documento NoSQL (dict)"""
+    print("=== Esquema SQL normalizado ===")
+    print("Tabla: clientes (id, nombre, ciudad)")
+    print("Tabla: pedidos (id, cliente_id, producto, total)")
     print()
-    usuarios = [
-        {"_id": 1, "nombre": "Ana", "edad": 25, "ciudad": "Madrid"},
-        {"_id": 2, "nombre": "Luis", "edad": 30, "ciudad": "Barcelona"},
-        {"_id": 3, "nombre": "Maria", "edad": 22, "ciudad": "Madrid"},
-        {"_id": 4, "nombre": "Carlos", "edad": 35, "ciudad": "Valencia"},
-    ]
-    for u in usuarios:
-        print(f"  {u}")
+    print("Convierte los pedidos de un cliente a un unico documento NoSQL")
+    print("donde los pedidos sean un array anidado dentro del cliente")
     print()
-    print("TAREA: Escribe codigo Python (como si fuera una consulta")
-    print("MongoDB) para filtrar los usuarios mayores de 25 anos")
-    print("que viven en Madrid.")
+    datos_sql = {
+        "clientes": [
+            {"id": 1, "nombre": "Ana", "ciudad": "Madrid"},
+            {"id": 2, "nombre": "Juan", "ciudad": "Barcelona"}
+        ],
+        "pedidos": [
+            {"id": 1, "cliente_id": 1, "producto": "Laptop", "total": 999.99},
+            {"id": 2, "cliente_id": 1, "producto": "Mouse", "total": 25.50},
+            {"id": 3, "cliente_id": 2, "producto": "Teclado", "total": 45.00}
+        ]
+    }
+    print("Datos SQL:", datos_sql)
     print()
-    print("PISTA: [u for u in usuarios if u['edad'] > 25 and u['ciudad'] == 'Madrid']")
+    # ==== ESCRIBE TU RESPUESTA AQUI ====
+    # Crea un documento NoSQL donde cada cliente incluya sus pedidos como array anidado
+    # documento = {
+    #     "cliente": { "nombre": "...", "ciudad": "..." },
+    #     "pedidos": [ { "producto": "...", "total": ... }, ... ]
+    # }
+    pass
 
 def ejercicio_3():
-    print("=" * 50)
-    print("EJERCICIO 3: Cuando usar SQL vs NoSQL")
-    print("=" * 50)
-    escenarios = [
-        ("A", "Sistema bancario con transferencias entre cuentas."),
-        ("B", "Catalogo de productos con campos variables segun el tipo."),
-        ("C", "Red social con posts, comentarios, likes y amigos."),
+    """Compara casos de uso: cuando usar SQL vs NoSQL"""
+    import random
+    casos = [
+        "Sistema bancario con transferencias entre cuentas",
+        "Catalogo de productos con estructura variable",
+        "Red social con posts, likes y comentarios",
+        "Sistema de facturacion con totales exactos",
+        "Blog con articulos y multiples autores",
+        "Analitica en tiempo real de eventos de usuario",
+        "Sistema de reservas de vuelos con integridad estricta",
+        "Almacenamiento de sesiones de usuario con TTL"
     ]
-    for letra, desc in escenarios:
-        print(f"{letra}. {desc}")
+    print("=== Clasifica cada caso como SQL o NoSQL ===")
     print()
-    print("TAREA: Para cada escenario, decide si usarias SQL o NoSQL")
-    print("y explica brevemente por que.")
+    for i, caso in enumerate(casos, 1):
+        print(f"  {i}. {caso}")
     print()
-    print("PISTA: A->SQL (ACID), B->NoSQL (esquema flexible),")
-    print("  C->depende, pero NoSQL funciona bien para datos anidados.")
-
-pistas = {
-    "1": "Tabla usuarios: id, nombre, direccion_ciudad, direccion_cp\nTabla pedidos: id, usuario_id, producto, total\nCon FOREIGN KEY de usuario_id a usuarios(id)",
-    "2": "resultado = [u for u in usuarios if u['edad'] > 25 and u['ciudad'] == 'Madrid']",
-    "3": "A: SQL (requiere ACID, transacciones atomicas)\nB: NoSQL (esquema flexible, productos con atributos variables)\nC: NoSQL (datos anidados, relaciones de grafo)"
-}
-
-def menu():
-    print("=" * 50)
-    print("NOSQL INTRO - EJERCICIOS")
-    print("=" * 50)
-    print("1 - Documento vs Relacional")
-    print("2 - Filtrar documentos Python")
-    print("3 - Cuando usar SQL vs NoSQL")
-    print()
-    print("Usa: python ejercicios.py <numero>")
-    print("     python ejercicios.py <numero> -p  (pista)")
-
-def main():
-    args = sys.argv[1:]
-    if not args:
-        menu()
-        return
-    num = args[0]
-    mostrar_pista = "-p" in args
-    if mostrar_pista and num in pistas:
-        print("=== PISTA ===")
-        print(pistas[num])
-        print()
-    if num == "1":
-        ejercicio_1()
-    elif num == "2":
-        ejercicio_2()
-    elif num == "3":
-        ejercicio_3()
-    else:
-        print("Ejercicio no valido. Usa 1, 2 o 3.")
+    print("Para cada caso, escribe: 'SQL' o 'NoSQL' y explica brevemente por que")
+    # ==== ESCRIBE TU RESPUESTA AQUI ====
+    # analisis = {
+    #     1: ("SQL", "Requiere ACID para transferencias exactas"),
+    #     2: ("NoSQL", "Estructura flexible para diferentes tipos de producto"),
+    #     ...
+    # }
+    # for num, (tipo, razon) in analisis.items():
+    #     print(f"  {num}. {tipo:6s} - {razon}")
+    pass
 
 if __name__ == "__main__":
-    main()
+    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    if len(sys.argv) > 1 and sys.argv[1].isdigit():
+        num = int(sys.argv[1]) - 1
+        if 0 <= num < len(ejercicios):
+            print(f">> EJERCICIO {num + 1}: {ejercicios[num].__doc__}")
+            print("-" * 40)
+            ejercicios[num]()
+    else:
+        for i, ej in enumerate(ejercicios, 1):
+            print(f"  {i}. {ej.__doc__}")

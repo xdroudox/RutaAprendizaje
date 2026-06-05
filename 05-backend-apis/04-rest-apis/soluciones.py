@@ -1,109 +1,74 @@
+"""
+SOLUCIONES - REST APIs
+Ejecuta desde raiz: python scripts/runner.py 5 4 1 -s
+"""
 import sys
-
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-productos = [
-    {"id": 1, "nombre": "Laptop", "precio": 1200},
-    {"id": 2, "nombre": "Mouse", "precio": 25},
-]
+def ejercicio_1():
+    """Disenar endpoints REST para un blog"""
+    endpoints = {
+        "posts": {
+            "listar": "GET /api/posts",
+            "obtener": "GET /api/posts/{id}",
+            "crear": "POST /api/posts",
+            "actualizar": "PUT /api/posts/{id}",
+            "eliminar": "DELETE /api/posts/{id}"
+        },
+        "comments": {
+            "listar": "GET /api/posts/{postId}/comments",
+            "crear": "POST /api/posts/{postId}/comments",
+            "eliminar": "DELETE /api/comments/{id}"
+        },
+        "users": {
+            "listar": "GET /api/users",
+            "obtener": "GET /api/users/{id}",
+            "crear": "POST /api/users",
+            "actualizar": "PUT /api/users/{id}"
+        }
+    }
+    for recurso, ops in endpoints.items():
+        print(f"\n{recurso.upper()}:")
+        for nombre, endpoint in ops.items():
+            print(f"  {nombre}: {endpoint}")
 
-def manejar_peticion(metodo, ruta, datos=None):
-    if metodo == "GET" and ruta == "/productos":
-        print("Listando productos:")
-        for p in productos:
-            print(f"  [{p['id']}] {p['nombre']} - ${p['precio']}")
-    elif metodo == "GET" and ruta.startswith("/productos/"):
-        pid = int(ruta.split("/")[2])
-        prod = [p for p in productos if p["id"] == pid]
-        if prod:
-            p = prod[0]
-            print(f"  [{p['id']}] {p['nombre']} - ${p['precio']}")
-        else:
-            print("  Producto no encontrado")
-    elif metodo == "POST" and ruta == "/productos":
-        if datos:
-            nuevo_id = max(p["id"] for p in productos) + 1
-            datos["id"] = nuevo_id
-            productos.append(datos)
-            print(f"  Producto creado con id={nuevo_id}")
-    elif metodo == "DELETE" and ruta.startswith("/productos/"):
-        pid = int(ruta.split("/")[2])
-        global productos
-        productos = [p for p in productos if p["id"] != pid]
-        print(f"  Producto con id={pid} eliminado")
-    else:
-        print("  Ruta no encontrada")
+def ejercicio_2():
+    """Mapear CRUD a metodos HTTP"""
+    operaciones = [
+        ("Obtener todos los posts", "GET", "/api/posts"),
+        ("Crear un nuevo post", "POST", "/api/posts"),
+        ("Obtener un post por ID", "GET", "/api/posts/{id}"),
+        ("Actualizar un post completo", "PUT", "/api/posts/{id}"),
+        ("Eliminar un post", "DELETE", "/api/posts/{id}"),
+        ("Crear un comentario en un post", "POST", "/api/posts/{id}/comments"),
+    ]
+    for desc, metodo, ruta in operaciones:
+        print(f"  {metodo:6s} {ruta:30s} -> {desc}")
 
-def solucion_1():
-    print("=" * 50)
-    print("SOLUCION 1: Disenar endpoints REST")
-    print("=" * 50)
+def ejercicio_3():
+    """Identificar que endpoints son idempotentes"""
     endpoints = [
-        ("Obtener todos los libros", "GET", "/libros"),
-        ("Obtener un libro por ID", "GET", "/libros/{id}"),
-        ("Agregar un libro nuevo", "POST", "/libros"),
-        ("Actualizar libro completo", "PUT", "/libros/{id}"),
-        ("Eliminar un libro", "DELETE", "/libros/{id}"),
-        ("Prestamos de un usuario", "GET", "/usuarios/{id}/prestamos"),
+        ("GET /api/posts", True, "Solo lectura, no modifica estado"),
+        ("POST /api/posts", False, "Crea un nuevo recurso cada vez"),
+        ("PUT /api/posts/1", True, "Reemplaza el recurso, mismo resultado siempre"),
+        ("DELETE /api/posts/1", True, "Eliminar algo ya eliminado no cambia el estado"),
+        ("PATCH /api/posts/1", False, "Modificacion parcial, resultado puede variar"),
     ]
-    for desc, metodo, url in endpoints:
-        print(f"  {metodo:6s} {url:25s} -> {desc}")
-
-def solucion_2():
-    print("=" * 50)
-    print("SOLUCION 2: Determinar idempotencia")
-    print("=" * 50)
-    resultados = [
-        ("GET /api/usuarios", "SI", "Solo lectura, no modifica estado"),
-        ("POST /api/usuarios", "NO", "Crea un nuevo recurso cada vez"),
-        ("PUT /api/usuarios/5", "SI", "Mismo cuerpo produce mismo estado final"),
-        ("DELETE /api/usuarios/5", "SI", "Tras borrar, el estado es el mismo"),
-        ("PATCH /api/usuarios/5", "NO", "Puede incrementar un contador, etc."),
-        ("GET /api/usuarios/5", "SI", "Solo lectura, no modifica estado"),
-    ]
-    for op, idemp, razon in resultados:
-        print(f"  {op:30s} | Idempotente: {idemp} | {razon}")
-
-def solucion_3():
-    print("=" * 50)
-    print("SOLUCION 3: Simular una API REST")
-    print("=" * 50)
-    print("Probando la API REST simulada:")
-    print()
-    manejar_peticion("GET", "/productos")
-    print()
-    manejar_peticion("GET", "/productos/1")
-    print()
-    manejar_peticion("POST", "/productos", {"nombre": "Teclado", "precio": 45})
-    print()
-    manejar_peticion("GET", "/productos")
-    print()
-    manejar_peticion("DELETE", "/productos/1")
-    print()
-    manejar_peticion("GET", "/productos")
-
-def menu():
-    print("SOLUCIONES - REST APIS")
-    print("1 - Disenar endpoints REST")
-    print("2 - Determinar idempotencia")
-    print("3 - Simular una API REST")
-
-def main():
-    args = sys.argv[1:]
-    if not args:
-        menu()
-        return
-    num = args[0]
-    if num == "1":
-        solucion_1()
-    elif num == "2":
-        solucion_2()
-    elif num == "3":
-        solucion_3()
-    else:
-        print("Solucion no valida. Usa 1, 2 o 3.")
+    for endpoint, idempotente, razon in endpoints:
+        marca = "SI" if idempotente else "NO"
+        print(f"  {endpoint:25s} -> Idempotente: {marca} ({razon})")
 
 if __name__ == "__main__":
-    main()
+    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    if len(sys.argv) > 1 and sys.argv[1].isdigit():
+        num = int(sys.argv[1]) - 1
+        if 0 <= num < len(ejercicios):
+            print(f">> SOLUCION {num + 1}: {ejercicios[num].__doc__}")
+            print("-" * 40)
+            ejercicios[num]()
+    else:
+        print("SOLUCIONES:")
+        for i, ej in enumerate(ejercicios, 1):
+            print(f"  {i}. {ej.__doc__}")

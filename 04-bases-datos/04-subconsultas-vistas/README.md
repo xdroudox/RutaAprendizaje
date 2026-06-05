@@ -1,54 +1,44 @@
 # Subconsultas y Vistas
 
-## Subconsulta en WHERE
+## Contenido
+- Subconsultas en WHERE (comparacion con subresultado)
+- Subconsultas en FROM (tabla derivada)
+- Subconsultas en SELECT
+- Vistas (CREATE VIEW)
+- CTE con WITH
 
-Una consulta dentro de otra, usada para filtrar resultados.
+## Ejercicios
+
+| #  | Ejercicio                                                          |
+|----|--------------------------------------------------------------------|
+| 1  | Subconsulta en WHERE (empleados con salario > promedio)            |
+| 2  | Subconsulta en FROM (usar subconsulta como tabla temporal)         |
+| 3  | Crear y consultar una VIEW                                         |
+
+## Comandos
+
+```bash
+python scripts/runner.py 4 4 1
+python scripts/runner.py 4 4 2
+python scripts/runner.py 4 4 3
+```
+
+## Resumen
 
 ```sql
-SELECT nombre FROM empleados
+-- Subconsulta en WHERE
+SELECT * FROM empleados
 WHERE salario > (SELECT AVG(salario) FROM empleados);
-```
 
-## Subconsulta en FROM
+-- Subconsulta en FROM
+SELECT producto, total_vendido
+FROM (SELECT producto, SUM(total) as total_vendido FROM ventas GROUP BY producto)
+ORDER BY total_vendido DESC;
 
-Trata el resultado de una subconsulta como una tabla temporal.
+-- Crear vista
+CREATE VIEW empleados_ti AS
+SELECT * FROM empleados WHERE departamento = 'TI' AND salario >= 55000;
 
-```sql
-SELECT AVG(total) FROM (
-    SELECT cliente_id, SUM(total) AS total
-    FROM pedidos GROUP BY cliente_id
-);
-```
-
-## Subconsulta en SELECT
-
-Subconsulta como columna calculada.
-
-```sql
-SELECT nombre,
-    (SELECT COUNT(*) FROM pedidos WHERE pedidos.cliente_id = clientes.id) AS num_pedidos
-FROM clientes;
-```
-
-## VIEW
-
-Una vista es una consulta almacenada que se comporta como una tabla virtual.
-
-```sql
-CREATE VIEW empleados_caros AS
-SELECT * FROM empleados WHERE salario > 50000;
-
-SELECT * FROM empleados_caros;
-```
-
-## CTE (WITH)
-
-Common Table Expression: consulta temporal con nombre, util para consultas
-recursivas o para simplificar subconsultas complejas.
-
-```sql
-WITH empleados_caros AS (
-    SELECT * FROM empleados WHERE salario > 50000
-)
-SELECT * FROM empleados_caros;
+-- Consultar vista
+SELECT * FROM empleados_ti;
 ```

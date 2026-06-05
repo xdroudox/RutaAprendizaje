@@ -1,66 +1,33 @@
 # Pruebas de Integracion
 
-## Que son las pruebas de integracion
+Verifican que multiples componentes funcionen correctamente juntos.
 
-Las pruebas de integracion verifican que multiples componentes funcionen correctamente juntos. Mientras las pruebas unitarias aï¿½lan una unidad, las de integracion prueban la interaccion entre unidades.
+## SQLite en memoria
 
-Ejemplos:
-- Una funcion que consulta una base de datos
-- Un modulo que llama a otro modulo
-- Un servicio que se comunica con una API externa
-
-## Pruebas de integracion con base de datos
-
-SQLite en memoria es ideal para pruebas de integracion:
+Ideal para pruebas sin afectar datos reales:
 
 ```python
-import sqlite3
-import pytest
+conn = sqlite3.connect(':memory:')
+```
 
+## Fixtures con setup/teardown
+
+```python
 @pytest.fixture
 def db():
-    conn = sqlite3.connect(":memory:")
-    conn.execute("CREATE TABLE usuarios (id INTEGER PRIMARY KEY, nombre TEXT)")
-    conn.execute("INSERT INTO usuarios VALUES (1, 'Ana')")
+    conn = sqlite3.connect(':memory:')
+    conn.execute("CREATE TABLE test (id INT)")
     yield conn
     conn.close()
-
-def test_obtener_usuario(db):
-    cursor = db.execute("SELECT nombre FROM usuarios WHERE id = 1")
-    assert cursor.fetchone()[0] == "Ana"
 ```
 
-## Setup y Teardown
+## Ejercicios
 
-Setup: prepara el entorno antes de cada prueba.
-Teardown: limpia los recursos despues de cada prueba.
+1. **Probar funcion que inserta y consulta SQLite**
+   **Ejecuta:** `python scripts/runner.py 7 2 1`
 
-En pytest, se usa `yield` en un fixture para separar setup y teardown:
+2. **Setup/teardown de base de datos en memoria**
+   **Ejecuta:** `python scripts/runner.py 7 2 2`
 
-```python
-@pytest.fixture
-def recurso():
-    # Setup
-    db = conectar_base_datos()
-    yield db
-    # Teardown
-    db.cerrar_conexion()
-```
-
-## Pruebas entre modulos
-
-Cuando un modulo depende de otro, se prueba la integracion:
-
-```python
-# modulo_usuarios.py
-def crear_usuario(db, nombre):
-    db.execute("INSERT INTO usuarios (nombre) VALUES (?)", (nombre,))
-    db.commit()
-    return db.lastrowid
-
-# test_integracion.py
-def test_crear_y_consultar_usuario(db):
-    id_usuario = crear_usuario(db, "Luis")
-    cursor = db.execute("SELECT nombre FROM usuarios WHERE id = ?", (id_usuario,))
-    assert cursor.fetchone()[0] == "Luis"
-```
+3. **Probar integracion entre 2 modulos**
+   **Ejecuta:** `python scripts/runner.py 7 2 3`

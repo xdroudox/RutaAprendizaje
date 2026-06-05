@@ -1,90 +1,64 @@
+"""
+SOLUCIONES - Protocolo HTTP
+Ejecuta desde raiz: python scripts/runner.py 5 1 1 -s
+"""
 import sys
-import http.client
-
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-def solucion_1():
-    print("=" * 50)
-    print("SOLUCION 1: Estructura de una URL")
-    print("=" * 50)
-    url = "https://api.ejemplo.com:8080/usuarios?rol=admin&edad=25#perfil"
-    print("URL:", url)
-    print()
+def ejercicio_1():
+    """Crear una URL a partir de componentes"""
+    scheme = "https"
+    host = "api.ejemplo.com"
+    path = "/usuarios"
+    params = {"rol": "admin", "edad": "25"}
+    query = "&".join(f"{k}={v}" for k, v in params.items())
+    url = f"{scheme}://{host}{path}?{query}"
+    print(f"URL construida: {url}")
 
-    esquema = url.split("://")[0]
-    resto = url.split("://")[1]
-    if "#" in resto:
-        dominio_ruta_query, fragmento = resto.split("#")
-    else:
-        dominio_ruta_query = resto
-        fragmento = ""
-    if "?" in dominio_ruta_query:
-        dominio_ruta, query = dominio_ruta_query.split("?")
-    else:
-        dominio_ruta = dominio_ruta_query
-        query = ""
-    if ":" in dominio_ruta.split("/")[0]:
-        dominio, puerto = dominio_ruta.split("/")[0].split(":")
-    else:
-        dominio = dominio_ruta.split("/")[0]
-        puerto = ""
-    ruta = "/" + "/".join(dominio_ruta.split("/")[1:]) if "/" in dominio_ruta else ""
+def ejercicio_2():
+    """Simular request HTTP como diccionario"""
+    request = {
+        "method": "POST",
+        "path": "/api/usuarios",
+        "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer token123"
+        },
+        "body": '{"nombre": "Ana", "email": "ana@ejemplo.com"}'
+    }
+    print("Request HTTP:")
+    for k, v in request.items():
+        print(f"  {k}: {v}")
 
-    print(f"Esquema:  {esquema}")
-    print(f"Dominio:  {dominio}")
-    print(f"Puerto:   {puerto if puerto else '(default)'}")
-    print(f"Ruta:     {ruta if ruta else '/'}")
-    print(f"Query:    {query if query else '(ninguna)'}")
-    print(f"Fragmento: {fragmento if fragmento else '(ninguno)'}")
-
-def solucion_2():
-    print("=" * 50)
-    print("SOLUCION 2: Construir una peticion GET")
-    print("=" * 50)
-    conn = http.client.HTTPSConnection("jsonplaceholder.typicode.com")
-    conn.request("GET", "/posts/3")
-    resp = conn.getresponse()
-    print("Codigo de estado:", resp.status, resp.reason)
-    print()
-    print("Cuerpo de la respuesta:")
-    print(resp.read().decode())
-    conn.close()
-
-def solucion_3():
-    print("=" * 50)
-    print("SOLUCION 3: Headers de request")
-    print("=" * 50)
-    conn = http.client.HTTPSConnection("httpbin.org")
-    conn.request("GET", "/headers", headers={"X-Mi-Header": "HolaMundo"})
-    resp = conn.getresponse()
-    print("Codigo:", resp.status)
-    print()
-    print("Respuesta:")
-    print(resp.read().decode())
-    conn.close()
-
-def menu():
-    print("SOLUCIONES - PROTOCOLO HTTP")
-    print("1 - Estructura de una URL")
-    print("2 - Construir una peticion GET")
-    print("3 - Headers de request")
-
-def main():
-    args = sys.argv[1:]
-    if not args:
-        menu()
-        return
-    num = args[0]
-    if num == "1":
-        solucion_1()
-    elif num == "2":
-        solucion_2()
-    elif num == "3":
-        solucion_3()
-    else:
-        print("Solucion no valida. Usa 1, 2 o 3.")
+def ejercicio_3():
+    """Parsear response HTTP desde string"""
+    response_str = "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n{\"id\": 1, \"nombre\": \"Ana\"}"
+    linea_inicial, resto = response_str.split("\r\n", 1)
+    partes = linea_inicial.split(" ")
+    version = partes[0]
+    status_code = int(partes[1])
+    mensaje = partes[2]
+    encabezados, body = resto.split("\r\n\r\n", 1)
+    headers = {}
+    for linea in encabezados.split("\r\n"):
+        if ": " in linea:
+            k, v = linea.split(": ", 1)
+            headers[k] = v
+    print(f"Status: {status_code} {mensaje}")
+    print(f"Headers: {headers}")
+    print(f"Body: {body}")
 
 if __name__ == "__main__":
-    main()
+    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    if len(sys.argv) > 1 and sys.argv[1].isdigit():
+        num = int(sys.argv[1]) - 1
+        if 0 <= num < len(ejercicios):
+            print(f">> SOLUCION {num + 1}: {ejercicios[num].__doc__}")
+            print("-" * 40)
+            ejercicios[num]()
+    else:
+        print("SOLUCIONES:")
+        for i, ej in enumerate(ejercicios, 1):
+            print(f"  {i}. {ej.__doc__}")

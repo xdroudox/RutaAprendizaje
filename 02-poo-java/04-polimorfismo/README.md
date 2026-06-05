@@ -2,23 +2,19 @@
 
 ## Teoria
 
-El polimorfismo permite que objetos de diferentes clases respondan al mismo mensaje de formas distintas. En Java hay dos tipos principales: sobrecarga (compile-time) y sobrescritura (runtime).
+El polimorfismo permite que un mismo metodo tenga diferentes comportamientos segun el contexto.
 
 ### Sobrecarga (Overloading)
 
-Varios metodos con el mismo nombre pero diferentes parametros (tipo, numero u orden). Se resuelve en tiempo de compilacion.
+Varios metodos con el mismo nombre pero distintos parametros (numero o tipo).
 
 ```java
 public class Calculadora {
-    public int sumar(int a, int b) {
+    int sumar(int a, int b) {
         return a + b;
     }
 
-    public double sumar(double a, double b) {
-        return a + b;
-    }
-
-    public int sumar(int a, int b, int c) {
+    int sumar(int a, int b, int c) {
         return a + b + c;
     }
 }
@@ -26,63 +22,49 @@ public class Calculadora {
 
 ### Sobrescritura (Overriding)
 
-Una subclase redefine un metodo heredado. Se resuelve en tiempo de ejecucion (dynamic dispatch).
+Una subclase redefine un metodo de la superclase.
 
 ```java
-class Animal {
-    void saludar() { System.out.println("Hola"); }
+public class Animal {
+    void hacerSonido() { System.out.println("..."); }
 }
 
-class Perro extends Animal {
+public class Perro extends Animal {
     @Override
-    void saludar() { System.out.println("Guau"); }
-}
-
-class Gato extends Animal {
-    @Override
-    void saludar() { System.out.println("Miau"); }
+    void hacerSonido() { System.out.println("Guau!"); }
 }
 ```
 
 ### Dynamic Dispatch
 
-En tiempo de ejecucion, Java determina que metodo ejecutar basado en el tipo real del objeto, no el tipo de la referencia.
+Cuando se llama a un metodo sobre una variable de tipo padre, Java ejecuta el metodo del tipo real del objeto.
 
 ```java
 Animal a = new Perro();
-a.saludar(); // Imprime "Guau" (no "Hola")
-```
-
-### Polimorfismo con Arrays y Parametros
-
-```java
-Animal[] animales = { new Perro(), new Gato(), new Perro() };
-for (Animal a : animales) {
-    a.saludar(); // Cada uno hace su sonido
-}
-
-void hacerSaludar(Animal a) {
-    a.saludar();
-}
+a.hacerSonido(); // Imprime "Guau!" (no "...")
 ```
 
 ## Ejercicios
 
-### Ejercicio 1: Sobrecarga de metodos
-Crea una clase `Impresora` con metodos `imprimir` sobrecargados:
-- `imprimir(String texto)` - imprime texto
-- `imprimir(int numero)` - imprime el numero
-- `imprimir(String texto, int veces)` - imprime el texto N veces
-- `imprimir(int[] numeros)` - imprime todos los numeros del array
+### Ejercicio 1: Sobrecarga de sumar()
+Crea una Calculadora con dos versiones de sumar() (2 y 3 parametros).
 
-### Ejercicio 2: Polimorfismo con animales
-Crea una clase base `Animal` con metodo `hacerSonido()`. Crea subclases `Perro`, `Gato` y `Vaca` que sobrescriban el metodo. En el main, crea un array de Animal y usa un bucle para que cada uno haga su sonido.
+**Ejecuta:** `python scripts/runner.py 2 4 1`
 
-### Ejercicio 3: Sistema de pagos
-Crea una interfaz `Pagable` con metodo `double calcularPago()`. Implementala en clases `Factura` (monto fijo) y `Empleado` (salario * horas). Usa polimorfismo para procesar una lista de pagables.
+### Ejercicio 2: Array polimorfico de Animales
+Usa un array Animal[] con Perro y Gato para demostrar dynamic dispatch.
 
-### Ejecuta los ejercicios
+**Ejecuta:** `python scripts/runner.py 2 4 2`
+
+### Ejercicio 3: Figura, Circulo y Rectangulo
+Clase Figura con area(). Circulo y Rectangulo heredan y sobrescriben.
+
+**Ejecuta:** `python scripts/runner.py 2 4 3`
+
+## Soluciones
 
 ```bash
-javac Ejercicios.java && java Ejercicios
+python scripts/runner.py 2 4 1 -s
+python scripts/runner.py 2 4 2 -s
+python scripts/runner.py 2 4 3 -s
 ```

@@ -1,44 +1,38 @@
 # Indices y Optimizacion
 
-## CREATE INDEX
+## Contenido
+- CREATE INDEX para acelerar busquedas
+- EXPLAIN QUERY PLAN para analizar el plan de ejecucion
+- Comparacion de rendimiento con y sin indices
+- Cuando indexar (y cuando no)
 
-Los indices aceleran las busquedas en columnas especificas.
+## Ejercicios
 
-```sql
-CREATE INDEX idx_empleados_nombre ON empleados(nombre);
-CREATE INDEX idx_orden_fecha ON ordenes(fecha DESC);
+| #  | Ejercicio                                                      |
+|----|----------------------------------------------------------------|
+| 1  | Crear indice y medir velocidad con EXPLAIN                     |
+| 2  | Comparar query CON y SIN indice (con time)                     |
+| 3  | Identificar queries lentas y proponer indices                  |
+
+## Comandos
+
+```bash
+python scripts/runner.py 4 6 1
+python scripts/runner.py 4 6 2
+python scripts/runner.py 4 6 3
 ```
 
-Indice unico (no permite duplicados):
+## Resumen
 
 ```sql
-CREATE UNIQUE INDEX idx_email ON usuarios(email);
-```
+-- Crear indice
+CREATE INDEX idx_categoria ON productos(categoria);
 
-## EXPLAIN QUERY PLAN
+-- Analizar plan de ejecucion
+EXPLAIN QUERY PLAN SELECT * FROM productos WHERE categoria = 'Electronica';
 
-Muestra como SQLite ejecutara una consulta. Ayuda a detectar
-carencia de indices.
-
-```sql
-EXPLAIN QUERY PLAN SELECT * FROM empleados WHERE nombre = 'Ana';
-```
-
-## Cuando indexar
-
-- Columnas usadas frecuentemente en WHERE
-- Columnas usadas en JOIN (FOREIGN KEY)
-- Columnas usadas en ORDER BY
-
-## Cuando NO indexar
-
-- Tablas pequenas
-- Columnas con pocos valores distintos (ej. booleanos)
-- Columnas que se actualizan muy frecuentemente
-- El indice tiene costo en INSERTS, UPDATES, DELETES
-
-## Indices compuestos
-
-```sql
-CREATE INDEX idx_depto_salario ON empleados(departamento, salario);
+-- Buenas practicas
+-- Indexar columnas usadas en WHERE, JOIN y ORDER BY
+-- No indexar columnas con baja cardinalidad (ej. booleanos)
+-- Los indices aceleran lecturas pero ralentizan escrituras
 ```

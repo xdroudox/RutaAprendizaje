@@ -1,43 +1,48 @@
 # Transacciones ACID
 
-## ACID
+## Contenido
+- Transacciones con BEGIN, COMMIT y ROLLBACK
+- Propiedades ACID (Atomicidad, Consistencia, Aislamiento, Durabilidad)
+- Manejo de errores y consistencia de datos
 
-- **Atomicity** (Atomicidad): La transaccion se ejecuta completa o no se ejecuta.
-- **Consistency** (Consistencia): La base de datos pasa de un estado valido a otro.
-- **Isolation** (Aislamiento): Las transacciones concurrentes no interfieren entre si.
-- **Durability** (Durabilidad): Una vez confirmada, la transaccion persiste.
+## Ejercicios
 
-## BEGIN
+| #  | Ejercicio                                                      |
+|----|----------------------------------------------------------------|
+| 1  | BEGIN, INSERT, COMMIT (transferencia bancaria)                 |
+| 2  | ROLLBACK (revertir cambios ante error)                         |
+| 3  | Simular fallo y mostrar que ROLLBACK mantiene consistencia     |
 
-Inicia una transaccion.
+## Comandos
+
+```bash
+python scripts/runner.py 4 5 1
+python scripts/runner.py 4 5 2
+python scripts/runner.py 4 5 3
+```
+
+## Resumen
 
 ```sql
+-- Iniciar transaccion
 BEGIN;
-```
 
-## COMMIT
+-- Operaciones
+UPDATE cuentas SET saldo = saldo - 200 WHERE id = 1;
+UPDATE cuentas SET saldo = saldo + 200 WHERE id = 2;
 
-Confirma los cambios de la transaccion actual.
-
-```sql
+-- Confirmar cambios
 COMMIT;
-```
 
-## ROLLBACK
-
-Revierte todos los cambios desde el BEGIN.
-
-```sql
+-- Revertir cambios
 ROLLBACK;
 ```
 
-## Ejemplo tipico (transferencia bancaria)
+## Propiedades ACID
 
-```sql
-BEGIN;
-UPDATE cuentas SET saldo = saldo - 100 WHERE id = 1;
-UPDATE cuentas SET saldo = saldo + 100 WHERE id = 2;
-COMMIT;
-```
-
-Si algo falla, se hace ROLLBACK y ambas cuentas quedan como antes.
+| Propiedad    | Descripcion                                              |
+|-------------|----------------------------------------------------------|
+| Atomicidad  | La transaccion se ejecuta completamente o no se ejecuta  |
+| Consistencia| Los datos siempre cumplen las reglas de integridad       |
+| Aislamiento | Las transacciones concurrentes no interfieren entre si   |
+| Durabilidad | Los cambios confirmados persisten incluso tras fallos    |

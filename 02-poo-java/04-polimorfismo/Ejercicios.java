@@ -1,111 +1,59 @@
-import java.util.Scanner;
-
+/**
+ * EJERCICIOS - Polimorfismo
+ * Ejecuta desde raiz: python scripts/runner.py 2 4 [ejercicio]
+ */
 public class Ejercicios {
+
     public static void main(String[] args) {
-        if (args.length == 0) {
-            menu();
-        } else if (args[0].equals("-s") && args.length > 1) {
-            mostrarSolucion(Integer.parseInt(args[1]));
-        } else {
+        if (args.length > 0) {
             int num = Integer.parseInt(args[0]);
-            if (args.length > 1 && args[1].equals("-p")) {
-                mostrarPista(num);
-            } else {
-                ejecutarEjercicio(num);
+            switch (num) {
+                case 1: ejercicio_1(); break;
+                case 2: ejercicio_2(); break;
+                case 3: ejercicio_3(); break;
+                default: System.out.println("Ejercicio no encontrado");
             }
-        }
-    }
-
-    static void menu() {
-        Scanner sc = new Scanner(System.in);
-        while (true) {
-            System.out.println("=== MENU - Polimorfismo ===");
-            System.out.println("1. Sobrecarga de metodos (Impresora)");
-            System.out.println("2. Polimorfismo con animales");
-            System.out.println("3. Sistema de pagos (Pagable)");
-            System.out.println("0. Salir");
-            System.out.print("Selecciona un ejercicio: ");
-            String opt = sc.nextLine();
-            if (opt.equals("0")) break;
-            try {
-                int n = Integer.parseInt(opt);
-                ejecutarEjercicio(n);
-            } catch (NumberFormatException e) {
-                System.out.println("Opcion invalida");
-            }
-        }
-        sc.close();
-    }
-
-    static void ejecutarEjercicio(int n) {
-        switch (n) {
-            case 1: ejercicio_1(); break;
-            case 2: ejercicio_2(); break;
-            case 3: ejercicio_3(); break;
-            default: System.out.println("Ejercicio no encontrado");
+        } else {
+            System.out.println("EJERCICIOS:");
+            System.out.println("1. Sobrecarga: metodo sumar() con 2 y 3 parametros");
+            System.out.println("2. Array polimorfico de Animal llamando a hacerSonido()");
+            System.out.println("3. Clase Figura con area(), Circulo y Rectangulo");
         }
     }
 
     static void ejercicio_1() {
-        System.out.println(">> EJERCICIO 1: Sobrecarga de metodos");
-        System.out.println("Crea clase Impresora con metodos sobrecargados:");
-        System.out.println("  - imprimir(String texto)");
-        System.out.println("  - imprimir(int numero)");
-        System.out.println("  - imprimir(String texto, int veces)");
-        System.out.println("  - imprimir(int[] numeros)");
-        System.out.println("En el main, prueba todos los metodos.");
+        System.out.println(">> EJERCICIO 1: Sobrecarga de sumar()");
+        System.out.println("-".repeat(40));
+        System.out.println("Crea una clase Calculadora con dos metodos sumar:");
+        System.out.println("  - sumar(int a, int b) que retorne a + b");
+        System.out.println("  - sumar(int a, int b, int c) que retorne a + b + c");
+        System.out.println("En el main, crea una Calculadora y prueba ambos metodos.");
         System.out.println();
-        System.out.println("PISTA: Misma firma = mismo nombre + diferentes parametros.");
-        System.out.println("// --- TU CODIGO AQUI ---");
+        System.out.println("// ==== ESCRIBE TU RESPUESTA AQUI ====");
     }
 
     static void ejercicio_2() {
-        System.out.println(">> EJERCICIO 2: Polimorfismo con animales");
-        System.out.println("Clase base Animal con metodo hacerSonido().");
-        System.out.println("Subclases Perro, Gato y Vaca que sobrescriben hacerSonido().");
-        System.out.println("En el main, crea un array Animal[] y recorrelo con un bucle.");
+        System.out.println(">> EJERCICIO 2: Array polimorfico de Animales");
+        System.out.println("-".repeat(40));
+        System.out.println("Usando las clases Animal, Perro y Gato del modulo de herencia:");
+        System.out.println("Crea un array de tipo Animal[] con un Perro y un Gato.");
+        System.out.println("Recorre el array con un bucle for llamando a hacerSonido().");
+        System.out.println("Cada animal ejecutara su propia version del metodo.");
         System.out.println();
-        System.out.println("PISTA: Animal[] animales = {new Perro(), new Gato(), new Vaca()};");
-        System.out.println("// --- TU CODIGO AQUI ---");
+        System.out.println("// ==== ESCRIBE TU RESPUESTA AQUI ====");
     }
 
     static void ejercicio_3() {
-        System.out.println(">> EJERCICIO 3: Sistema de pagos");
-        System.out.println("Interfaz Pagable con metodo double calcularPago().");
-        System.out.println("Clase Factura: tiene montoFijo, calcularPago() devuelve el monto.");
-        System.out.println("Clase Empleado: tiene salarioPorHora y horas, calcularPago() devuelve salario*horas.");
-        System.out.println("En el main, crea un array Pagable[] y procesa los pagos.");
+        System.out.println(">> EJERCICIO 3: Figura, Circulo y Rectangulo");
+        System.out.println("-".repeat(40));
+        System.out.println("Crea una clase Figura con metodo area() que retorne 0.0.");
+        System.out.println("Crea Circulo que herede de Figura, con atributo radio,");
+        System.out.println("y area() retorne Math.PI * radio * radio.");
+        System.out.println("Crea Rectangulo que herede de Figura, con base y altura,");
+        System.out.println("y area() retorne base * altura.");
+        System.out.println("En el main, crea un array de Figura[] con un circulo y un");
+        System.out.println("rectangulo, y muestra el area de cada uno.");
         System.out.println();
-        System.out.println("PISTA: Empleado calcularPago = salarioPorHora * horas;");
-        System.out.println("// --- TU CODIGO AQUI ---");
-    }
-
-    static void mostrarPista(int n) {
-        String[][] pistas = {
-            {
-                "Pista 1: Sobrecarga = mismo nombre, diferentes parametros",
-                "Pista 2: 'void imprimir(String texto)' y 'void imprimir(int numero)'",
-                "Pista 3: 'void imprimir(int[] numeros)' usa for-each para imprimir"
-            },
-            {
-                "Pista 1: Animal es la clase base con metodo hacerSonido()",
-                "Pista 2: @Override en cada subclase",
-                "Pista 3: for(Animal a : animales) { a.hacerSonido(); }"
-            },
-            {
-                "Pista 1: 'interface Pagable { double calcularPago(); }'",
-                "Pista 2: 'class Factura implements Pagable'",
-                "Pista 3: Pagable[] pagos = {new Factura(100), new Empleado(15, 40)};"
-            }
-        };
-        if (n >= 1 && n <= pistas.length) {
-            for (String p : pistas[n - 1]) {
-                System.out.println(p);
-            }
-        }
-    }
-
-    static void mostrarSolucion(int n) {
-        Soluciones.main(new String[]{String.valueOf(n)});
+        System.out.println("// ==== ESCRIBE TU RESPUESTA AQUI ====");
     }
 }

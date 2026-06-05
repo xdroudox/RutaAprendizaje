@@ -1,69 +1,70 @@
+"""
+SOLUCIONES - Seguridad Web
+Ejecuta desde raiz: python scripts/runner.py 10 06 [ejercicio] solucion
+"""
 import sys
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-import html
+def solucion_1():
+    """Simula SQL injection: concatenar string vs usar parametros"""
+    import sqlite3
+    print(">> SQL INJECTION - Version VULNERABLE:")
+    print()
+    usuario = "admin' OR '1'='1"
+    query_vulnerable = f"SELECT * FROM usuarios WHERE nombre = '{usuario}'"
+    print(f"  Input: {usuario}")
+    print(f"  Query: {query_vulnerable}")
+    print("  Problema: el atacante inyecta SQL para evitar la autenticacion.")
+    print()
+    print(">> Version SEGURA (parametrizada):")
+    query_segura = "SELECT * FROM usuarios WHERE nombre = ?"
+    print(f"  Query: {query_segura}")
+    print("  Los datos se pasan por separado, nunca se concatenan.")
 
-def ejercicio_1():
-    print(">> SOLUCION EJERCICIO 1: SQL Injection")
-    print("")
-    print("Problema: concatenar el input del usuario directamente en la query")
-    print("permite inyeccion SQL. Un atacante puede ingresar: \" OR 1=1; --")
-    print("")
-    print("Solucion con consultas parametrizadas:")
-    print("")
-    print("  import sqlite3")
-    print("  conn = sqlite3.connect('basedatos.db')")
-    print("  cursor = conn.cursor()")
-    print("  usuario = input('Usuario: ')")
-    print("  cursor.execute('SELECT * FROM usuarios WHERE nombre = ?', (usuario,))")
-    print("  resultados = cursor.fetchall()")
+def solucion_2():
+    """Escapa HTML para prevenir XSS"""
+    import html
+    entrada = '<script>alert("xss")</script>'
+    sanitizado = html.escape(entrada)
+    print(f"Entrada original: {entrada}")
+    print(f"Sanitizado:       {sanitizado}")
+    print()
+    print("html.escape() convierte < > & \" ' en entidades HTML")
+    print("evitando que el navegador los interprete como codigo.")
 
-def ejercicio_2():
-    print(">> SOLUCION EJERCICIO 2: Sanitizar XSS")
-    def sanitizar(texto):
-        return html.escape(texto)
-    print("")
-    entrada = "<script>alert('xss')</script>"
-    print(f"Entrada: {entrada}")
-    print(f"Sanitizado: {sanitizar(entrada)}")
-
-def ejercicio_3():
-    print(">> SOLUCION EJERCICIO 3: Verificar CSP header")
+def solucion_3():
+    """Verifica headers de seguridad en una respuesta simulada"""
     headers = {
         "Content-Type": "text/html",
         "X-Frame-Options": "DENY",
+        "X-Content-Type-Options": "nosniff",
     }
+    headers_requeridos = [
+        "Content-Security-Policy",
+        "X-Frame-Options",
+        "X-Content-Type-Options",
+        "Strict-Transport-Security",
+    ]
+    print("Headers de la respuesta:")
+    for clave, valor in headers.items():
+        print(f"  {clave}: {valor}")
+    print()
+    for h in headers_requeridos:
+        if h not in headers:
+            print(f"ADVERTENCIA: Falta el header '{h}'")
     if "Content-Security-Policy" not in headers:
-        print("ADVERTENCIA: Falta el header Content-Security-Policy")
-        print("Se recomienda anadirlo para prevenir XSS:")
-        print("Content-Security-Policy: default-src 'self'")
-    else:
-        print("Header CSP presente")
-
-def menu():
-    print("=== Seguridad Web - Soluciones ===")
-    print("1. SQL Injection")
-    print("2. Sanitizar XSS")
-    print("3. Verificar CSP header")
-    print("0. Salir")
-    return input("Selecciona un ejercicio: ")
-
-def main():
-    while True:
-        opcion = menu()
-        if opcion == "1":
-            ejercicio_1()
-        elif opcion == "2":
-            ejercicio_2()
-        elif opcion == "3":
-            ejercicio_3()
-        elif opcion == "0":
-            break
-        else:
-            print("Opcion no valida")
-        input("Presiona Enter para continuar...")
+        print("  Recomendacion: Content-Security-Policy: default-src 'self'")
 
 if __name__ == "__main__":
-    main()
+    soluciones = [solucion_1, solucion_2, solucion_3]
+    if len(sys.argv) > 1 and sys.argv[1].isdigit():
+        num = int(sys.argv[1]) - 1
+        if 0 <= num < len(soluciones):
+            print(f">> SOLUCION {num + 1}: {soluciones[num].__doc__}")
+            print("-" * 40)
+            soluciones[num]()
+    else:
+        for i, sol in enumerate(soluciones, 1):
+            print(f"  {i}. {sol.__doc__}")

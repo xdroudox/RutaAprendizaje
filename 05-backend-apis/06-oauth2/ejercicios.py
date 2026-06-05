@@ -1,103 +1,55 @@
+"""
+EJERCICIOS - OAuth2
+Ejecuta desde raiz: python scripts/runner.py 5 6 [ejercicio]
+"""
 import sys
-
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
 def ejercicio_1():
-    print("=" * 50)
-    print("EJERCICIO 1: Identificar roles OAuth2")
-    print("=" * 50)
-    print()
-    print("TAREA: Dado el siguiente escenario, identifica el rol de cada")
-    print("participante segun OAuth2.")
-    print()
-    print('Escenario: "Una app de fotos (FotoApp) quiere acceder a las')
-    print('fotos de un usuario almacenadas en Google Fotos. El usuario')
-    print('inicia sesion con su cuenta de Google y autoriza a FotoApp.')
-    print('Google emite un token que FotoApp usa para leer las fotos."')
-    print()
-    print("  a) El usuario dueño de las fotos:")
-    print("  b) FotoApp:")
-    print("  c) Google (que emite el token):")
-    print("  d) Google Fotos API:")
-    print()
-    print("PISTA: Resource Owner, Client, Authorization Server, Resource Server")
+    """Identificar roles en OAuth2"""
+    entidades = [
+        "Usuario final con datos en Google",
+        "App web que quiere acceder a Google Drive",
+        "Servidor de Google que emite tokens",
+        "API de Google Drive que almacena archivos",
+    ]
+    roles = ["Resource Owner", "Client", "Authorization Server", "Resource Server"]
+    # Asigna cada entidad a su rol
+    # ==== ESCRIBE TU RESPUESTA AQUI ====
+    pass
 
 def ejercicio_2():
-    print("=" * 50)
-    print("EJERCICIO 2: Simular flujo Client Credentials")
-    print("=" * 50)
-    print()
-    print("TAREA: Implementa una funcion obtener_token(client_id, client_secret)")
-    print("que simule el flujo Client Credentials.")
-    print()
-    print("Reglas:")
-    print("  - Si client_id='mi_backend' y client_secret='pass123'")
-    print("    retorna un dict con access_token, token_type='Bearer',")
-    print("    expires_in=3600")
-    print("  - Si no, retorna None")
-    print()
-    print("PISTA: if client_id == 'mi_backend' and client_secret == 'pass123':")
+    """Simular flujo Authorization Code paso a paso"""
+    # Imprime los pasos del flujo:
+    # 1. Usuario hace clic en "Iniciar sesion con Google"
+    # 2. Redirige a auth server con client_id y redirect_uri
+    # 3. Usuario autentica y autoriza
+    # 4. Auth server devuelve authorization code
+    # 5. Cliente canjea code por access token
+    # 6. Cliente usa token para acceder a recurso
+    # ==== ESCRIBE TU RESPUESTA AQUI ====
+    pass
 
 def ejercicio_3():
-    print("=" * 50)
-    print("EJERCICIO 3: Secuencia del flujo Authorization Code")
-    print("=" * 50)
-    print()
-    print("TAREA: Ordena los siguientes pasos del flujo Authorization Code")
-    print("numerandolos del 1 al 6.")
-    print()
-    pasos = [
-        "El Auth Server devuelve un codigo de autorizacion al Client",
-        "La aplicacion redirige al usuario al Auth Server",
-        "El Client intercambia el codigo por un Access Token",
-        "El usuario inicia sesion y autoriza a la aplicacion",
-        "El Client usa el Access Token para acceder a recursos",
-        "El usuario solicita iniciar sesion con un proveedor externo",
-    ]
-    for i, paso in enumerate(pasos, 1):
-        print(f"  __. {paso}")
-    print()
-    print("PISTA: El orden logico es: solicitud -> redireccion -> login")
-    print("  -> codigo -> intercambio -> uso del token.")
-
-pistas = {
-    "1": "a) Resource Owner, b) Client, c) Authorization Server, d) Resource Server",
-    "2": "def obtener_token(client_id, client_secret): if client_id == 'mi_backend' and client_secret == 'pass123': return {'access_token': 'tokendemo123', 'token_type': 'Bearer', 'expires_in': 3600}; return None",
-    "3": "1-sexto, 2-segundo, 3-quinto, 4-tercero, 5-sexto, 6-primero. Orden: 6, 2, 4, 1, 3, 5"
-}
-
-def menu():
-    print("=" * 50)
-    print("OAUTH2 - EJERCICIOS")
-    print("=" * 50)
-    print("1 - Identificar roles OAuth2")
-    print("2 - Simular flujo Client Credentials")
-    print("3 - Secuencia Authorization Code")
-    print()
-    print("Usa: python ejercicios.py <numero>")
-    print("     python ejercicios.py <numero> -p  (pista)")
-
-def main():
-    args = sys.argv[1:]
-    if not args:
-        menu()
-        return
-    num = args[0]
-    mostrar_pista = "-p" in args
-    if mostrar_pista and num in pistas:
-        print("=== PISTA ===")
-        print(pistas[num])
-        print()
-    if num == "1":
-        ejercicio_1()
-    elif num == "2":
-        ejercicio_2()
-    elif num == "3":
-        ejercicio_3()
-    else:
-        print("Ejercicio no valido. Usa 1, 2 o 3.")
+    """Simular flujo Client Credentials"""
+    # Simula el flujo client_credentials:
+    # Cliente se autentica con client_id + client_secret
+    # Obtiene access token directamente
+    # Usa el token para llamar a la API
+    # ==== ESCRIBE TU RESPUESTA AQUI ====
+    pass
 
 if __name__ == "__main__":
-    main()
+    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    if len(sys.argv) > 1 and sys.argv[1].isdigit():
+        num = int(sys.argv[1]) - 1
+        if 0 <= num < len(ejercicios):
+            print(f">> EJERCICIO {num + 1}: {ejercicios[num].__doc__}")
+            print("-" * 40)
+            ejercicios[num]()
+    else:
+        print("EJERCICIOS:")
+        for i, ej in enumerate(ejercicios, 1):
+            print(f"  {i}. {ej.__doc__}")

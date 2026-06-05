@@ -1,64 +1,36 @@
+"""
+EJERCICIOS - Seguridad Web
+Ejecuta desde raiz: python scripts/runner.py 10 06 [ejercicio]
+"""
 import sys
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
 def ejercicio_1():
-    print(">> EJERCICIO 1: Detecta SQL Injection")
-    print("")
-    print("Dado el siguiente codigo vulnerable, identifica el problema")
-    print("y escribe la version corregida usando consultas parametrizadas.")
-    print("")
-    print("  usuario = input('Usuario: ')")
-    print("  query = f'SELECT * FROM usuarios WHERE nombre = \"{usuario}\"'")
-    print("")
-    print("# --- TU CODIGO AQUI ---")
+    """Simula SQL injection: concatenar string vs usar parametros"""
+    # ==== ESCRIBE TU RESPUESTA AQUI ====
     pass
 
 def ejercicio_2():
-    print(">> EJERCICIO 2: Sanitizar XSS")
-    print("")
-    print("Escribe una funcion que reciba un texto ingresado por el usuario")
-    print("y lo sanitice para evitar XSS, reemplazando < > & \" ' por sus")
-    print("entidades HTML.")
-    print("")
-    print("# --- TU CODIGO AQUI ---")
+    """Escapa HTML para prevenir XSS"""
+    import html
+    # ==== ESCRIBE TU RESPUESTA AQUI ====
     pass
 
 def ejercicio_3():
-    print(">> EJERCICIO 3: Verificar CSP header")
-    print("")
-    print("Simula la respuesta HTTP de un servidor y verifica si incluye")
-    print("el header Content-Security-Policy. Si no lo incluye, muestra")
-    print("una advertencia de seguridad.")
-    print("")
-    print("PISTA: usa un diccionario para simular los headers")
-    print("")
-    print("# --- TU CODIGO AQUI ---")
+    """Verifica headers de seguridad en una respuesta simulada"""
+    # ==== ESCRIBE TU RESPUESTA AQUI ====
     pass
 
-def menu():
-    print("=== Seguridad Web - Ejercicios ===")
-    print("1. Detectar SQL Injection")
-    print("2. Sanitizar XSS")
-    print("3. Verificar CSP header")
-    print("0. Salir")
-    return input("Selecciona un ejercicio: ")
-
-def main():
-    while True:
-        opcion = menu()
-        if opcion == "1":
-            ejercicio_1()
-        elif opcion == "2":
-            ejercicio_2()
-        elif opcion == "3":
-            ejercicio_3()
-        elif opcion == "0":
-            break
-        else:
-            print("Opcion no valida")
-        input("Presiona Enter para continuar...")
-
 if __name__ == "__main__":
-    main()
+    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    if len(sys.argv) > 1 and sys.argv[1].isdigit():
+        num = int(sys.argv[1]) - 1
+        if 0 <= num < len(ejercicios):
+            print(f">> EJERCICIO {num + 1}: {ejercicios[num].__doc__}")
+            print("-" * 40)
+            ejercicios[num]()
+    else:
+        for i, ej in enumerate(ejercicios, 1):
+            print(f"  {i}. {ej.__doc__}")

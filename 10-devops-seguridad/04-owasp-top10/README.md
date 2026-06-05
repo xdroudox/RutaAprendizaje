@@ -109,22 +109,25 @@ acceder a servicios internos desde el servidor web.
 
 ---
 
-## Cuestionario
+## Preguntas de reflexion
 
 <details>
-<summary>Pregunta 1: Un usuario modifica el id en la URL de /perfil/123 a /perfil/456
-y ve los datos de otro usuario. Que vulnerabilidad OWASP es?</summary>
+<summary>Pregunta 1: Un usuario modifica el id en la URL de /perfil/123 a /perfil/456 y ve los datos de otro usuario. Que vulnerabilidad OWASP es?</summary>
+
 A01: Broken Access Control. No se valida que el usuario sea propietario del recurso.
 </details>
 
 <details>
-<summary>Pregunta 2: Que tecnica evita SQL Injection al construir consultas?</summary>
+<summary>Pregunta 2: Que tecnica de programacion evita completamente la inyeccion SQL?</summary>
+
 Usar consultas parametrizadas (prepared statements) en lugar de concatenar cadenas.
+Esto separa los datos del codigo SQL, haciendo imposible la inyeccion.
 </details>
 
 <details>
-<summary>Pregunta 3: Que medida principal recomienda OWASP contra A02 (Cryptographic
-Failures)?</summary>
-Cifrar datos sensibles en reposo y en transito usando algoritmos modernos como
-AES-256, TLS 1.3 y bcrypt para contrasenas.
+<summary>Pregunta 3: Cual es la diferencia entre A02 (Cryptographic Failures) y A07 (Authentication Failures)?</summary>
+
+A02 se refiere a datos no cifrados o cifrados con algoritmos debiles (ej: usar MD5 para
+contrasenas). A07 se refiere a fallos en la autenticacion (ej: permitir brute force, no
+tener MFA). Se relacionan pero A02 es sobre cifrado y A07 es sobre procesos de login.
 </details>

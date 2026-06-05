@@ -1,95 +1,26 @@
 # JSON y XML
 
-## JSON (JavaScript Object Notation)
+JSON (JavaScript Object Notation) y XML (eXtensible Markup Language) son formatos de intercambio de datos.
 
-Formato ligero de intercambio de datos. Basado en pares clave-valor.
+## JSON
+- Ligero y legible
+- `json.dumps()`: dict/lista a string JSON
+- `json.loads()`: string JSON a dict/lista
+- `json.dump()`: escribe JSON a archivo
+- `json.load()`: lee JSON desde archivo
 
-```json
-{
-    "nombre": "Ana",
-    "edad": 30,
-    "activo": true,
-    "hobbies": ["leer", "correr"],
-    "direccion": {
-        "ciudad": "Madrid",
-        "cp": "28001"
-    }
-}
-```
+## XML
+- Mas verboso, con etiquetas
+- Usa `xml.etree.ElementTree`
+- Soporta atributos y namespaces
 
-### Tipos JSON
+## Ejercicios
 
-- String: "texto"
-- Number: 42, 3.14
-- Boolean: true, false
-- Null: null
-- Array: [1, 2, 3]
-- Object: {"clave": "valor"}
+1. **Convertir dict a JSON** - Usar json.dumps() para serializar un diccionario.
+   **Ejecuta:** `python scripts/runner.py 5 3 1`
 
-### Modulo json en Python
+2. **Parsear JSON a dict** - Usar json.loads() para deserializar un string JSON.
+   **Ejecuta:** `python scripts/runner.py 5 3 2`
 
-```python
-import json
-
-# Dict a JSON string
-datos = {"nombre": "Ana", "edad": 30}
-json_str = json.dumps(datos, indent=2)
-print(json_str)
-
-# JSON string a dict
-datos2 = json.loads(json_str)
-print(datos2["nombre"])
-
-# Guardar a archivo
-with open("datos.json", "w") as f:
-    json.dump(datos, f, indent=2)
-
-# Leer de archivo
-with open("datos.json") as f:
-    datos3 = json.load(f)
-```
-
-## XML (eXtensible Markup Language)
-
-Formato de marcado para datos estructurados.
-
-```xml
-<persona>
-    <nombre>Ana</nombre>
-    <edad>30</edad>
-    <activo>true</activo>
-    <hobbies>
-        <hobbie>leer</hobbie>
-        <hobbie>correr</hobbie>
-    </hobbies>
-    <direccion>
-        <ciudad>Madrid</ciudad>
-        <cp>28001</cp>
-    </direccion>
-</persona>
-```
-
-### Cuando usar cada uno
-
-| JSON | XML |
-|------|-----|
-| Ligero y rapido | Mas verboso |
-| Ideal para APIs REST | Usado en SOAP, configs |
-| Tipos nativos | Todo es texto |
-| Sin atributos | Soporta atributos |
-| Facil de leer | Mas estructurado |
-
-```python
-import json
-
-# Serializar
-datos = {"producto": "Laptop", "precio": 1200.50}
-print(json.dumps(datos, indent=2))
-
-# Deserializar
-json_str = '{"producto": "Laptop", "precio": 1200.50}'
-datos = json.loads(json_str)
-print(datos["producto"])
-```
-
-Ejecuta: python ejercicios.py 1
+3. **Leer JSON de archivo** - Usar json.load() para leer datos desde un archivo JSON.
+   **Ejecuta:** `python scripts/runner.py 5 3 3`

@@ -1,8 +1,13 @@
+/**
+ * SOLUCIONES - Principios SOLID
+ * Ejecuta: python scripts/runner.py 2 6 [ejercicio] -s
+ */
 public class Soluciones {
+
     public static void main(String[] args) {
         if (args.length > 0) {
-            int n = Integer.parseInt(args[0]);
-            switch (n) {
+            int num = Integer.parseInt(args[0]);
+            switch (num) {
                 case 1: solucion_1(); break;
                 case 2: solucion_2(); break;
                 case 3: solucion_3(); break;
@@ -14,106 +19,95 @@ public class Soluciones {
     }
 
     static void solucion_1() {
-        System.out.println("=== SOLUCION 1: SRP - Refactorizar Pedido ===");
-        System.out.println("// Clase 1: Solo datos del pedido");
-        System.out.println("class Pedido {");
-        System.out.println("    private int id;");
-        System.out.println("    private List<Producto> productos;");
-        System.out.println("    public double calcularTotal() {");
-        System.out.println("        return productos.stream().mapToDouble(Producto::getPrecio).sum();");
+        System.out.println("=== SOLUCION 1: SRP ===");
+        System.out.println("class Reporte {");
+        System.out.println("    String titulo;");
+        System.out.println("    String contenido;");
+        System.out.println();
+        System.out.println("    Reporte(String titulo, String contenido) {");
+        System.out.println("        this.titulo = titulo;");
+        System.out.println("        this.contenido = contenido;");
         System.out.println("    }");
         System.out.println("}");
         System.out.println();
-        System.out.println("// Clase 2: Persistencia");
-        System.out.println("class PedidoDAO {");
-        System.out.println("    public void guardar(Pedido p) {");
-        System.out.println("        System.out.println(\"Guardando pedido en BD...\");");
+        System.out.println("class Impresora {");
+        System.out.println("    static void imprimir(Reporte r) {");
+        System.out.println("        System.out.println(r.titulo);");
+        System.out.println("        System.out.println(\"---\");");
+        System.out.println("        System.out.println(r.contenido);");
         System.out.println("    }");
         System.out.println("}");
         System.out.println();
-        System.out.println("// Clase 3: Facturacion y notificacion");
-        System.out.println("class FacturaService {");
-        System.out.println("    public void imprimirFactura(Pedido p) {");
-        System.out.println("        System.out.println(\"Imprimiendo factura...\");");
-        System.out.println("    }");
-        System.out.println("    public void enviarEmail(Pedido p) {");
-        System.out.println("        System.out.println(\"Enviando email...\");");
-        System.out.println("    }");
-        System.out.println("}");
+        System.out.println("// En el main:");
+        System.out.println("Reporte r = new Reporte(\"Ventas\", \"Resumen del mes\");");
+        System.out.println("Impresora.imprimir(r);");
         System.out.println();
-        System.out.println("Explicacion: Cada clase tiene una unica responsabilidad.");
-        System.out.println("Pedido solo maneja datos, PedidoDAO solo persistencia, FacturaService solo facturacion.");
+        System.out.println("Explicacion: Reporte solo almacena datos. Impresora solo imprime. SRP cumplido.");
     }
 
     static void solucion_2() {
-        System.out.println("=== SOLUCION 2: OCP - Sistema de descuentos ===");
+        System.out.println("=== SOLUCION 2: OCP ===");
         System.out.println("interface Descuento {");
-        System.out.println("    double aplicar(double monto);");
+        System.out.println("    double aplicar(double precio);");
         System.out.println("}");
         System.out.println();
-        System.out.println("class DescuentoNormal implements Descuento {");
-        System.out.println("    @Override");
-        System.out.println("    public double aplicar(double monto) { return monto; }");
+        System.out.println("class DescuentoPorcentaje implements Descuento {");
+        System.out.println("    double porcentaje;");
+        System.out.println("    DescuentoPorcentaje(double porcentaje) { this.porcentaje = porcentaje; }");
+        System.out.println("    public double aplicar(double precio) { return precio * (1 - porcentaje / 100); }");
         System.out.println("}");
         System.out.println();
-        System.out.println("class DescuentoPremium implements Descuento {");
-        System.out.println("    @Override");
-        System.out.println("    public double aplicar(double monto) { return monto * 0.90; }");
+        System.out.println("class DescuentoFijo implements Descuento {");
+        System.out.println("    double cantidad;");
+        System.out.println("    DescuentoFijo(double cantidad) { this.cantidad = cantidad; }");
+        System.out.println("    public double aplicar(double precio) { return Math.max(0, precio - cantidad); }");
         System.out.println("}");
         System.out.println();
-        System.out.println("class DescuentoVIP implements Descuento {");
-        System.out.println("    @Override");
-        System.out.println("    public double aplicar(double monto) { return monto * 0.75; }");
-        System.out.println("}");
-        System.out.println();
-        System.out.println("class CalculadoraDescuento {");
-        System.out.println("    public double calcular(Descuento descuento, double monto) {");
-        System.out.println("        return descuento.aplicar(monto);");
+        System.out.println("class CalculadoraPrecio {");
+        System.out.println("    double calcular(double precio, Descuento d) {");
+        System.out.println("        return d.aplicar(precio);");
         System.out.println("    }");
         System.out.println("}");
         System.out.println();
-        System.out.println("Explicacion: Para anadir un nuevo descuento, solo creamos una nueva clase.");
-        System.out.println("No modificamos el codigo existente. Abierto a extension, cerrado a modificacion.");
+        System.out.println("// En el main:");
+        System.out.println("CalculadoraPrecio calc = new CalculadoraPrecio();");
+        System.out.println("System.out.println(calc.calcular(100, new DescuentoPorcentaje(10))); // 90.0");
+        System.out.println("System.out.println(calc.calcular(100, new DescuentoFijo(15)));      // 85.0");
+        System.out.println();
+        System.out.println("Explicacion: Para aniadir un nuevo descuento, solo se crea una clase nueva.");
+        System.out.println("No se modifica codigo existente. OCP cumplido.");
     }
 
     static void solucion_3() {
-        System.out.println("=== SOLUCION 3: DIP - Sistema de notificaciones ===");
-        System.out.println("interface Notificador {");
-        System.out.println("    void enviar(String mensaje);");
+        System.out.println("=== SOLUCION 3: DIP ===");
+        System.out.println("interface BaseDatos {");
+        System.out.println("    void guardar(String dato);");
         System.out.println("}");
         System.out.println();
-        System.out.println("class EmailNotificador implements Notificador {");
-        System.out.println("    @Override");
-        System.out.println("    public void enviar(String mensaje) {");
-        System.out.println("        System.out.println(\"Enviando email: \" + mensaje);");
+        System.out.println("class BaseDatosMySQL implements BaseDatos {");
+        System.out.println("    public void guardar(String dato) {");
+        System.out.println("        System.out.println(\"Guardado en MySQL: \" + dato);");
         System.out.println("    }");
         System.out.println("}");
         System.out.println();
-        System.out.println("class SMSNotificador implements Notificador {");
-        System.out.println("    @Override");
-        System.out.println("    public void enviar(String mensaje) {");
-        System.out.println("        System.out.println(\"Enviando SMS: \" + mensaje);");
+        System.out.println("class BaseDatosArchivo implements BaseDatos {");
+        System.out.println("    public void guardar(String dato) {");
+        System.out.println("        System.out.println(\"Guardado en archivo: \" + dato);");
         System.out.println("    }");
         System.out.println("}");
         System.out.println();
-        System.out.println("class ServicioNotificacion {");
-        System.out.println("    private Notificador notificador;");
-        System.out.println();
-        System.out.println("    public ServicioNotificacion(Notificador notificador) {");
-        System.out.println("        this.notificador = notificador;");
-        System.out.println("    }");
-        System.out.println();
-        System.out.println("    public void notificar(String mensaje) {");
-        System.out.println("        notificador.enviar(mensaje);");
-        System.out.println("    }");
+        System.out.println("class Servicio {");
+        System.out.println("    private BaseDatos db;");
+        System.out.println("    Servicio(BaseDatos db) { this.db = db; }");
+        System.out.println("    void procesar(String dato) { db.guardar(dato); }");
         System.out.println("}");
         System.out.println();
-        System.out.println("// Uso:");
-        System.out.println("// Notificador email = new EmailNotificador();");
-        System.out.println("// ServicioNotificacion s = new ServicioNotificacion(email);");
-        System.out.println("// s.notificar(\"Hola\");");
+        System.out.println("// En el main:");
+        System.out.println("Servicio s1 = new Servicio(new BaseDatosMySQL());");
+        System.out.println("Servicio s2 = new Servicio(new BaseDatosArchivo());");
+        System.out.println("s1.procesar(\"datos\");");
+        System.out.println("s2.procesar(\"datos\");");
         System.out.println();
-        System.out.println("Explicacion: ServicioNotificacion depende de la abstraccion Notificador,");
-        System.out.println("no de una implementacion concreta. Podemos cambiar el tipo de notificacion facilmente.");
+        System.out.println("Explicacion: Servicio depende de la abstraccion BaseDatos, no de clases concretas.");
     }
 }

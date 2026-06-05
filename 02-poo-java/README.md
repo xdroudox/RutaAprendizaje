@@ -4,15 +4,15 @@
 
 | Modulo | Tema | Estado |
 |--------|------|--------|
-| 01 | Clases y Objetos | Pendiente |
-| 02 | Encapsulacion | Pendiente |
-| 03 | Herencia | Pendiente |
-| 04 | Polimorfismo | Pendiente |
-| 05 | Interfaces y Clases Abstractas | Pendiente |
-| 06 | Principios SOLID | Pendiente |
-| 07 | Excepciones | Pendiente |
-| 08 | Colecciones y Genericos | Pendiente |
-| 09 | Java I/O | Pendiente |
+| 01 | Clases y Objetos | Completado |
+| 02 | Encapsulacion | Completado |
+| 03 | Herencia | Completado |
+| 04 | Polimorfismo | Completado |
+| 05 | Interfaces y Clases Abstractas | Completado |
+| 06 | Principios SOLID | Completado |
+| 07 | Excepciones | Completado |
+| 08 | Colecciones y Genericos | Completado |
+| 09 | Java I/O | Completado |
 
 ## Objetivo
 
@@ -44,16 +44,20 @@ Cada modulo contiene tres archivos:
   Soluciones.java  -- Soluciones comentadas
 ```
 
-Para compilar y ejecutar los ejercicios:
+Para ejecutar un ejercicio desde la raiz del proyecto:
 
 ```bash
-javac Ejercicios.java && java Ejercicios
+python scripts/runner.py 2 [modulo] [ejercicio]
 ```
 
-Para ver una solucion especifica:
-
+Ejemplo:
 ```bash
-java Ejercicios -s NUMERO
+python scripts/runner.py 2 1 1
+```
+
+Para ver la solucion:
+```bash
+python scripts/runner.py 2 1 1 -s
 ```
 
 ## Navegacion rapida

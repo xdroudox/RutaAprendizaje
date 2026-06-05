@@ -1,94 +1,67 @@
-import sys, json, base64, hashlib
-
+"""
+SOLUCIONES - JWT y Autenticacion
+Ejecuta desde raiz: python scripts/runner.py 5 5 1 -s
+"""
+import sys
+import base64
+import json
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-def generar_jwt(payload, secreto):
+def b64_encode(data):
+    return base64.urlsafe_b64encode(json.dumps(data).encode()).rstrip(b"=").decode()
+
+def b64_decode(data):
+    padding = 4 - len(data) % 4
+    if padding != 4:
+        data += "=" * padding
+    return json.loads(base64.urlsafe_b64decode(data).decode())
+
+def ejercicio_1():
+    """Crear un JWT simple (header.payload.firma)"""
     header = {"alg": "HS256", "typ": "JWT"}
-    header_b64 = base64.urlsafe_b64encode(json.dumps(header, separators=(",", ":")).encode()).rstrip(b"=").decode()
-    payload_b64 = base64.urlsafe_b64encode(json.dumps(payload, separators=(",", ":")).encode()).rstrip(b"=").decode()
-    firma_input = f"{header_b64}.{payload_b64}{secreto}".encode()
-    firma = hashlib.sha256(firma_input).hexdigest()
-    return f"{header_b64}.{payload_b64}.{firma}"
+    payload = {"sub": "123", "name": "Ana", "iat": 1700000000}
+    header_b64 = b64_encode(header)
+    payload_b64 = b64_encode(payload)
+    firma = "firma_simple"
+    firma_b64 = base64.urlsafe_b64encode(firma.encode()).rstrip(b"=").decode()
+    token = f"{header_b64}.{payload_b64}.{firma_b64}"
+    print(f"JWT generado: {token}")
 
-def verificar_jwt(jwt, secreto):
-    partes = jwt.split(".")
-    if len(partes) != 3:
-        return False
-    firma_calc = hashlib.sha256(f"{partes[0]}.{partes[1]}{secreto}".encode()).hexdigest()
-    return firma_calc == partes[2]
+def ejercicio_2():
+    """Decodificar un JWT y extraer el payload"""
+    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjMiLCJuYW1lIjoiQW5hIiwiaWF0IjoxNzAwMDAwMDAwfQ.firma_falsa"
+    partes = token.split(".")
+    header_b64, payload_b64, firma_b64 = partes
+    header = b64_decode(header_b64)
+    payload = b64_decode(payload_b64)
+    print(f"Header: {header}")
+    print(f"Payload: {payload}")
+    print(f"Usuario: {payload.get('name')}")
 
-def solucion_1():
-    print("=" * 50)
-    print("SOLUCION 1: Decodificar un JWT")
-    print("=" * 50)
-    jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkFuYSBMb3BleiIsImlhdCI6MTUxNjIzOTAyMiwiZXhwIjoxNTE2MjQyNjIyfQ.XYZ123"
-    partes = jwt.split(".")
-    print("Partes del JWT:")
-    for i, etiqueta in enumerate(["Header", "Payload", "Signature"]):
-        print(f"  {etiqueta}: {partes[i]}")
-    print()
-    header_dec = json.loads(base64.urlsafe_b64decode(partes[0] + "==").decode())
-    payload_dec = json.loads(base64.urlsafe_b64decode(partes[1] + "==").decode())
-    print("Header decodificado:")
-    print(json.dumps(header_dec, indent=2))
-    print()
-    print("Payload decodificado:")
-    print(json.dumps(payload_dec, indent=2))
-
-def solucion_2():
-    print("=" * 50)
-    print("SOLUCION 2: Generar un JWT")
-    print("=" * 50)
-    payload = {"sub": "42", "name": "Carlos Ruiz", "rol": "admin"}
-    secreto = "mi_secreto_super_seguro"
-    jwt = generar_jwt(payload, secreto)
-    print("JWT generado:")
-    print(jwt)
-    print()
-    print("Partes:")
-    for i, etiqueta in enumerate(["Header", "Payload", "Signature"]):
-        print(f"  {etiqueta}: {jwt.split('.')[i]}")
-
-def solucion_3():
-    print("=" * 50)
-    print("SOLUCION 3: Verificar un JWT")
-    print("=" * 50)
-    payload = {"sub": "42", "name": "Carlos Ruiz", "rol": "admin"}
-    secreto = "mi_secreto_super_seguro"
-    jwt = generar_jwt(payload, secreto)
-    print("JWT generado:", jwt)
-    print()
-    valido = verificar_jwt(jwt, secreto)
-    print(f"Verificacion con secreto correcto: {valido}")
-    print()
-    falso = verificar_jwt(jwt, "otro_secreto")
-    print(f"Verificacion con secreto incorrecto: {falso}")
-    print()
-    print("Explicacion: la firma se calcula con el secreto, por lo que")
-    print("cambiar el secreto produce una firma diferente.")
-
-def menu():
-    print("SOLUCIONES - JWT Y AUTENTICACION")
-    print("1 - Decodificar un JWT")
-    print("2 - Generar un JWT")
-    print("3 - Verificar un JWT")
-
-def main():
-    args = sys.argv[1:]
-    if not args:
-        menu()
-        return
-    num = args[0]
-    if num == "1":
-        solucion_1()
-    elif num == "2":
-        solucion_2()
-    elif num == "3":
-        solucion_3()
+def ejercicio_3():
+    """Verificar si un JWT esta expirado"""
+    import time
+    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjMiLCJuYW1lIjoiQW5hIiwiZXhwIjoxNzAwMDAwMDAwfQ.firma"
+    payload_b64 = token.split(".")[1]
+    payload = b64_decode(payload_b64)
+    exp = payload.get("exp", 0)
+    ahora = time.time()
+    if ahora > exp:
+        print(f"Token EXPIRADO (exp: {exp}, ahora: {int(ahora)})")
     else:
-        print("Solucion no valida. Usa 1, 2 o 3.")
+        print(f"Token VALIDO (exp: {exp}, ahora: {int(ahora)})")
 
 if __name__ == "__main__":
-    main()
+    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    if len(sys.argv) > 1 and sys.argv[1].isdigit():
+        num = int(sys.argv[1]) - 1
+        if 0 <= num < len(ejercicios):
+            print(f">> SOLUCION {num + 1}: {ejercicios[num].__doc__}")
+            print("-" * 40)
+            ejercicios[num]()
+    else:
+        print("SOLUCIONES:")
+        for i, ej in enumerate(ejercicios, 1):
+            print(f"  {i}. {ej.__doc__}")

@@ -360,3 +360,24 @@ d) Una propiedad para colores
 <summary>Ver respuesta</summary>
 b) CSS Grid es un sistema de layout bidimensional que permite controlar filas y columnas.
 </details>
+
+---
+
+## Preguntas de reflexion
+
+Responde estas preguntas para profundizar tu comprension:
+
+### Pregunta 1: DOM vs CSSOM
+Explica la diferencia entre el DOM y el CSSOM. En que etapa del pipeline de rendering se combinan y cual es el resultado?
+
+### Pregunta 2: Reflow vs Repaint
+Un desarrollador cambia el `width` de un elemento y luego su `color`. Cual de estos cambios causa reflow y cual causa solo repaint? Por que es importante minimizar los reflows?
+
+### Pregunta 3: Event Loop
+Dado el siguiente codigo, explica en que orden se imprimen los mensajes y por que:
+```javascript
+console.log('Inicio');
+setTimeout(() => console.log('Timeout'), 0);
+Promise.resolve().then(() => console.log('Promise'));
+console.log('Fin');
+```

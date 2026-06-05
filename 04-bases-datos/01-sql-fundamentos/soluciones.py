@@ -1,121 +1,93 @@
-import sys, sqlite3
-
+"""
+SOLUCIONES - SQL Fundamentos
+Ejecuta desde raiz: python scripts/runner.py 4 1 [ejercicio]
+"""
+import sys
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-def get_db():
+def ejercicio_1():
+    """Escribe una consulta SELECT que muestre los usuarios mayores de 25"""
+    import sqlite3
     conn = sqlite3.connect(":memory:")
-    conn.row_factory = sqlite3.Row
-    return conn
+    c = conn.cursor()
+    c.executescript("""
+        CREATE TABLE usuarios (
+            id INTEGER PRIMARY KEY,
+            nombre TEXT NOT NULL,
+            edad INTEGER NOT NULL
+        );
+        INSERT INTO usuarios VALUES (1, 'Ana', 25);
+        INSERT INTO usuarios VALUES (2, 'Juan', 30);
+        INSERT INTO usuarios VALUES (3, 'Maria', 22);
+        INSERT INTO usuarios VALUES (4, 'Carlos', 28);
+        INSERT INTO usuarios VALUES (5, 'Laura', 19);
+    """)
+    conn.commit()
+    print(">>> Usuarios mayores de 25:")
+    query = "SELECT * FROM usuarios WHERE edad > 25"
+    c.execute(query)
+    for row in c.fetchall():
+        print(f"  {row[0]:<3} {row[1]:<8} {row[2]} anos")
 
-def mostrar_resultados(conn, query):
-    try:
-        cur = conn.execute(query)
-        filas = cur.fetchall()
-        if not filas:
-            print("(Sin resultados)")
-            return
-        headers = [d[0] for d in cur.description]
-        print(" | ".join(h for h in headers))
-        print("-" * 40)
-        for f in filas:
-            print(" | ".join(str(f[h]) for h in headers))
-    except Exception as e:
-        print("ERROR:", e)
-
-def solucion_1():
-    print("=" * 50)
-    print("SOLUCION 1: CREATE TABLE e INSERT")
-    print("=" * 50)
-    conn = get_db()
-    conn.executescript("""
+def ejercicio_2():
+    """Escribe un INSERT INTO para agregar un nuevo producto"""
+    import sqlite3
+    conn = sqlite3.connect(":memory:")
+    c = conn.cursor()
+    c.executescript("""
         CREATE TABLE productos (
             id INTEGER PRIMARY KEY,
-            nombre TEXT,
-            precio REAL,
-            stock INTEGER
+            nombre TEXT NOT NULL,
+            precio REAL NOT NULL,
+            stock INTEGER DEFAULT 0
         );
-        INSERT INTO productos VALUES (1, 'Laptop', 1200.00, 10);
+        INSERT INTO productos VALUES (1, 'Laptop', 999.99, 10);
         INSERT INTO productos VALUES (2, 'Mouse', 25.50, 50);
         INSERT INTO productos VALUES (3, 'Teclado', 45.00, 30);
     """)
-    query = "INSERT INTO productos VALUES (4, 'Monitor', 300.00, 15);"
-    conn.execute(query)
-    print("Consulta ejecutada:")
-    print(query)
-    print()
-    mostrar_resultados(conn, "SELECT * FROM productos;")
+    conn.commit()
+    print(">>> Agregando Monitor (id=4, precio=299.99, stock=15):")
+    query = "INSERT INTO productos VALUES (4, 'Monitor', 299.99, 15)"
+    c.execute(query)
+    conn.commit()
+    for row in c.execute("SELECT * FROM productos"):
+        print(f"  {row}")
 
-def solucion_2():
-    print("=" * 50)
-    print("SOLUCION 2: SELECT con WHERE")
-    print("=" * 50)
-    conn = get_db()
-    conn.executescript("""
-        CREATE TABLE empleados (
+def ejercicio_3():
+    """Escribe un UPDATE para aumentar precio y un DELETE para eliminar un registro"""
+    import sqlite3
+    conn = sqlite3.connect(":memory:")
+    c = conn.cursor()
+    c.executescript("""
+        CREATE TABLE productos (
             id INTEGER PRIMARY KEY,
-            nombre TEXT,
-            salario REAL,
-            departamento TEXT
+            nombre TEXT NOT NULL,
+            precio REAL NOT NULL,
+            stock INTEGER DEFAULT 0
         );
-        INSERT INTO empleados VALUES (1, 'Ana', 45000, 'Ventas');
-        INSERT INTO empleados VALUES (2, 'Luis', 52000, 'TI');
-        INSERT INTO empleados VALUES (3, 'Maria', 48000, 'Ventas');
-        INSERT INTO empleados VALUES (4, 'Carlos', 55000, 'TI');
-        INSERT INTO empleados VALUES (5, 'Sofia', 39000, 'RH');
+        INSERT INTO productos VALUES (1, 'Laptop', 999.99, 10);
+        INSERT INTO productos VALUES (2, 'Mouse', 25.50, 50);
+        INSERT INTO productos VALUES (3, 'Teclado', 45.00, 30);
+        INSERT INTO productos VALUES (4, 'Monitor', 299.99, 15);
     """)
-    query = "SELECT * FROM empleados WHERE departamento = 'Ventas' AND salario > 46000;"
-    print("Consulta ejecutada:")
-    print(query)
-    print()
-    mostrar_resultados(conn, query)
-
-def solucion_3():
-    print("=" * 50)
-    print("SOLUCION 3: ORDER BY y LIMIT")
-    print("=" * 50)
-    conn = get_db()
-    conn.executescript("""
-        CREATE TABLE estudiantes (
-            id INTEGER PRIMARY KEY,
-            nombre TEXT,
-            nota REAL,
-            ciudad TEXT
-        );
-        INSERT INTO estudiantes VALUES (1, 'Pedro', 8.5, 'Madrid');
-        INSERT INTO estudiantes VALUES (2, 'Laura', 9.2, 'Barcelona');
-        INSERT INTO estudiantes VALUES (3, 'Diego', 7.8, 'Madrid');
-        INSERT INTO estudiantes VALUES (4, 'Elena', 9.5, 'Barcelona');
-        INSERT INTO estudiantes VALUES (5, 'Jorge', 6.5, 'Valencia');
-        INSERT INTO estudiantes VALUES (6, 'Clara', 8.0, 'Valencia');
-    """)
-    query = "SELECT * FROM estudiantes ORDER BY nota DESC LIMIT 3;"
-    print("Consulta ejecutada:")
-    print(query)
-    print()
-    mostrar_resultados(conn, query)
-
-def menu():
-    print("SOLUCIONES - SQL FUNDAMENTOS")
-    print("1 - CREATE TABLE e INSERT")
-    print("2 - SELECT con WHERE")
-    print("3 - ORDER BY y LIMIT")
-
-def main():
-    args = sys.argv[1:]
-    if not args:
-        menu()
-        return
-    num = args[0]
-    if num == "1":
-        solucion_1()
-    elif num == "2":
-        solucion_2()
-    elif num == "3":
-        solucion_3()
-    else:
-        print("Solucion no valida. Usa 1, 2 o 3.")
+    conn.commit()
+    print(">>> Actualizando Mouse a 30.00 y eliminando Teclado (id=3):")
+    c.execute("UPDATE productos SET precio = 30.00 WHERE nombre = 'Mouse'")
+    c.execute("DELETE FROM productos WHERE id = 3")
+    conn.commit()
+    for row in c.execute("SELECT * FROM productos ORDER BY id"):
+        print(f"  {row}")
 
 if __name__ == "__main__":
-    main()
+    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    if len(sys.argv) > 1 and sys.argv[1].isdigit():
+        num = int(sys.argv[1]) - 1
+        if 0 <= num < len(ejercicios):
+            print(f">> EJERCICIO {num + 1}: {ejercicios[num].__doc__}")
+            print("-" * 40)
+            ejercicios[num]()
+    else:
+        for i, ej in enumerate(ejercicios, 1):
+            print(f"  {i}. {ej.__doc__}")

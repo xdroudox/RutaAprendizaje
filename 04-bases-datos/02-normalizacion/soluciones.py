@@ -1,141 +1,125 @@
-import sys, sqlite3
-
+"""
+SOLUCIONES - Normalizacion
+Ejecuta desde raiz: python scripts/runner.py 4 2 [ejercicio]
+"""
+import sys
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-def get_db():
+def ejercicio_1():
+    """Identifica la violacion de 1NF: columna con multiples valores separados por comas"""
+    import sqlite3
     conn = sqlite3.connect(":memory:")
-    conn.row_factory = sqlite3.Row
-    return conn
-
-def mostrar_resultados(conn, query):
-    try:
-        cur = conn.execute(query)
-        filas = cur.fetchall()
-        if not filas:
-            print("(Sin resultados)")
-            return
-        headers = [d[0] for d in cur.description]
-        print(" | ".join(h for h in headers))
-        print("-" * 40)
-        for f in filas:
-            print(" | ".join(str(f[h]) for h in headers))
-    except Exception as e:
-        print("ERROR:", e)
-
-def solucion_1():
-    print("=" * 50)
-    print("SOLUCION 1: Primera Forma Normal (1NF)")
-    print("=" * 50)
-    conn = get_db()
-    conn.executescript("""
-        CREATE TABLE ordenes (
-            orden_id INTEGER PRIMARY KEY,
-            cliente TEXT
-        );
-        CREATE TABLE detalle_orden (
-            orden_id INTEGER,
-            producto TEXT,
-            FOREIGN KEY (orden_id) REFERENCES ordenes(orden_id)
-        );
-        INSERT INTO ordenes VALUES (1, 'Ana'), (2, 'Luis'), (3, 'Maria');
-        INSERT INTO detalle_orden VALUES
-            (1, 'Laptop'), (1, 'Mouse'),
-            (2, 'Teclado'),
-            (3, 'Monitor'), (3, 'Laptop'), (3, 'Mouse');
-    """)
-    query = """
-        SELECT o.orden_id, o.cliente, d.producto
-        FROM ordenes o
-        JOIN detalle_orden d ON o.orden_id = d.orden_id;
-    """
-    print("Consulta ejecutada:")
-    print(query.strip())
-    print()
-    mostrar_resultados(conn, query)
-
-def solucion_2():
-    print("=" * 50)
-    print("SOLUCION 2: Tercera Forma Normal (3NF)")
-    print("=" * 50)
-    conn = get_db()
-    conn.executescript("""
-        CREATE TABLE departamentos (
-            dept_id TEXT PRIMARY KEY,
-            nombre TEXT,
-            ciudad TEXT
-        );
-        INSERT INTO departamentos VALUES
-            ('D1', 'Ventas', 'Madrid'),
-            ('D2', 'TI', 'Barcelona');
-        CREATE TABLE empleados (
+    c = conn.cursor()
+    # Esquema normalizado a 1FN
+    c.executescript("""
+        CREATE TABLE estudiantes (
             id INTEGER PRIMARY KEY,
-            nombre TEXT,
-            dept_id TEXT,
-            FOREIGN KEY (dept_id) REFERENCES departamentos(dept_id)
+            nombre TEXT NOT NULL
         );
-        INSERT INTO empleados VALUES
-            (1, 'Ana', 'D1'),
-            (2, 'Luis', 'D2'),
-            (3, 'Pedro', 'D1');
-    """)
-    query = """
-        SELECT e.id, e.nombre, d.nombre AS dept_nombre, d.ciudad
-        FROM empleados e
-        JOIN departamentos d ON e.dept_id = d.dept_id;
-    """
-    print("Consulta ejecutada:")
-    print(query.strip())
-    print()
-    mostrar_resultados(conn, query)
-
-def solucion_3():
-    print("=" * 50)
-    print("SOLUCION 3: Desnormalizacion")
-    print("=" * 50)
-    conn = get_db()
-    conn.executescript("""
-        CREATE TABLE pedidos_con_cliente (
+        CREATE TABLE cursos (
             id INTEGER PRIMARY KEY,
-            cliente_id INTEGER,
-            cliente_nombre TEXT,
-            fecha TEXT
+            nombre TEXT NOT NULL
         );
-        INSERT INTO pedidos_con_cliente VALUES
-            (1, 1, 'Ana', '2024-01-15'),
-            (2, 2, 'Luis', '2024-01-16'),
-            (3, 1, 'Ana', '2024-01-17');
+        CREATE TABLE estudiante_curso (
+            estudiante_id INTEGER,
+            curso_id INTEGER,
+            PRIMARY KEY (estudiante_id, curso_id),
+            FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id),
+            FOREIGN KEY (curso_id) REFERENCES cursos(id)
+        );
+        INSERT INTO estudiantes VALUES (1, 'Ana'), (2, 'Juan'), (3, 'Maria');
+        INSERT INTO cursos VALUES (1, 'Matematicas'), (2, 'Historia'), (3, 'Ciencias'), (4, 'Arte'), (5, 'Musica');
+        INSERT INTO estudiante_curso VALUES (1, 1), (1, 2), (2, 3), (2, 4), (2, 5), (3, 2), (3, 3);
     """)
-    query = "SELECT * FROM pedidos_con_cliente;"
-    print("Consulta ejecutada:")
-    print(query)
+    conn.commit()
+    print(">>> Esquema normalizado a 1FN:")
+    print("  Tabla: estudiantes, cursos, estudiante_curso")
     print()
-    mostrar_resultados(conn, query)
-    print()
-    print("Nota: Hay redundancia (Ana aparece varias veces) pero")
-    print("evitamos JOINs en consultas frecuentes.")
+    print("  Estudiantes:")
+    for row in c.execute("SELECT * FROM estudiantes"):
+        print(f"    {row}")
+    print("  Cursos:")
+    for row in c.execute("SELECT * FROM cursos"):
+        print(f"    {row}")
+    print("  Relaciones:")
+    for row in c.execute("SELECT e.nombre, c.nombre FROM estudiante_curso ec JOIN estudiantes e ON ec.estudiante_id=e.id JOIN cursos c ON ec.curso_id=c.id"):
+        print(f"    {row[0]} -> {row[1]}")
 
-def menu():
-    print("SOLUCIONES - NORMALIZACION")
-    print("1 - Primera Forma Normal (1NF)")
-    print("2 - Tercera Forma Normal (3NF)")
-    print("3 - Desnormalizacion")
+def ejercicio_2():
+    """Normaliza a 2FN: elimina dependencias parciales en una tabla de calificaciones"""
+    import sqlite3
+    conn = sqlite3.connect(":memory:")
+    c = conn.cursor()
+    # Esquema normalizado a 2FN
+    c.executescript("""
+        CREATE TABLE estudiantes (
+            id INTEGER PRIMARY KEY,
+            nombre TEXT NOT NULL
+        );
+        CREATE TABLE cursos (
+            id INTEGER PRIMARY KEY,
+            nombre TEXT NOT NULL,
+            profesor TEXT NOT NULL
+        );
+        CREATE TABLE calificaciones (
+            estudiante_id INTEGER,
+            curso_id INTEGER,
+            nota REAL,
+            PRIMARY KEY (estudiante_id, curso_id),
+            FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id),
+            FOREIGN KEY (curso_id) REFERENCES cursos(id)
+        );
+        INSERT INTO estudiantes VALUES (1, 'Ana'), (2, 'Juan');
+        INSERT INTO cursos VALUES (101, 'Matematicas', 'Dr. Lopez'), (102, 'Historia', 'Dra. Perez'), (103, 'Ciencias', 'Dr. Garcia');
+        INSERT INTO calificaciones VALUES (1, 101, 8.5), (1, 102, 9.0), (2, 101, 7.5), (2, 103, 8.0);
+    """)
+    conn.commit()
+    print(">>> Esquema normalizado a 2FN (sin dependencias parciales):")
+    for row in c.execute("SELECT e.nombre, c.nombre, c.profesor, cal.nota FROM calificaciones cal JOIN estudiantes e ON cal.estudiante_id=e.id JOIN cursos c ON cal.curso_id=c.id"):
+        print(f"  {row[0]:<8} | {row[1]:<12} | {row[2]:<12} | {row[3]}")
 
-def main():
-    args = sys.argv[1:]
-    if not args:
-        menu()
-        return
-    num = args[0]
-    if num == "1":
-        solucion_1()
-    elif num == "2":
-        solucion_2()
-    elif num == "3":
-        solucion_3()
-    else:
-        print("Solucion no valida. Usa 1, 2 o 3.")
+def ejercicio_3():
+    """Normaliza a 3FN: elimina dependencias transitivas en una tabla de pedidos"""
+    import sqlite3
+    conn = sqlite3.connect(":memory:")
+    c = conn.cursor()
+    # Esquema normalizado a 3FN
+    c.executescript("""
+        CREATE TABLE clientes (
+            id INTEGER PRIMARY KEY,
+            nombre TEXT NOT NULL,
+            ciudad TEXT NOT NULL
+        );
+        CREATE TABLE pedidos (
+            id INTEGER PRIMARY KEY,
+            cliente_id INTEGER NOT NULL,
+            producto TEXT NOT NULL,
+            cantidad INTEGER NOT NULL,
+            total REAL NOT NULL,
+            FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+        );
+        INSERT INTO clientes VALUES (1, 'Ana', 'Madrid'), (2, 'Juan', 'Barcelona'), (3, 'Maria', 'Valencia');
+        INSERT INTO pedidos VALUES (1, 1, 'Laptop', 1, 999.99), (2, 2, 'Mouse', 2, 51.00), (3, 1, 'Teclado', 1, 45.00), (4, 3, 'Monitor', 2, 599.98);
+    """)
+    conn.commit()
+    print(">>> Esquema normalizado a 3FN (sin dependencias transitivas):")
+    print("  Clientes:")
+    for row in c.execute("SELECT * FROM clientes"):
+        print(f"    {row}")
+    print("  Pedidos:")
+    for row in c.execute("SELECT * FROM pedidos JOIN clientes ON pedidos.cliente_id=clientes.id"):
+        print(f"    Pedido {row[0]}: {row[5]} ({row[6]}) - {row[3]} x {row[4]}")
 
 if __name__ == "__main__":
-    main()
+    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    if len(sys.argv) > 1 and sys.argv[1].isdigit():
+        num = int(sys.argv[1]) - 1
+        if 0 <= num < len(ejercicios):
+            print(f">> EJERCICIO {num + 1}: {ejercicios[num].__doc__}")
+            print("-" * 40)
+            ejercicios[num]()
+    else:
+        for i, ej in enumerate(ejercicios, 1):
+            print(f"  {i}. {ej.__doc__}")

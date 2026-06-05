@@ -1,71 +1,56 @@
 # SQL Fundamentos
 
-## CREATE TABLE
+## Contenido
+- Creacion de tablas con CREATE TABLE
+- Insercion de datos con INSERT INTO
+- Consultas con SELECT y WHERE
+- Actualizacion con UPDATE y eliminacion con DELETE
 
-Crea una nueva tabla en la base de datos. Define columnas con sus tipos.
+## Ejercicios
+
+| #  | Ejercicio                                           |
+|----|-----------------------------------------------------|
+| 1  | SELECT con WHERE (usuarios mayores de 25)           |
+| 2  | INSERT INTO (agregar un nuevo producto)             |
+| 3  | UPDATE y DELETE (actualizar precio, eliminar)       |
+
+## Comandos
+
+Ejecutar un ejercicio especifico:
+
+```bash
+python scripts/runner.py 4 1 1
+python scripts/runner.py 4 1 2
+python scripts/runner.py 4 1 3
+```
+
+Ejecutar solucion:
+
+```bash
+python scripts/runner.py 4 1 1 --solucion
+```
+
+
+## Resumen SQL
 
 ```sql
-CREATE TABLE usuarios (
+-- Crear tabla
+CREATE TABLE productos (
     id INTEGER PRIMARY KEY,
     nombre TEXT NOT NULL,
-    edad INTEGER
+    precio REAL NOT NULL,
+    stock INTEGER DEFAULT 0
 );
-```
 
-Tipos comunes en SQLite: `INTEGER`, `TEXT`, `REAL`, `BLOB`, `NULL`.
+-- Insertar datos
+INSERT INTO productos VALUES (1, 'Laptop', 999.99, 10);
 
-## INSERT
+-- Consultar
+SELECT * FROM productos WHERE precio > 100;
 
-Agrega filas a una tabla.
+-- Actualizar
+UPDATE productos SET precio = 30.00 WHERE nombre = 'Mouse';
 
-```sql
-INSERT INTO usuarios VALUES (1, 'Ana', 25);
-INSERT INTO usuarios (nombre, edad) VALUES ('Luis', 35);
-```
-
-Multiples filas a la vez:
-
-```sql
-INSERT INTO usuarios VALUES
-    (1, 'Ana', 25),
-    (2, 'Juan', 30),
-    (3, 'Maria', 22);
-```
-
-## SELECT
-
-Recupera datos de una o mas tablas.
-
-```sql
-SELECT nombre, edad FROM usuarios;
-SELECT * FROM usuarios;
-```
-
-## WHERE
-
-Filtra filas segun una condicion.
-
-```sql
-SELECT * FROM usuarios WHERE edad > 25;
-SELECT * FROM usuarios WHERE nombre = 'Ana';
-```
-
-Operadores: `=`, `<>`, `>`, `<`, `>=`, `<=`, `LIKE`, `IN`, `BETWEEN`, `AND`, `OR`.
-
-## ORDER BY
-
-Ordena los resultados.
-
-```sql
-SELECT * FROM usuarios ORDER BY edad ASC;
-SELECT * FROM usuarios ORDER BY nombre DESC;
-```
-
-## LIMIT
-
-Limita el numero de filas devueltas.
-
-```sql
-SELECT * FROM usuarios LIMIT 5;
-SELECT * FROM usuarios ORDER BY edad DESC LIMIT 3;
+-- Eliminar
+DELETE FROM productos WHERE id = 3;
 ```

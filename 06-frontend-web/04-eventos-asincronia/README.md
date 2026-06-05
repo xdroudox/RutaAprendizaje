@@ -161,4 +161,17 @@ async function obtenerDatos() {
 
 ## Ejercicios
 
-Abre `ejercicios.html` en tu navegador y completa los 3 ejercicios.
+### Ejercicio 1: Eventos de raton
+Agrega event listeners (click, mouseenter, mouseleave) a una caja para cambiar estilos y texto.
+**Ejecuta:** `python scripts/runner.py 6 4 1`
+**O abre directo:** `06-frontend-web/04-eventos-asincronia/ejercicios.html`
+
+### Ejercicio 2: setTimeout y setInterval para cuenta regresiva
+Implementa una cuenta regresiva del 5 al 1 usando setInterval y clearInterval.
+**Ejecuta:** `python scripts/runner.py 6 4 2`
+**O abre directo:** `06-frontend-web/04-eventos-asincronia/ejercicios.html`
+
+### Ejercicio 3: Promesa simple con async/await
+Simula una operacion asincrona con Promise, setTimeout y async/await con try/catch.
+**Ejecuta:** `python scripts/runner.py 6 4 3`
+**O abre directo:** `06-frontend-web/04-eventos-asincronia/ejercicios.html`

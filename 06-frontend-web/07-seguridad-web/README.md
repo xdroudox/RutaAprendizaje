@@ -167,4 +167,17 @@ Politica de seguridad fundamental del navegador. Un origen se define por: protoc
 
 ## Ejercicios
 
-Abre `ejercicios.html` en tu navegador y completa los 3 ejercicios.
+### Ejercicio 1: Prevenir XSS usando textContent
+Corrige una funcion vulnerable que usa innerHTML para que use textContent y prevenga inyeccion XSS.
+**Ejecuta:** `python scripts/runner.py 6 7 1`
+**O abre directo:** `06-frontend-web/07-seguridad-web/ejercicios.html`
+
+### Ejercicio 2: Sanitizar entrada de URL
+Valida que una URL sea segura: solo http/https, bloquea javascript: y data:.
+**Ejecuta:** `python scripts/runner.py 6 7 2`
+**O abre directo:** `06-frontend-web/07-seguridad-web/ejercicios.html`
+
+### Ejercicio 3: Simular CSRF y su prevencion con token
+Implementa proteccion CSRF generando un token aleatorio y verificandolo al enviar el formulario.
+**Ejecuta:** `python scripts/runner.py 6 7 3`
+**O abre directo:** `06-frontend-web/07-seguridad-web/ejercicios.html`

@@ -1,8 +1,13 @@
+/**
+ * SOLUCIONES - Polimorfismo
+ * Ejecuta: python scripts/runner.py 2 4 [ejercicio] -s
+ */
 public class Soluciones {
+
     public static void main(String[] args) {
         if (args.length > 0) {
-            int n = Integer.parseInt(args[0]);
-            switch (n) {
+            int num = Integer.parseInt(args[0]);
+            switch (num) {
                 case 1: solucion_1(); break;
                 case 2: solucion_2(); break;
                 case 3: solucion_3(); break;
@@ -14,113 +19,82 @@ public class Soluciones {
     }
 
     static void solucion_1() {
-        System.out.println("=== SOLUCION 1: Sobrecarga de metodos ===");
-        System.out.println("class Impresora {");
-        System.out.println("    void imprimir(String texto) {");
-        System.out.println("        System.out.println(texto);");
+        System.out.println("=== SOLUCION 1: Sobrecarga de sumar() ===");
+        System.out.println("class Calculadora {");
+        System.out.println("    int sumar(int a, int b) {");
+        System.out.println("        return a + b;");
         System.out.println("    }");
         System.out.println();
-        System.out.println("    void imprimir(int numero) {");
-        System.out.println("        System.out.println(numero);");
-        System.out.println("    }");
-        System.out.println();
-        System.out.println("    void imprimir(String texto, int veces) {");
-        System.out.println("        for (int i = 0; i < veces; i++) {");
-        System.out.println("            System.out.println(texto);");
-        System.out.println("        }");
-        System.out.println("    }");
-        System.out.println();
-        System.out.println("    void imprimir(int[] numeros) {");
-        System.out.println("        for (int n : numeros) {");
-        System.out.println("            System.out.println(n);");
-        System.out.println("        }");
+        System.out.println("    int sumar(int a, int b, int c) {");
+        System.out.println("        return a + b + c;");
         System.out.println("    }");
         System.out.println("}");
         System.out.println();
-        System.out.println("public class Main {");
-        System.out.println("    public static void main(String[] args) {");
-        System.out.println("        Impresora i = new Impresora();");
-        System.out.println("        i.imprimir(\"Hola\");");
-        System.out.println("        i.imprimir(42);");
-        System.out.println("        i.imprimir(\"Hola\", 3);");
-        System.out.println("        i.imprimir(new int[]{1,2,3,4});");
-        System.out.println("    }");
-        System.out.println("}");
+        System.out.println("// En el main:");
+        System.out.println("Calculadora calc = new Calculadora();");
+        System.out.println("System.out.println(calc.sumar(3, 4));");
+        System.out.println("System.out.println(calc.sumar(3, 4, 5));");
         System.out.println();
-        System.out.println("Explicacion: La sobrecarga permite multiples versiones del mismo metodo.");
-        System.out.println("El compilador selecciona la version segun los argumentos proporcionados.");
+        System.out.println("Explicacion: La sobrecarga permite mismo nombre con distintos parametros.");
     }
 
     static void solucion_2() {
-        System.out.println("=== SOLUCION 2: Polimorfismo con animales ===");
-        System.out.println("class Animal {");
-        System.out.println("    void hacerSonido() {");
-        System.out.println("        System.out.println(\"El animal hace un sonido\");");
-        System.out.println("    }");
+        System.out.println("=== SOLUCION 2: Array polimorfico de Animales ===");
+        System.out.println("Animal[] animales = new Animal[2];");
+        System.out.println("animales[0] = new Perro();");
+        System.out.println("animales[1] = new Gato();");
+        System.out.println();
+        System.out.println("for (Animal a : animales) {");
+        System.out.println("    a.hacerSonido();");
         System.out.println("}");
         System.out.println();
-        System.out.println("class Perro extends Animal {");
-        System.out.println("    @Override");
-        System.out.println("    void hacerSonido() { System.out.println(\"Guau\"); }");
-        System.out.println("}");
-        System.out.println("class Gato extends Animal {");
-        System.out.println("    @Override");
-        System.out.println("    void hacerSonido() { System.out.println(\"Miau\"); }");
-        System.out.println("}");
-        System.out.println("class Vaca extends Animal {");
-        System.out.println("    @Override");
-        System.out.println("    void hacerSonido() { System.out.println(\"Muu\"); }");
-        System.out.println("}");
-        System.out.println();
-        System.out.println("public class Main {");
-        System.out.println("    public static void main(String[] args) {");
-        System.out.println("        Animal[] animales = {new Perro(), new Gato(), new Vaca()};");
-        System.out.println("        for (Animal a : animales) {");
-        System.out.println("            a.hacerSonido();");
-        System.out.println("        }");
-        System.out.println("    }");
-        System.out.println("}");
-        System.out.println();
-        System.out.println("Explicacion: Dynamic dispatch ejecuta el metodo de la clase real,");
-        System.out.println("no del tipo de la referencia. Polimorfismo en accion.");
+        System.out.println("Explicacion: El array es de tipo Animal pero contiene objetos Perro y Gato.");
+        System.out.println("Java llama al metodo adecuado segun el tipo real del objeto (dynamic dispatch).");
     }
 
     static void solucion_3() {
-        System.out.println("=== SOLUCION 3: Sistema de pagos ===");
-        System.out.println("interface Pagable {");
-        System.out.println("    double calcularPago();");
-        System.out.println("}");
-        System.out.println();
-        System.out.println("class Factura implements Pagable {");
-        System.out.println("    private double montoFijo;");
-        System.out.println("    public Factura(double montoFijo) { this.montoFijo = montoFijo; }");
-        System.out.println("    @Override");
-        System.out.println("    public double calcularPago() { return montoFijo; }");
-        System.out.println("}");
-        System.out.println();
-        System.out.println("class Empleado implements Pagable {");
-        System.out.println("    private double salarioPorHora;");
-        System.out.println("    private int horas;");
-        System.out.println("    public Empleado(double salarioPorHora, int horas) {");
-        System.out.println("        this.salarioPorHora = salarioPorHora;");
-        System.out.println("        this.horas = horas;");
-        System.out.println("    }");
-        System.out.println("    @Override");
-        System.out.println("    public double calcularPago() { return salarioPorHora * horas; }");
-        System.out.println("}");
-        System.out.println();
-        System.out.println("public class Main {");
-        System.out.println("    public static void main(String[] args) {");
-        System.out.println("        Pagable[] pagos = {new Factura(250.0), new Empleado(15.5, 40)};");
-        System.out.println("        double total = 0;");
-        System.out.println("        for (Pagable p : pagos) {");
-        System.out.println("            total += p.calcularPago();");
-        System.out.println("        }");
-        System.out.println("        System.out.println(\"Total a pagar: \" + total);");
+        System.out.println("=== SOLUCION 3: Figura, Circulo y Rectangulo ===");
+        System.out.println("class Figura {");
+        System.out.println("    double area() {");
+        System.out.println("        return 0.0;");
         System.out.println("    }");
         System.out.println("}");
         System.out.println();
-        System.out.println("Explicacion: La interfaz Pagable define un contrato comun.");
-        System.out.println("Cada clase implementa calcularPago() a su manera. Polimorfismo via interfaz.");
+        System.out.println("class Circulo extends Figura {");
+        System.out.println("    double radio;");
+        System.out.println();
+        System.out.println("    Circulo(double radio) {");
+        System.out.println("        this.radio = radio;");
+        System.out.println("    }");
+        System.out.println();
+        System.out.println("    @Override");
+        System.out.println("    double area() {");
+        System.out.println("        return Math.PI * radio * radio;");
+        System.out.println("    }");
+        System.out.println("}");
+        System.out.println();
+        System.out.println("class Rectangulo extends Figura {");
+        System.out.println("    double base, altura;");
+        System.out.println();
+        System.out.println("    Rectangulo(double base, double altura) {");
+        System.out.println("        this.base = base;");
+        System.out.println("        this.altura = altura;");
+        System.out.println("    }");
+        System.out.println();
+        System.out.println("    @Override");
+        System.out.println("    double area() {");
+        System.out.println("        return base * altura;");
+        System.out.println("    }");
+        System.out.println("}");
+        System.out.println();
+        System.out.println("// En el main:");
+        System.out.println("Figura[] figuras = new Figura[2];");
+        System.out.println("figuras[0] = new Circulo(5);");
+        System.out.println("figuras[1] = new Rectangulo(4, 6);");
+        System.out.println("for (Figura f : figuras) {");
+        System.out.println("    System.out.println(\"Area: \" + f.area());");
+        System.out.println("}");
+        System.out.println();
+        System.out.println("Explicacion: Cada subclase tiene su propia implementacion de area().");
     }
 }

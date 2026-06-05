@@ -16,3 +16,11 @@
 | X-Content-Type-Options | Evitar MIME sniffing |
 | X-Frame-Options | Prevenir clickjacking |
 | Strict-Transport-Security | Forzar HTTPS |
+
+## Ejercicios
+
+1. **SQL Injection** - Simula consulta vulnerable vs parametrizada.
+2. **Prevenir XSS** - Escapa HTML con html.escape().
+3. **Headers de seguridad** - Verifica headers en una respuesta simulada.
+
+**Ejecuta:** `python scripts/runner.py 10 06 [ejercicio]`

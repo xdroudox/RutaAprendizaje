@@ -1,61 +1,38 @@
+"""
+EJERCICIOS - Cifrado y Hashing
+Ejecuta desde raiz: python scripts/runner.py 10 05 [ejercicio]
+"""
 import sys
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-import hashlib
-
 def ejercicio_1():
-    print(">> EJERCICIO 1: Hashing SHA-256")
-    print("")
-    print("Solicita al usuario un texto por consola y muestra su hash SHA-256.")
-    print("")
-    print("# --- TU CODIGO AQUI ---")
+    """Hashea un string con hashlib usando SHA-256"""
+    import hashlib
+    # ==== ESCRIBE TU RESPUESTA AQUI ====
     pass
 
 def ejercicio_2():
-    print(">> EJERCICIO 2: Verificar contrasena con hashlib")
-    print("")
-    print("Almacena el hash SHA-256 de la contrasena 'secreta'. Luego pide")
-    print("al usuario una contrasena, calcula su hash y comprueba si coincide.")
-    print("")
-    print("# --- TU CODIGO AQUI ---")
+    """Verifica una contrasena comparando su hash"""
+    import hashlib
+    # ==== ESCRIBE TU RESPUESTA AQUI ====
     pass
 
 def ejercicio_3():
-    print(">> EJERCICIO 3: Cifrado simetrico simple")
-    print("")
-    print("Usa la libreria cryptography (o implementa tu propio cifrado simple)")
-    print("para cifrar y descifrar un mensaje con una clave fija.")
-    print("Muestra el mensaje original, el cifrado y el descifrado.")
-    print("")
-    print("PISTA: from cryptography.fernet import Fernet")
-    print("")
-    print("# --- TU CODIGO AQUI ---")
+    """Codifica y decodifica un string en base64"""
+    import base64
+    # ==== ESCRIBE TU RESPUESTA AQUI ====
     pass
 
-def menu():
-    print("=== Cifrado y Hashing - Ejercicios ===")
-    print("1. Hashing SHA-256")
-    print("2. Verificar contrasena")
-    print("3. Cifrado simetrico")
-    print("0. Salir")
-    return input("Selecciona un ejercicio: ")
-
-def main():
-    while True:
-        opcion = menu()
-        if opcion == "1":
-            ejercicio_1()
-        elif opcion == "2":
-            ejercicio_2()
-        elif opcion == "3":
-            ejercicio_3()
-        elif opcion == "0":
-            break
-        else:
-            print("Opcion no valida")
-        input("Presiona Enter para continuar...")
-
 if __name__ == "__main__":
-    main()
+    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    if len(sys.argv) > 1 and sys.argv[1].isdigit():
+        num = int(sys.argv[1]) - 1
+        if 0 <= num < len(ejercicios):
+            print(f">> EJERCICIO {num + 1}: {ejercicios[num].__doc__}")
+            print("-" * 40)
+            ejercicios[num]()
+    else:
+        for i, ej in enumerate(ejercicios, 1):
+            print(f"  {i}. {ej.__doc__}")

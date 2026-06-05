@@ -1,43 +1,49 @@
-# NoSQL - Introduccion
+# NoSQL Introduccion
 
-## Documentos vs Relacional
+## Contenido
+- Documentos vs modelo relacional
+- Conceptos de MongoDB (colecciones, documentos, schemas flexibles)
+- Modelado de datos anidados
+- Cuando usar SQL vs NoSQL
 
-| Relacional (SQL) | Documentos (NoSQL)  |
-|------------------|----------------------|
-| Tablas           | Colecciones          |
-| Filas            | Documentos (JSON)    |
-| Columnas         | Campos               |
-| Esquema fijo     | Esquema flexible     |
-| JOINs            | Embedding / Referencias |
+## Ejercicios
 
-## MongoDB conceptos
+| #  | Ejercicio                                                      |
+|----|----------------------------------------------------------------|
+| 1  | Modelar documento MongoDB para usuario (dict anidado)           |
+| 2  | Convertir esquema SQL normalizado a documento NoSQL             |
+| 3  | Comparar: cuando usar SQL vs NoSQL (casos practicos)            |
 
-Un documento en MongoDB es similar a un diccionario Python:
+## Comandos
+
+```bash
+python scripts/runner.py 4 7 1
+python scripts/runner.py 4 7 2
+python scripts/runner.py 4 7 3
+```
+
+## Resumen
 
 ```python
-{
-    "_id": 1,
-    "nombre": "Ana",
+# Documento NoSQL (MongoDB-like)
+usuario = {
+    "nombre": "Ana Garcia",
+    "email": "ana@email.com",
     "direccion": {
+        "calle": "Calle Mayor 10",
         "ciudad": "Madrid",
-        "calle": "Calle Mayor 10"
+        "pais": "Espana"
     },
-    "intereses": ["lectura", "deporte"]
+    "intereses": ["lectura", "viajes", "fotografia"]
 }
 ```
 
-## Cuando usar NoSQL
+## SQL vs NoSQL
 
-- Esquema de datos que cambia frecuentemente
-- Datos jerarquicos o anidados
-- Alta escalabilidad horizontal
-- Prototipos rapidos sin esquema fijo
-- Cuando la consistencia inmediata no es critica
-
-## Cuando usar SQL
-
-- Relaciones complejas entre entidades
-- Consultas ad-hoc y analiticas
-- ACID es requisito
-- Datos altamente estructurados
-- Reportes con agregaciones complejas
+| Caracteristica       | SQL                        | NoSQL                          |
+|---------------------|----------------------------|--------------------------------|
+| Esquema             | Fijo (tablas, columnas)    | Flexible (documentos)          |
+| Relaciones         | Joins, FK                  | Anidacion, referencias         |
+| Escalabilidad      | Vertical                   | Horizontal                     |
+| Consistencia       | Fuerte (ACID)              | Eventual (BASE)                |
+| Casos tipicos      | Bancos, facturacion        | Redes sociales, analytics      |

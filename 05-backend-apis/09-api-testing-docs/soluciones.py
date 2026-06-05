@@ -1,105 +1,122 @@
+"""
+SOLUCIONES - API Testing y Documentacion
+Ejecuta desde raiz: python scripts/runner.py 5 9 1 -s
+"""
 import sys
-import http.client
 import json
-
+import http.client
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-def solucion_1():
-    print("=" * 50)
-    print("SOLUCION 1: Test GET con http.client")
-    print("=" * 50)
-    conn = http.client.HTTPSConnection("jsonplaceholder.typicode.com")
-    conn.request("GET", "/posts")
+def ejercicio_1():
+    """Construir request GET con http.client"""
+    host = "jsonplaceholder.typicode.com"
+    ruta = "/posts/1"
+    conn = http.client.HTTPSConnection(host, timeout=5)
+    conn.request("GET", ruta)
     resp = conn.getresponse()
-    data = json.loads(resp.read().decode())
-    print(f"Codigo de estado: {resp.status} {resp.reason}")
-    print(f"Cantidad de posts recibidos: {len(data)}")
-    print()
-    print("Primer post:")
-    print(json.dumps(data[0], indent=2))
+    print(f"Status: {resp.status} {resp.reason}")
+    body = resp.read().decode()
+    print(f"Body: {body}")
     conn.close()
 
-def solucion_2():
-    print("=" * 50)
-    print("SOLUCION 2: Test POST para crear recurso")
-    print("=" * 50)
-    conn = http.client.HTTPSConnection("jsonplaceholder.typicode.com")
-    payload = json.dumps({
-        "title": "Mi post",
-        "body": "Contenido del post",
-        "userId": 1
-    })
-    conn.request("POST", "/posts", body=payload, headers={"Content-Type": "application/json"})
+def ejercicio_2():
+    """Validar status code y body de una response"""
+    import json
+    conn = http.client.HTTPSConnection("jsonplaceholder.typicode.com", timeout=5)
+    conn.request("GET", "/posts/1")
     resp = conn.getresponse()
-    data = json.loads(resp.read().decode())
-    print(f"Codigo de estado: {resp.status} {resp.reason}")
-    print(f"ID del post creado: {data['id']}")
-    print()
-    print("Respuesta completa:")
-    print(json.dumps(data, indent=2))
+    status = resp.status
+    body = resp.read().decode()
     conn.close()
+    assert status == 200, f"Status code esperado 200, obtenido {status}"
+    print(f"Status code 200: OK")
+    datos = json.loads(body)
+    campos = ["id", "title", "body"]
+    for campo in campos:
+        if campo in datos:
+            print(f"  Campo '{campo}': {datos[campo]}")
+        else:
+            print(f"  Campo '{campo}': FALTANTE")
+    print("Validacion completada.")
 
-def solucion_3():
-    print("=" * 50)
-    print("SOLUCION 3: Documentar un endpoint en OpenAPI")
-    print("=" * 50)
-    spec = """
-openapi: 3.0.0
-info:
-  title: API de Productos
-  version: 1.0.0
-paths:
-  /productos/{id}:
-    get:
-      summary: Obtiene un producto por su ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: ID del producto
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: Producto encontrado
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                  nombre:
-                    type: string
-                  precio:
-                    type: number
-        '404':
-          description: Producto no encontrado
-"""
-    print(spec)
-
-def menu():
-    print("SOLUCIONES - API TESTING Y DOCS")
-    print("1 - Test GET con http.client")
-    print("2 - Test POST para crear recurso")
-    print("3 - Documentar un endpoint en OpenAPI")
-
-def main():
-    args = sys.argv[1:]
-    if not args:
-        menu()
-        return
-    num = args[0]
-    if num == "1":
-        solucion_1()
-    elif num == "2":
-        solucion_2()
-    elif num == "3":
-        solucion_3()
-    else:
-        print("Solucion no valida. Usa 1, 2 o 3.")
+def ejercicio_3():
+    """Escribir documentacion OpenAPI simple (dict)"""
+    openapi_doc = {
+        "openapi": "3.0.0",
+        "info": {
+            "title": "API de Usuarios",
+            "version": "1.0.0",
+            "description": "API para gestionar usuarios"
+        },
+        "paths": {
+            "/api/usuarios": {
+                "get": {
+                    "summary": "Listar todos los usuarios",
+                    "responses": {
+                        "200": {
+                            "description": "Lista de usuarios",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "array",
+                                        "items": {"$ref": "#/components/schemas/Usuario"}
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "post": {
+                    "summary": "Crear un nuevo usuario",
+                    "requestBody": {
+                        "required": True,
+                        "content": {
+                            "application/json": {
+                                "schema": {"$ref": "#/components/schemas/UsuarioInput"}
+                            }
+                        }
+                    },
+                    "responses": {
+                        "201": {"description": "Usuario creado exitosamente"},
+                        "400": {"description": "Datos invalidos"}
+                    }
+                }
+            }
+        },
+        "components": {
+            "schemas": {
+                "Usuario": {
+                    "type": "object",
+                    "properties": {
+                        "id": {"type": "integer"},
+                        "nombre": {"type": "string"},
+                        "email": {"type": "string"}
+                    }
+                },
+                "UsuarioInput": {
+                    "type": "object",
+                    "properties": {
+                        "nombre": {"type": "string"},
+                        "email": {"type": "string"}
+                    },
+                    "required": ["nombre", "email"]
+                }
+            }
+        }
+    }
+    print(json.dumps(openapi_doc, indent=2, ensure_ascii=False))
 
 if __name__ == "__main__":
-    main()
+    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    if len(sys.argv) > 1 and sys.argv[1].isdigit():
+        num = int(sys.argv[1]) - 1
+        if 0 <= num < len(ejercicios):
+            print(f">> SOLUCION {num + 1}: {ejercicios[num].__doc__}")
+            print("-" * 40)
+            ejercicios[num]()
+    else:
+        print("SOLUCIONES:")
+        for i, ej in enumerate(ejercicios, 1):
+            print(f"  {i}. {ej.__doc__}")

@@ -1,119 +1,115 @@
-import sys, sqlite3
-
+"""
+EJERCICIOS - Transacciones ACID
+Ejecuta desde raiz: python scripts/runner.py 4 5 [ejercicio]
+"""
+import sys
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-def get_db():
-    conn = sqlite3.connect(":memory:")
-    conn.row_factory = sqlite3.Row
-    return conn
-
 def ejercicio_1():
-    print("=" * 50)
-    print("EJERCICIO 1: BEGIN, COMMIT, ROLLBACK basico")
-    print("=" * 50)
-    conn = get_db()
-    conn.executescript("""
+    """Realiza una transferencia bancaria usando BEGIN, INSERT y COMMIT"""
+    import sqlite3
+    conn = sqlite3.connect(":memory:")
+    c = conn.cursor()
+    c.executescript("""
         CREATE TABLE cuentas (
             id INTEGER PRIMARY KEY,
-            titular TEXT,
-            saldo REAL
+            titular TEXT NOT NULL,
+            saldo REAL NOT NULL
         );
-        INSERT INTO cuentas VALUES (1, 'Ana', 1000.00), (2, 'Luis', 500.00);
+        INSERT INTO cuentas VALUES (1, 'Ana', 1000.00);
+        INSERT INTO cuentas VALUES (2, 'Juan', 500.00);
     """)
-    print("Cuentas:")
-    cur = conn.execute("SELECT * FROM cuentas;")
-    for f in cur.fetchall():
-        print(f"  {f['id']}: {f['titular']} - ${f['saldo']:.2f}")
+    conn.commit()
+    print("=== Cuentas antes de la transferencia ===")
+    for row in c.execute("SELECT * FROM cuentas"):
+        print(f"  {row[0]}. {row[1]:<6} ${row[2]:>7.2f}")
     print()
-    print("TAREA: Escribe el codigo SQL para transferir $200 de")
-    print("Ana a Luis usando una transaccion (BEGIN, UPDATE, UPDATE, COMMIT).")
-    print()
-    print("PISTA: BEGIN; UPDATE cuentas SET saldo = saldo - 200 WHERE id = 1;")
-    print("  UPDATE cuentas SET saldo = saldo + 200 WHERE id = 2; COMMIT;")
+    print("Transfiere $200 de la cuenta 1 (Ana) a la cuenta 2 (Juan)")
+    print("Usa BEGIN, UPDATE, UPDATE, COMMIT")
+    # ==== ESCRIBE TU CONSULTA SQL AQUI ====
+    # c.execute("BEGIN")
+    # c.execute("UPDATE cuentas SET saldo = saldo - 200 WHERE id = 1")
+    # c.execute("UPDATE cuentas SET saldo = saldo + 200 WHERE id = 2")
+    # conn.commit()
+    # for row in c.execute("SELECT * FROM cuentas"):
+    #     print(row)
+    pass
 
 def ejercicio_2():
-    print("=" * 50)
-    print("EJERCICIO 2: ROLLBACK por saldo insuficiente")
-    print("=" * 50)
-    conn = get_db()
-    conn.executescript("""
+    """Usa ROLLBACK para revertir cambios ante un error"""
+    import sqlite3
+    conn = sqlite3.connect(":memory:")
+    c = conn.cursor()
+    c.executescript("""
         CREATE TABLE cuentas (
             id INTEGER PRIMARY KEY,
-            titular TEXT,
-            saldo REAL
+            titular TEXT NOT NULL,
+            saldo REAL NOT NULL
         );
-        INSERT INTO cuentas VALUES (1, 'Ana', 100.00), (2, 'Luis', 500.00);
+        INSERT INTO cuentas VALUES (1, 'Ana', 1000.00);
+        INSERT INTO cuentas VALUES (2, 'Juan', 500.00);
     """)
-    print("Cuentas:")
-    cur = conn.execute("SELECT * FROM cuentas;")
-    for f in cur.fetchall():
-        print(f"  {f['id']}: {f['titular']} - ${f['saldo']:.2f}")
+    conn.commit()
+    print("=== Cuentas antes ===")
+    for row in c.execute("SELECT * FROM cuentas"):
+        print(f"  {row}")
     print()
-    print("TAREA: Intenta transferir $300 de Ana (que solo tiene $100)")
-    print("a Luis. Usa BEGIN, intenta el UPDATE, verifica saldo, y")
-    print("haz ROLLBACK si el saldo es insuficiente.")
-    print()
-    print("PISTA: BEGIN; UPDATE ... WHERE id=1 (saldo queda -200);")
-    print("  Eso es incorrecto. Hay que VERIFICAR antes de transferir.")
+    print("Intenta transferir $1200 (saldo insuficiente) y haz ROLLBACK")
+    # ==== ESCRIBE TU CONSULTA SQL AQUI ====
+    # c.execute("BEGIN")
+    # saldo = c.execute("SELECT saldo FROM cuentas WHERE id=1").fetchone()[0]
+    # if saldo >= 1200:
+    #     c.execute("UPDATE cuentas SET saldo = saldo - 1200 WHERE id=1")
+    #     c.execute("UPDATE cuentas SET saldo = saldo + 1200 WHERE id=2")
+    #     conn.commit()
+    #     print("Transferencia exitosa")
+    # else:
+    #     conn.rollback()
+    #     print("Fondos insuficientes, transaccion revertida")
+    # for row in c.execute("SELECT * FROM cuentas"):
+    #     print(row)
+    pass
 
 def ejercicio_3():
-    print("=" * 50)
-    print("EJERCICIO 3: Propiedades ACID")
-    print("=" * 50)
-    print("Identifica que propiedad ACID se violaria en cada caso:")
-    print()
-    print("Caso A: Una transferencia debita $200 de la cuenta A")
-    print("pero el sistema falla antes de acreditar a la cuenta B.")
-    print()
-    print("Caso B: Dos usuarios ven simultaneamente saldo = $1000.")
-    print("Ambos transfieren $900 y el banco permite ambos.")
-    print()
-    print("Caso C: El sistema confirma una venta pero tras un reinicio")
-    print("los datos se pierden.")
-    print()
-    print("PISTA: Atomicity, Isolation, Durability")
-    print()
-    print("TAREA: Escribe el nombre de la propiedad para cada caso")
-    print("(responde mentalmente y luego revisa soluciones.py)")
+    """Simula un fallo y muestra que ROLLBACK mantiene la consistencia"""
+    import sqlite3
+    conn = sqlite3.connect(":memory:")
+    c = conn.cursor()
+    c.executescript("""
+        CREATE TABLE cuentas (
+            id INTEGER PRIMARY KEY,
+            titular TEXT NOT NULL,
+            saldo REAL NOT NULL
+        );
+        INSERT INTO cuentas VALUES (1, 'Ana', 1000.00);
+        INSERT INTO cuentas VALUES (2, 'Juan', 500.00);
+    """)
+    conn.commit()
 
-pistas = {
-    "1": "BEGIN;\nUPDATE cuentas SET saldo = saldo - 200 WHERE id = 1;\nUPDATE cuentas SET saldo = saldo + 200 WHERE id = 2;\nCOMMIT;",
-    "2": "BEGIN;\nSELECT saldo FROM cuentas WHERE id = 1;  (si saldo < 300 -> ROLLBACK)\nSi saldo >= 300: UPDATE ... SET saldo = saldo - 300 WHERE id = 1;\nUPDATE ... SET saldo = saldo + 300 WHERE id = 2;\nCOMMIT;",
-    "3": "Caso A: Atomicity (se viola atomicidad)\nCaso B: Isolation (se viola aislamiento)\nCaso C: Durability (se viola durabilidad)"
-}
+    def saldo_total():
+        return c.execute("SELECT SUM(saldo) FROM cuentas").fetchone()[0]
 
-def menu():
-    print("=" * 50)
-    print("TRANSACCIONES ACID - EJERCICIOS")
-    print("=" * 50)
-    print("1 - BEGIN, COMMIT, ROLLBACK basico")
-    print("2 - ROLLBACK por saldo insuficiente")
-    print("3 - Propiedades ACID")
+    print(f"Saldo total inicial: ${saldo_total():.2f}")
     print()
-    print("Usa: python ejercicios.py <numero>")
-    print("     python ejercicios.py <numero> -p  (pista)")
-
-def main():
-    args = sys.argv[1:]
-    if not args:
-        menu()
-        return
-    num = args[0]
-    mostrar_pista = "-p" in args
-    if mostrar_pista and num in pistas:
-        print("=== PISTA ===")
-        print(pistas[num])
-        print()
-    if num == "1":
-        ejercicio_1()
-    elif num == "2":
-        ejercicio_2()
-    elif num == "3":
-        ejercicio_3()
-    else:
-        print("Ejercicio no valido. Usa 1, 2 o 3.")
+    print("Simula una transferencia que falla a mitad del proceso:")
+    print("1. BEGIN")
+    print("2. Restar $300 de Ana")
+    print("3. (Simular fallo antes de sumar a Juan)")
+    print("4. ROLLBACK")
+    print("5. Verificar que el saldo total volvio al valor original")
+    # ==== ESCRIBE TU RESPUESTA AQUI ====
+    pass
 
 if __name__ == "__main__":
-    main()
+    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    if len(sys.argv) > 1 and sys.argv[1].isdigit():
+        num = int(sys.argv[1]) - 1
+        if 0 <= num < len(ejercicios):
+            print(f">> EJERCICIO {num + 1}: {ejercicios[num].__doc__}")
+            print("-" * 40)
+            ejercicios[num]()
+    else:
+        for i, ej in enumerate(ejercicios, 1):
+            print(f"  {i}. {ej.__doc__}")
