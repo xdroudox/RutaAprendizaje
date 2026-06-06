@@ -58,6 +58,28 @@ Sistema de e-commerce como microservicios:
 | Despliegue independiente | Debugging distribuido (trazas) |
 | Aislamiento de fallos | Gestion de configuraciones y secretos |
 
+## Glosario
+
+**Microservicio**: Servicio pequeno, autonomo y desplegable independientemente que se enfoca en una unica capacidad de negocio.
+
+**API Gateway**: Punto unico de entrada que enruta peticiones a los microservicios correspondientes y gestiona autenticacion, rate limiting y balanceo.
+
+**Despliegue independiente**: Capacidad de actualizar, escalar o desplegar un servicio sin afectar a los demas.
+
+**Contexto acotado**: Limite explicito donde un modelo de dominio es valido, inspirandose en DDD para definir el alcance de cada microservicio.
+
+**Comunicacion sincrona**: El emisor espera una respuesta inmediata del receptor, tipicamente via HTTP/REST o gRPC.
+
+**Comunicacion asincrona**: El emisor envía un mensaje sin esperar respuesta, usando brokers como RabbitMQ o Kafka.
+
+**Broker de mensajes**: Sistema intermediario (cola o stream) que recibe, almacena y distribuye mensajes entre servicios.
+
+**Polyglot persistence**: Practica de usar diferentes tipos de bases de datos segun las necesidades de cada microservicio.
+
+**Escalabilidad horizontal**: Capacidad de agregar mas instancias de un servicio para manejar mayor carga de trabajo.
+
+**Tolerancia a fallos**: Capacidad del sistema de seguir operando ante la caida de uno o varios servicios individuales.
+
 ## Ejercicios
 
 ### Ejercicio 1: Descomposicion de un monolitico

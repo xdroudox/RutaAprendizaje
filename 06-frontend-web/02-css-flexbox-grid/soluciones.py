@@ -7,7 +7,7 @@ if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-def ejercicio_1():
+def solucion_1():
     """Centrar elemento con Flexbox"""
     print(">> SOLUCION 1: Centrar elemento con Flexbox")
     print("-" * 40)
@@ -19,7 +19,7 @@ def ejercicio_1():
     print()
     print("Abre soluciones.html en el navegador para verlo en accion.")
 
-def ejercicio_2():
+def solucion_2():
     """Galeria responsiva con Flexbox wrap"""
     print(">> SOLUCION 2: Galeria responsiva con Flexbox wrap")
     print("-" * 40)
@@ -32,7 +32,7 @@ def ejercicio_2():
     print("    flex: 1 1 200px;")
     print("}")
 
-def ejercicio_3():
+def solucion_3():
     """Layout completo con CSS Grid"""
     print(">> SOLUCION 3: Layout completo con CSS Grid")
     print("-" * 40)
@@ -53,11 +53,11 @@ def ejercicio_3():
     print(".grid-layout > :nth-child(5) { grid-area: footer; }")
 
 if __name__ == "__main__":
-    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    soluciones = [solucion_1, solucion_2, solucion_3]
     if len(sys.argv) > 1 and sys.argv[1].isdigit():
         num = int(sys.argv[1]) - 1
-        if 0 <= num < len(ejercicios):
-            ejercicios[num]()
+        if 0 <= num < len(soluciones):
+            soluciones[num]()
     else:
-        for i, ej in enumerate(ejercicios, 1):
-            print(f"  {i}. {ej.__doc__}")
+        for i, sol in enumerate(soluciones, 1):
+            print(f"  {i}. {sol.__doc__}")

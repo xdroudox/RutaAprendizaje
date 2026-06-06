@@ -61,6 +61,28 @@ Un sistema de transferencias bancarias:
 | Alta cohesion, bajo acoplamiento | Puede llevar a sobrediseno |
 | Facilita la adopcion de DDD | Dificil de justificar en CRUD simples |
 
+## Glosario
+
+**Arquitectura hexagonal**: Patron que aísla el dominio del negocio colocandolo en el centro y conectandolo al exterior mediante puertos y adaptadores.
+
+**Puerto (Port)**: Interfaz que define un punto de comunicacion entre el dominio y el mundo exterior; puede ser entrante o saliente.
+
+**Adaptador (Adapter)**: Implementacion concreta de un puerto que traduce las peticiones externas al dominio o viceversa.
+
+**Dominio**: Nucleo de la aplicacion que contiene las entidades, reglas de negocio y logica pura, sin depender de tecnologia externa.
+
+**Driving adapter**: Adaptador que inicia la comunicacion hacia el dominio (ej: controlador REST, interfaz CLI).
+
+**Driven adapter**: Adaptador que es invocado por el dominio para realizar operaciones externas (ej: repositorio de base de datos, servicio de email).
+
+**Principio de inversion de dependencias (DIP)**: Las abstracciones (puertos) no deben depender de los detalles; los detalles deben depender de las abstracciones.
+
+**Caso de uso**: Operacion especifica del sistema que representa una interaccion completa desde la perspectiva del usuario.
+
+**Mock**: Objeto simulado usado en pruebas para sustituir un puerto o adaptador real y verificar comportamientos.
+
+**Indireccion**: Nivel adicional de abstraccion introducido al separar interfaces de implementaciones.
+
 ## Ejercicios
 
 ### Ejercicio 1: Identificar puertos y adaptadores

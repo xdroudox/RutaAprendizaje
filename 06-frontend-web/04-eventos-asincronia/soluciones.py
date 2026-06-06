@@ -7,30 +7,28 @@ if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-def ejercicio_1():
+def solucion_1():
     """Eventos de raton: click, mouseenter, mouseleave"""
     print(">> SOLUCION 1: Eventos de raton")
     print("-" * 40)
+    print("var caja1 = document.getElementById('caja1');")
     print("caja1.addEventListener('click', function() {")
     print("    this.style.background = '#3498db';")
     print("    this.textContent = 'Click!';")
-    print("    logMsg('Click!');")
     print("});")
     print("caja1.addEventListener('mouseenter', function() {")
     print("    this.style.transform = 'scale(1.2)';")
     print("    this.textContent = 'Hover!';")
-    print("    logMsg('Mouse enter');")
     print("});")
     print("caja1.addEventListener('mouseleave', function() {")
     print("    this.style.transform = 'scale(1)';")
     print("    this.style.background = '#e74c3c';")
     print("    this.textContent = 'Fuera!';")
-    print("    logMsg('Mouse leave');")
     print("});")
     print()
     print("Abre soluciones.html en el navegador para verlo en accion.")
 
-def ejercicio_2():
+def solucion_2():
     """setTimeout y setInterval para cuenta regresiva"""
     print(">> SOLUCION 2: setTimeout y setInterval para cuenta regresiva")
     print("-" * 40)
@@ -57,7 +55,7 @@ def ejercicio_2():
     print("    display.textContent = '-';")
     print("}")
 
-def ejercicio_3():
+def solucion_3():
     """Promesa simple con async/await"""
     print(">> SOLUCION 3: Promesa simple con async/await")
     print("-" * 40)
@@ -72,6 +70,7 @@ def ejercicio_3():
     print("}")
     print("async function iniciarOperacion() {")
     print("    try {")
+    print("        displayOp.textContent = 'Cargando...';")
     print("        await esperar(2000);")
     print("        displayOp.textContent = 'Operacion completada!';")
     print("    } catch (error) {")
@@ -80,11 +79,11 @@ def ejercicio_3():
     print("}")
 
 if __name__ == "__main__":
-    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    soluciones = [solucion_1, solucion_2, solucion_3]
     if len(sys.argv) > 1 and sys.argv[1].isdigit():
         num = int(sys.argv[1]) - 1
-        if 0 <= num < len(ejercicios):
-            ejercicios[num]()
+        if 0 <= num < len(soluciones):
+            soluciones[num]()
     else:
-        for i, ej in enumerate(ejercicios, 1):
-            print(f"  {i}. {ej.__doc__}")
+        for i, sol in enumerate(soluciones, 1):
+            print(f"  {i}. {sol.__doc__}")

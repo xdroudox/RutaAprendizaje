@@ -7,7 +7,7 @@ if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-def ejercicio_1():
+def solucion_1():
     """Manipular texto y estilos con DOM"""
     print(">> SOLUCION 1: Manipular texto y estilos con DOM")
     print("-" * 40)
@@ -19,16 +19,15 @@ def ejercicio_1():
     print()
     print("Abre soluciones.html en el navegador para verlo en accion.")
 
-def ejercicio_2():
+def solucion_2():
     """Crear elementos con createElement y appendChild"""
     print(">> SOLUCION 2: Crear elementos con createElement y appendChild")
     print("-" * 40)
     print("function ejercicio2() {")
     print("    var contenedor = document.getElementById('contenedor-ej2');")
-    print("    contadorEj2++;")
     print("    var div = document.createElement('div');")
     print("    div.classList.add('card');")
-    print("    div.textContent = 'Elemento #' + contadorEj2;")
+    print("    div.textContent = 'Elemento #' + (++contadorEj2);")
     print("    contenedor.appendChild(div);")
     print("}")
     print("function limpiarEj2() {")
@@ -37,7 +36,7 @@ def ejercicio_2():
     print("    contadorEj2 = 0;")
     print("}")
 
-def ejercicio_3():
+def solucion_3():
     """Lista de tareas interactiva (to-do list)"""
     print(">> SOLUCION 3: Lista de tareas interactiva (to-do list)")
     print("-" * 40)
@@ -66,11 +65,11 @@ def ejercicio_3():
     print("}")
 
 if __name__ == "__main__":
-    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    soluciones = [solucion_1, solucion_2, solucion_3]
     if len(sys.argv) > 1 and sys.argv[1].isdigit():
         num = int(sys.argv[1]) - 1
-        if 0 <= num < len(ejercicios):
-            ejercicios[num]()
+        if 0 <= num < len(soluciones):
+            soluciones[num]()
     else:
-        for i, ej in enumerate(ejercicios, 1):
-            print(f"  {i}. {ej.__doc__}")
+        for i, sol in enumerate(soluciones, 1):
+            print(f"  {i}. {sol.__doc__}")

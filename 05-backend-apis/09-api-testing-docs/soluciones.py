@@ -1,37 +1,98 @@
 """
 SOLUCIONES - API Testing y Documentacion
-Ejecuta desde raiz: python scripts/runner.py 5 9 1 -s
+Ejecuta: python scripts/runner.py 5 9 [ejercicio] -s
 """
+
 import sys
 import json
 import http.client
+
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-def ejercicio_1():
-    """Construir request GET con http.client"""
+
+def solucion_1():
+    print("=" * 50)
+    print("🟢 SOLUCION 1: Request GET con http.client")
+    print("=" * 50)
+
     host = "jsonplaceholder.typicode.com"
     ruta = "/posts/1"
+
+    print("--- CODIGO ---")
+    print("conn = http.client.HTTPSConnection(host, timeout=5)")
+    print("conn.request('GET', ruta)")
+    print("resp = conn.getresponse()")
+    print("print(f'Status: {resp.status} {resp.reason}')")
+    print("print(f'Body: {resp.read().decode()}')")
+    print("conn.close()")
+    print()
+
     conn = http.client.HTTPSConnection(host, timeout=5)
     conn.request("GET", ruta)
     resp = conn.getresponse()
-    print(f"Status: {resp.status} {resp.reason}")
     body = resp.read().decode()
-    print(f"Body: {body}")
+
+    print("--- RESULTADO ---")
+    print(f"  Status: {resp.status} {resp.reason}")
+    datos = json.loads(body)
+    print(f"  Body: {json.dumps(datos, indent=2, ensure_ascii=False)}")
     conn.close()
 
-def ejercicio_2():
-    """Validar status code y body de una response"""
-    import json
-    conn = http.client.HTTPSConnection("jsonplaceholder.typicode.com", timeout=5)
-    conn.request("GET", "/posts/1")
+    print()
+    print("--- EXPLICACION ---")
+    print("""
+http.client es el modulo nativo de Python para HTTP.
+Pasos para hacer un request GET:
+
+  1. Crear conexion: HTTPSConnection(host, timeout)
+  2. Enviar request: conn.request('GET', ruta)
+  3. Obtener respuesta: resp = conn.getresponse()
+  4. Leer body: resp.read().decode()
+  5. Cerrar: conn.close()
+
+En la practica se usa la libreria 'requests' (mas simple):
+  import requests
+  resp = requests.get('https://jsonplaceholder.typicode.com/posts/1')
+  print(resp.status_code, resp.json())
+""")
+
+
+def solucion_2():
+    print("=" * 50)
+    print("🟡 SOLUCION 2: Validar status code y body")
+    print("=" * 50)
+
+    host = "jsonplaceholder.typicode.com"
+    ruta = "/posts/1"
+
+    print("--- CODIGO ---")
+    print("conn = http.client.HTTPSConnection(host, timeout=5)")
+    print("conn.request('GET', ruta)")
+    print("resp = conn.getresponse()")
+    print("status = resp.status")
+    print("body = resp.read().decode()")
+    print("conn.close()")
+    print("assert status == 200")
+    print("datos = json.loads(body)")
+    print("for campo in ['id', 'title', 'body']:")
+    print("    print(f'{campo}: {datos.get(campo)}')")
+    print()
+
+    conn = http.client.HTTPSConnection(host, timeout=5)
+    conn.request("GET", ruta)
     resp = conn.getresponse()
     status = resp.status
     body = resp.read().decode()
     conn.close()
-    assert status == 200, f"Status code esperado 200, obtenido {status}"
-    print(f"Status code 200: OK")
+
+    print("--- RESULTADO ---")
+    if status == 200:
+        print("  Status code 200: OK")
+    else:
+        print(f"  Status code: {status} (esperado 200)")
+
     datos = json.loads(body)
     campos = ["id", "title", "body"]
     for campo in campos:
@@ -39,10 +100,29 @@ def ejercicio_2():
             print(f"  Campo '{campo}': {datos[campo]}")
         else:
             print(f"  Campo '{campo}': FALTANTE")
-    print("Validacion completada.")
+    print("  Validacion completada.")
 
-def ejercicio_3():
-    """Escribir documentacion OpenAPI simple (dict)"""
+    print()
+    print("--- EXPLICACION ---")
+    print("""
+Validacion de respuestas API:
+
+  1. Verificar status code (assert o if)
+  2. Verificar estructura del body (campos esperados)
+  3. Verificar tipos de datos (opcional)
+
+En testing profesional se usan librerias como:
+  - pytest + requests (Pruebas de API)
+  - pydantic (validacion de schemas)
+  - schemathesis (testing basado en OpenAPI)
+""")
+
+
+def solucion_3():
+    print("=" * 50)
+    print("🔴 SOLUCION 3: Documentacion OpenAPI")
+    print("=" * 50)
+
     openapi_doc = {
         "openapi": "3.0.0",
         "info": {
@@ -106,17 +186,37 @@ def ejercicio_3():
             }
         }
     }
+
+    print("--- RESULTADO ---")
     print(json.dumps(openapi_doc, indent=2, ensure_ascii=False))
 
+    print()
+    print("--- EXPLICACION ---")
+    print("""
+OpenAPI 3.0 estructura:
+
+  openapi: version del estandar (3.0.0)
+  info: metadatos de la API (titulo, version, descripcion)
+  paths: endpoints disponibles con sus metodos
+  components/schemas: definiciones reutilizables de datos
+
+Cada path puede tener:
+  - get, post, put, delete, patch, etc.
+  - summary: descripcion breve
+  - requestBody: schema de entrada (POST/PUT)
+  - responses: codigos de respuesta con schemas
+
+Ventajas de OpenAPI:
+  - Generar documentacion visual (Swagger UI)
+  - Generar clientes SDK automaticamente
+  - Validar requests/responses automaticamente
+  - Mantener la documentacion sincronizada con el codigo
+""")
+
+
 if __name__ == "__main__":
-    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    soluciones = [solucion_1, solucion_2, solucion_3]
     if len(sys.argv) > 1 and sys.argv[1].isdigit():
         num = int(sys.argv[1]) - 1
-        if 0 <= num < len(ejercicios):
-            print(f">> SOLUCION {num + 1}: {ejercicios[num].__doc__}")
-            print("-" * 40)
-            ejercicios[num]()
-    else:
-        print("SOLUCIONES:")
-        for i, ej in enumerate(ejercicios, 1):
-            print(f"  {i}. {ej.__doc__}")
+        if 0 <= num < len(soluciones):
+            soluciones[num]()

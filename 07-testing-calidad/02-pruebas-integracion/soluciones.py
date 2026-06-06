@@ -1,14 +1,14 @@
 """
 SOLUCIONES - Pruebas de Integracion
-Ejecuta desde raiz: python scripts/runner.py 7 2 [ejercicio]
+Ejecuta desde raiz: python scripts/runner.py 7 2 [ejercicio] -s
 """
 import sys
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-def ejercicio_1():
-    """Solucion: insertar y consultar SQLite"""
+def solucion_1():
+    """Probar funcion que inserta y consulta SQLite"""
     import sqlite3
     conn = sqlite3.connect(':memory:')
     conn.execute('CREATE TABLE usuarios (id INTEGER PRIMARY KEY, nombre TEXT, email TEXT)')
@@ -20,10 +20,14 @@ def ejercicio_1():
     assert usuario[1] == 'Ana'
     assert usuario[2] == 'ana@test.com'
     conn.close()
+    print(">> SOLUCION 1: Probar funcion que inserta y consulta SQLite")
+    print("-" * 40)
     print("Prueba de integracion con SQLite superada.")
 
-def ejercicio_2():
-    """Solucion: fixture con setup/teardown"""
+def solucion_2():
+    """Setup/teardown de base de datos en memoria"""
+    print(">> SOLUCION 2: Setup/teardown de base de datos en memoria")
+    print("-" * 40)
     print("import pytest")
     print("import sqlite3")
     print()
@@ -39,8 +43,8 @@ def ejercicio_2():
     print("    cursor = db.execute(\"SELECT * FROM usuarios WHERE nombre = 'Luis'\")")
     print("    assert cursor.fetchone() is not None")
 
-def ejercicio_3():
-    """Solucion: integracion entre modulos"""
+def solucion_3():
+    """Probar integracion entre 2 modulos"""
     import sqlite3
     def procesar_datos(datos):
         return [d.upper() for d in datos]
@@ -56,16 +60,16 @@ def ejercicio_3():
     resultados = [row[0] for row in cursor.fetchall()]
     assert resultados == ['HOLA', 'MUNDO']
     conn.close()
+    print(">> SOLUCION 3: Probar integracion entre 2 modulos")
+    print("-" * 40)
     print("Integracion entre modulos verificada: datos procesados y guardados correctamente.")
 
 if __name__ == "__main__":
-    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    soluciones = [solucion_1, solucion_2, solucion_3]
     if len(sys.argv) > 1 and sys.argv[1].isdigit():
         num = int(sys.argv[1]) - 1
-        if 0 <= num < len(ejercicios):
-            print(f">> EJERCICIO {num + 1}: {ejercicios[num].__doc__}")
-            print("-" * 40)
-            ejercicios[num]()
+        if 0 <= num < len(soluciones):
+            soluciones[num]()
     else:
-        for i, ej in enumerate(ejercicios, 1):
-            print(f"  {i}. {ej.__doc__}")
+        for i, sol in enumerate(soluciones, 1):
+            print(f"  {i}. {sol.__doc__}")

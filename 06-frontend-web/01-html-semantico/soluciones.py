@@ -7,7 +7,7 @@ if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-def ejercicio_1():
+def solucion_1():
     """Estructura HTML semantica basica"""
     print(">> SOLUCION 1: Estructura HTML semantica basica")
     print("-" * 40)
@@ -37,7 +37,7 @@ def ejercicio_1():
     print()
     print("Abre soluciones.html en el navegador para verlo en accion.")
 
-def ejercicio_2():
+def solucion_2():
     """Agregar aside y mejorar accesibilidad"""
     print(">> SOLUCION 2: Agregar aside y mejorar accesibilidad")
     print("-" * 40)
@@ -54,7 +54,7 @@ def ejercicio_2():
     print()
     print("Agrega role='navigation' al <nav> y alt a las <img>.")
 
-def ejercicio_3():
+def solucion_3():
     """Blog completo con figure, time y article"""
     print(">> SOLUCION 3: Blog completo con figure, time y article")
     print("-" * 40)
@@ -76,11 +76,11 @@ def ejercicio_3():
     print("<footer>Copyright 2025</footer>")
 
 if __name__ == "__main__":
-    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    soluciones = [solucion_1, solucion_2, solucion_3]
     if len(sys.argv) > 1 and sys.argv[1].isdigit():
         num = int(sys.argv[1]) - 1
-        if 0 <= num < len(ejercicios):
-            ejercicios[num]()
+        if 0 <= num < len(soluciones):
+            soluciones[num]()
     else:
-        for i, ej in enumerate(ejercicios, 1):
-            print(f"  {i}. {ej.__doc__}")
+        for i, sol in enumerate(soluciones, 1):
+            print(f"  {i}. {sol.__doc__}")

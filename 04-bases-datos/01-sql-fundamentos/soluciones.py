@@ -1,15 +1,21 @@
 """
 SOLUCIONES - SQL Fundamentos
-Ejecuta desde raiz: python scripts/runner.py 4 1 [ejercicio]
+Ejecuta: python scripts/runner.py 4 1 [ejercicio] -s
 """
+
 import sys
+import sqlite3
+
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-def ejercicio_1():
-    """Escribe una consulta SELECT que muestre los usuarios mayores de 25"""
-    import sqlite3
+
+def solucion_1():
+    print("=" * 50)
+    print("🟢 SOLUCION 1: SELECT con WHERE")
+    print("=" * 50)
+
     conn = sqlite3.connect(":memory:")
     c = conn.cursor()
     c.executescript("""
@@ -25,15 +31,39 @@ def ejercicio_1():
         INSERT INTO usuarios VALUES (5, 'Laura', 19);
     """)
     conn.commit()
-    print(">>> Usuarios mayores de 25:")
+
+    print("--- CONSULTA ---")
+    print("SELECT * FROM usuarios WHERE edad > 25;")
+    print()
+
     query = "SELECT * FROM usuarios WHERE edad > 25"
     c.execute(query)
+    print("--- RESULTADO ---")
     for row in c.fetchall():
         print(f"  {row[0]:<3} {row[1]:<8} {row[2]} anos")
 
-def ejercicio_2():
-    """Escribe un INSERT INTO para agregar un nuevo producto"""
-    import sqlite3
+    print()
+    print("--- EXPLICACION ---")
+    print("""
+WHERE filtra las filas que cumplen la condicion.
+Solo se muestran Juan (30) y Carlos (28) porque Ana tiene
+exactamente 25 (no > 25) y los demas son menores.
+
+Operadores de comparacion en WHERE:
+  =   igual
+  <>  distinto (o !=)
+  >   mayor que
+  <   menor que
+  >=  mayor o igual
+  <=  menor o igual
+""")
+
+
+def solucion_2():
+    print("=" * 50)
+    print("🟡 SOLUCION 2: INSERT INTO")
+    print("=" * 50)
+
     conn = sqlite3.connect(":memory:")
     c = conn.cursor()
     c.executescript("""
@@ -48,16 +78,39 @@ def ejercicio_2():
         INSERT INTO productos VALUES (3, 'Teclado', 45.00, 30);
     """)
     conn.commit()
-    print(">>> Agregando Monitor (id=4, precio=299.99, stock=15):")
+
+    print("--- CONSULTA ---")
+    print("INSERT INTO productos VALUES (4, 'Monitor', 299.99, 15);")
+    print()
+
     query = "INSERT INTO productos VALUES (4, 'Monitor', 299.99, 15)"
     c.execute(query)
     conn.commit()
+
+    print("--- RESULTADO ---")
     for row in c.execute("SELECT * FROM productos"):
         print(f"  {row}")
 
-def ejercicio_3():
-    """Escribe un UPDATE para aumentar precio y un DELETE para eliminar un registro"""
-    import sqlite3
+    print()
+    print("--- EXPLICACION ---")
+    print("""
+INSERT INTO agrega una nueva fila a la tabla.
+Los valores deben coincidir en ORDEN y TIPO con las columnas:
+  (id INTEGER, nombre TEXT, precio REAL, stock INTEGER)
+
+Variantes de INSERT:
+  - Con columnas explicitas: INSERT INTO productos (nombre, precio)
+    VALUES ('Monitor', 299.99)  -- id y stock toman valores por defecto
+  - Multiples filas: INSERT INTO productos VALUES
+    (4, 'A', 1, 1), (5, 'B', 2, 2), (6, 'C', 3, 3);
+""")
+
+
+def solucion_3():
+    print("=" * 50)
+    print("🔴 SOLUCION 3: UPDATE y DELETE")
+    print("=" * 50)
+
     conn = sqlite3.connect(":memory:")
     c = conn.cursor()
     c.executescript("""
@@ -73,21 +126,42 @@ def ejercicio_3():
         INSERT INTO productos VALUES (4, 'Monitor', 299.99, 15);
     """)
     conn.commit()
-    print(">>> Actualizando Mouse a 30.00 y eliminando Teclado (id=3):")
+
+    print("--- CONSULTAS ---")
+    print("UPDATE productos SET precio = 30.00 WHERE nombre = 'Mouse';")
+    print("DELETE FROM productos WHERE id = 3;")
+    print()
+
     c.execute("UPDATE productos SET precio = 30.00 WHERE nombre = 'Mouse'")
     c.execute("DELETE FROM productos WHERE id = 3")
     conn.commit()
+
+    print("--- RESULTADO ---")
     for row in c.execute("SELECT * FROM productos ORDER BY id"):
         print(f"  {row}")
 
+    print()
+    print("--- EXPLICACION ---")
+    print("""
+UPDATE modifica filas existentes:
+  - SET columna = valor  → que columna cambiar
+  - WHERE condicion      → que filas afectar
+  - SIN WHERE se actualizarian TODAS las filas. ¡Peligro!
+
+DELETE elimina filas:
+  - WHERE condicion → que filas eliminar
+  - SIN WHERE se vaciaria la tabla entera. ¡Peligro!
+
+Buenas practicas:
+  1. Siempre hacer SELECT primero para ver que filas afecta el WHERE
+  2. Hacer backup antes de UPDATE/DELETE masivos
+  3. Usar transacciones (BEGIN/COMMIT) para poder hacer ROLLBACK
+""")
+
+
 if __name__ == "__main__":
-    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    soluciones = [solucion_1, solucion_2, solucion_3]
     if len(sys.argv) > 1 and sys.argv[1].isdigit():
         num = int(sys.argv[1]) - 1
-        if 0 <= num < len(ejercicios):
-            print(f">> EJERCICIO {num + 1}: {ejercicios[num].__doc__}")
-            print("-" * 40)
-            ejercicios[num]()
-    else:
-        for i, ej in enumerate(ejercicios, 1):
-            print(f"  {i}. {ej.__doc__}")
+        if 0 <= num < len(soluciones):
+            soluciones[num]()

@@ -1,15 +1,28 @@
 """
 EJERCICIOS - Normalizacion
 Ejecuta desde raiz: python scripts/runner.py 4 2 [ejercicio]
+
+Niveles:
+  🟢 Ej 1: Identificar y corregir 1FN
+  🟡 Ej 2: Normalizar a 2FN
+  🔴 Ej 3: Normalizar a 3FN
+
+Pistas: python scripts/runner.py 4 2 N -p [1|2|3]
 """
+
 import sys
+import sqlite3
+
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-def ejercicio_1():
-    """Identifica la violacion de 1NF: columna con multiples valores separados por comas"""
-    import sqlite3
+
+def ejercicio_1(pista=0):
+    """🟢 Identificar y corregir 1FN"""
+    print(">> 🟢 EJERCICIO 1: Identificar y corregir 1FN")
+    print("-" * 50)
+
     conn = sqlite3.connect(":memory:")
     c = conn.cursor()
     c.executescript("""
@@ -23,21 +36,50 @@ def ejercicio_1():
         INSERT INTO estudiantes VALUES (3, 'Maria', 'Historia,Ciencias');
     """)
     conn.commit()
-    print("=== Tabla actual (1FN violada) ===")
-    print("id | nombre | cursos")
-    print("---|--------|----------------------")
-    for row in c.execute("SELECT * FROM estudiantes"):
-        print(f" {row[0]}  | {row[1]:6s} | {row[2]}")
-    print()
-    print("Problema: la columna 'cursos' contiene multiples valores separados por comas.")
-    print("Crea dos tablas normalizadas: estudiantes y cursos, con tabla intermedia.")
-    # ==== ESCRIBE TU RESPUESTA AQUI ====
-    # Define el esquema normalizado a 1FN usando CREATE TABLE
-    pass
 
-def ejercicio_2():
-    """Normaliza a 2FN: elimina dependencias parciales en una tabla de calificaciones"""
-    import sqlite3
+    print("=== Tabla actual (viola 1FN) ===")
+    for row in c.execute("SELECT * FROM estudiantes"):
+        print(f"  {row[0]} | {row[1]:6s} | {row[2]}")
+
+    if pista == 1:
+        print("\n💡 Pista 1: 1FN requiere columnas ATOMICAS.")
+        print("  'cursos' contiene multiples valores → violacion.")
+        print("  Solucion: crear tablas estudiantes, cursos, y una")
+        print("  tabla intermedia estudiante_curso.")
+        return
+    elif pista == 2:
+        print("\n💡 Pista 2: Necesitas 3 tablas:")
+        print("  estudiantes(id, nombre)")
+        print("  cursos(id, nombre)")
+        print("  estudiante_curso(estudiante_id, curso_id)")
+        print("  Con PRIMARY KEY compuesta y FOREIGN KEYs")
+        return
+    elif pista == 3:
+        print("\n💡 Pista 3: Esquema completo:")
+        print("""
+  CREATE TABLE estudiantes (id INTEGER PRIMARY KEY, nombre TEXT);
+  CREATE TABLE cursos (id INTEGER PRIMARY KEY, nombre TEXT);
+  CREATE TABLE estudiante_curso (
+      estudiante_id INTEGER,
+      curso_id INTEGER,
+      PRIMARY KEY (estudiante_id, curso_id),
+      FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id),
+      FOREIGN KEY (curso_id) REFERENCES cursos(id)
+  );
+""")
+        return
+
+    print("\nProblema: columna 'cursos' tiene multiples valores (viola 1FN).")
+    print("Disena el esquema normalizado con CREATE TABLE.")
+    print()
+    print("# ==== ESCRIBE TU ESQUEMA SQL AQUI ====")
+
+
+def ejercicio_2(pista=0):
+    """🟡 Normalizar a 2FN"""
+    print(">> 🟡 EJERCICIO 2: Normalizar a 2FN")
+    print("-" * 50)
+
     conn = sqlite3.connect(":memory:")
     c = conn.cursor()
     c.executescript("""
@@ -57,21 +99,50 @@ def ejercicio_2():
             (2, 'Juan', 103, 'Ciencias', 'Dr. Garcia', 8.0);
     """)
     conn.commit()
-    print("=== Tabla actual (2FN violada) ===")
-    print("estudiante_id | estudiante_nombre | curso_id | curso_nombre | profesor    | nota")
-    print("--------------|-------------------|----------|--------------|-------------|------")
-    for row in c.execute("SELECT * FROM calificaciones"):
-        print(f" {row[0]:<13} | {row[1]:<17} | {row[2]:<8} | {row[3]:<12} | {row[4]:<11} | {row[5]}")
-    print()
-    print("Problema: estudiante_nombre depende solo de estudiante_id,")
-    print("curso_nombre y profesor dependen solo de curso_id.")
-    print("Crea tablas separadas: estudiantes, cursos, calificaciones (2FN).")
-    # ==== ESCRIBE TU RESPUESTA AQUI ====
-    pass
 
-def ejercicio_3():
-    """Normaliza a 3FN: elimina dependencias transitivas en una tabla de pedidos"""
-    import sqlite3
+    print("=== Tabla actual (viola 2FN) ===")
+    for row in c.execute("SELECT * FROM calificaciones"):
+        print(f"  {row}")
+
+    if pista == 1:
+        print("\n💡 Pista 1: Dependencias parciales:")
+        print("  estudiante_nombre depende SOLO de estudiante_id")
+        print("  curso_nombre y profesor dependen SOLO de curso_id")
+        return
+    elif pista == 2:
+        print("\n💡 Pista 2: 2FN requiere 3 tablas:")
+        print("  estudiantes(id, nombre)")
+        print("  cursos(id, nombre, profesor)")
+        print("  calificaciones(estudiante_id, curso_id, nota)")
+        print("  PK compuesta en calificaciones, FK a las otras")
+        return
+    elif pista == 3:
+        print("\n💡 Pista 3: Esquema completo 2FN:")
+        print("""
+  CREATE TABLE estudiantes (id INTEGER PRIMARY KEY, nombre TEXT);
+  CREATE TABLE cursos (id INTEGER PRIMARY KEY, nombre TEXT, profesor TEXT);
+  CREATE TABLE calificaciones (
+      estudiante_id INTEGER,
+      curso_id INTEGER,
+      nota REAL,
+      PRIMARY KEY (estudiante_id, curso_id),
+      FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id),
+      FOREIGN KEY (curso_id) REFERENCES cursos(id)
+  );
+""")
+        return
+
+    print("\nProblema: dependencias parciales (viola 2FN).")
+    print("Crea tablas separadas: estudiantes, cursos, calificaciones.")
+    print()
+    print("# ==== ESCRIBE TU ESQUEMA SQL AQUI ====")
+
+
+def ejercicio_3(pista=0):
+    """🔴 Normalizar a 3FN"""
+    print(">> 🔴 EJERCICIO 3: Normalizar a 3FN")
+    print("-" * 50)
+
     conn = sqlite3.connect(":memory:")
     c = conn.cursor()
     c.executescript("""
@@ -91,26 +162,58 @@ def ejercicio_3():
             (4, 3, 'Maria', 'Valencia', 'Monitor', 2, 599.98);
     """)
     conn.commit()
-    print("=== Tabla actual (3FN violada) ===")
-    print("pedido_id | cliente_id | cliente_nombre | cliente_ciudad | producto | cantidad | total")
-    print("----------|------------|----------------|----------------|----------|----------|-------")
+
+    print("=== Tabla actual (viola 3FN) ===")
     for row in c.execute("SELECT * FROM pedidos"):
-        print(f" {row[0]:<9} | {row[1]:<10} | {row[2]:<14} | {row[3]:<14} | {row[4]:<8} | {row[5]:<8} | {row[6]}")
+        print(f"  {row}")
+
+    if pista == 1:
+        print("\n💡 Pista 1: Dependencia transitiva:")
+        print("  pedido_id → cliente_id → cliente_nombre")
+        print("  pedido_id → cliente_id → cliente_ciudad")
+        return
+    elif pista == 2:
+        print("\n💡 Pista 2: 3FN requiere 2 tablas:")
+        print("  clientes(id, nombre, ciudad)")
+        print("  pedidos(id, cliente_id, producto, cantidad, total)")
+        return
+    elif pista == 3:
+        print("\n💡 Pista 3: Esquema completo 3FN:")
+        print("""
+  CREATE TABLE clientes (
+      id INTEGER PRIMARY KEY,
+      nombre TEXT,
+      ciudad TEXT
+  );
+  CREATE TABLE pedidos (
+      id INTEGER PRIMARY KEY,
+      cliente_id INTEGER REFERENCES clientes(id),
+      producto TEXT,
+      cantidad INTEGER,
+      total REAL
+  );
+""")
+        return
+
+    print("\nProblema: dependencias transitivas (viola 3FN).")
+    print("Crea tablas separadas: clientes, pedidos.")
     print()
-    print("Problema: cliente_nombre y cliente_ciudad dependen de cliente_id")
-    print("(dependencia transitiva a traves de pedido_id -> cliente_id -> datos_cliente).")
-    print("Crea tablas separadas: clientes, pedidos (3FN).")
-    # ==== ESCRIBE TU RESPUESTA AQUI ====
-    pass
+    print("# ==== ESCRIBE TU ESQUEMA SQL AQUI ====")
+
 
 if __name__ == "__main__":
     ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
     if len(sys.argv) > 1 and sys.argv[1].isdigit():
         num = int(sys.argv[1]) - 1
         if 0 <= num < len(ejercicios):
-            print(f">> EJERCICIO {num + 1}: {ejercicios[num].__doc__}")
-            print("-" * 40)
-            ejercicios[num]()
+            pista = 0
+            if "-p" in sys.argv:
+                idx = sys.argv.index("-p")
+                if idx + 1 < len(sys.argv) and sys.argv[idx + 1].isdigit():
+                    pista = int(sys.argv[idx + 1])
+            ejercicios[num](pista)
     else:
+        print("EJERCICIOS:")
         for i, ej in enumerate(ejercicios, 1):
-            print(f"  {i}. {ej.__doc__}")
+            doc = ej.__doc__ or ""
+            print(f"  {i}. {doc}")

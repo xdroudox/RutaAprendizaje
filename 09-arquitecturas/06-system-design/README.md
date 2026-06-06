@@ -78,6 +78,28 @@ Un sistema de video bajo demanda (Netflix-style):
 | CAP choices | Flexibilidad segun caso de uso | Sacrificio de una propiedad |
 | Rate Limiting | Protege contra abusos y DDoS | Complejidad, falsos positivos |
 
+## Glosario
+
+**Cache**: Almacenamiento temporal en memoria (Redis, Memcached) que reduce la latencia y la carga en la base de datos.
+
+**CDN (Content Delivery Network)**: Red de servidores distribuidos geograficamente que sirve contenido estatico cerca del usuario final.
+
+**Load Balancer**: Componente que distribuye el trafico entrante entre multiples servidores para evitar sobrecarga y garantizar disponibilidad.
+
+**Teorema CAP**: Principio que afirma que un sistema distribuido solo puede garantizar dos de tres propiedades: Consistencia, Disponibilidad y Tolerancia a Particion.
+
+**Rate Limiting**: Mecanismo que controla la cantidad de peticiones que un cliente puede realizar en un periodo de tiempo determinado.
+
+**Redis**: Base de datos en memoria de tipo clave-valor usada comunmente como cache, cola de mensajes y almacen de sesiones.
+
+**TTL (Time To Live)**: Tiempo de vida de un dato en cache; al expirar, el dato se elimina y debe volver a obtenerse de la fuente original.
+
+**Token Bucket**: Algoritmo de rate limiting que permite rafagas de trafico acumulando tokens en un cubeta con capacidad maxima.
+
+**Sliding Window**: Algoritmo de rate limiting que cuenta peticiones en una ventana de tiempo deslizante para mayor precision.
+
+**Consistencia vs Disponibilidad**: Disyuntiva del Teorema CAP donde los sistemas CP priorizan datos correctos y los AP priorizan estar siempre operativos.
+
 ## Ejercicios
 
 ### Ejercicio 1: Cache strategy

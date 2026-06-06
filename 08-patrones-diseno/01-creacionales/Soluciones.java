@@ -1,15 +1,15 @@
 /**
  * SOLUCIONES - Patrones Creacionales
- * Ejecuta desde raiz: python scripts/runner.py 8 1 [ejercicio]
+ * Ejecuta desde raiz: python scripts/runner.py 8 1 [ejercicio] -s
  */
 public class Soluciones {
     public static void main(String[] args) {
-        if (args.length > 0) {
+        if (args.length > 0 && args[0].matches("\\d+")) {
             int num = Integer.parseInt(args[0]);
             switch (num) {
-                case 1: ejercicio_1(); break;
-                case 2: ejercicio_2(); break;
-                case 3: ejercicio_3(); break;
+                case 1: solucion_1(); break;
+                case 2: solucion_2(); break;
+                case 3: solucion_3(); break;
             }
         } else {
             for (int i = 1; i <= 3; i++) {
@@ -18,7 +18,7 @@ public class Soluciones {
         }
     }
 
-    static void ejercicio_1() {
+    static void solucion_1() {
         System.out.println(">> SOLUCION 1: Singleton - Configuracion");
         System.out.println("-".repeat(40));
 
@@ -50,7 +50,7 @@ public class Soluciones {
         c1.mostrar();
     }
 
-    static void ejercicio_2() {
+    static void solucion_2() {
         System.out.println(">> SOLUCION 2: Factory - Figuras");
         System.out.println("-".repeat(40));
 
@@ -78,7 +78,7 @@ public class Soluciones {
         f2.dibujar();
     }
 
-    static void ejercicio_3() {
+    static void solucion_3() {
         System.out.println(">> SOLUCION 3: Builder - Pizza");
         System.out.println("-".repeat(40));
 

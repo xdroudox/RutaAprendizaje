@@ -131,3 +131,25 @@ A02 se refiere a datos no cifrados o cifrados con algoritmos debiles (ej: usar M
 contrasenas). A07 se refiere a fallos en la autenticacion (ej: permitir brute force, no
 tener MFA). Se relacionan pero A02 es sobre cifrado y A07 es sobre procesos de login.
 </details>
+
+---
+
+## Glosario
+
+- **Cifrado**: proceso de convertir informacion legible en ilegible usando un algoritmo y una clave. Puede ser simetrico (misma clave para cifrar y descifrar) o asimetrico (claves publica y privada).
+- **Hashing**: funcion unidireccional que convierte datos en una cadena de longitud fija (hash). No se puede revertir. Se usa para verificar integridad y almacenar contrasenas.
+- **SQL Injection**: vulnerabilidad donde un atacante inserta codigo SQL malicioso a traves de entradas de usuario para manipular la base de datos.
+- **XSS (Cross-Site Scripting)**: vulnerabilidad que permite inyectar scripts maliciosos en paginas web vistas por otros usuarios.
+- **CSRF (Cross-Site Request Forgery)**: ataque que fuerza a un usuario autenticado a ejecutar acciones no deseadas en una aplicacion web.
+- **CSP (Content Security Policy)**: header HTTP que permite restringir que recursos (scripts, estilos, imagenes) puede cargar un navegador.
+- **CORS (Cross-Origin Resource Sharing)**: mecanismo que permite o restringe peticiones entre diferentes origenes en el navegador.
+- **JWT (JSON Web Token)**: formato compacto y autónomo para transmitir informacion entre partes como un objeto JSON firmado digitalmente.
+- **OAuth**: protocolo de autorizacion que permite a aplicaciones acceder a recursos de un usuario sin compartir sus credenciales.
+- **Salt**: valor aleatorio que se agrega a una contrasena antes de hashearla para evitar ataques de rainbow tables.
+- **HTTPS**: version segura de HTTP que cifra la comunicacion entre el navegador y el servidor usando TLS/SSL.
+- **Cifrado simetrico**: algoritmo que usa la misma clave para cifrar y descifrar datos (ej: AES).
+- **Cifrado asimetrico**: algoritmo que usa un par de claves (publica y privada) donde una cifra y la otra descifra (ej: RSA).
+- **Prepared Statement**: consulta SQL parametrizada donde los datos se pasan por separado del codigo SQL, previniendo inyeccion.
+- **MFA (Multi-Factor Authentication)**: metodo de autenticacion que requiere dos o mas factores (algo que sabes, tienes o eres).
+- **SIEM (Security Information and Event Management)**: sistema que centraliza y analiza logs de seguridad para detectar amenazas.
+- **SBOM (Software Bill of Materials)**: inventario de componentes y dependencias de un software para rastrear vulnerabilidades.

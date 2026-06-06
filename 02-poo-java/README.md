@@ -1,73 +1,61 @@
-# Programacion Orientada a Objetos en Java
+# NIVEL 2: Programacion Orientada a Objetos con Java
 
-## Contenido
+```java
+System.out.println("Bienvenido al Nivel 2, Guerrero Java!");
+System.out.println("Aqui dominaras los objetos y las clases.");
+```
 
-| Modulo | Tema | Estado |
-|--------|------|--------|
-| 01 | Clases y Objetos | Completado |
-| 02 | Encapsulacion | Completado |
-| 03 | Herencia | Completado |
-| 04 | Polimorfismo | Completado |
-| 05 | Interfaces y Clases Abstractas | Completado |
-| 06 | Principios SOLID | Completado |
-| 07 | Excepciones | Completado |
-| 08 | Colecciones y Genericos | Completado |
-| 09 | Java I/O | Completado |
+## Que aprenderas en este nivel
 
-## Objetivo
+La **Programacion Orientada a Objetos (POO)** es un paradigma que organiza el codigo en **objetos** que tienen **datos** (atributos) y **comportamiento** (metodos). Java es un lenguaje PURAMENTE orientado a objetos.
 
-Dominar los fundamentos de la Programacion Orientada a Objetos en Java:
-- Crear clases y objetos con constructores y metodos
-- Aplicar encapsulacion para proteger los datos
-- Usar herencia para reutilizar codigo
-- Implementar polimorfismo con sobrecarga y sobrescritura
-- Disenar con interfaces y clases abstractas
-- Aplicar los principios SOLID
-- Manejar excepciones correctamente
-- Usar colecciones y genericos
-- Leer y escribir archivos con Java I/O
+Cada tema sigue la misma estructura:
+
+```
+📖 TEORIA → Explicacion con ejemplos linea por linea
+📖 GLOSARIO → Terminos del tema definidos
+🔄 COMPARATIVA → Mismo concepto en Java / Python / JavaScript
+📝 EJEMPLO GUIADO → Problema resuelto paso a paso
+🎯 EJERCICIOS → 3 niveles: 🟢 Basico, 🟡 Intermedio, 🔴 Avanzado
+```
+
+## Temas
+
+| # | Tema | Que aprenderas |
+|---|------|----------------|
+| 1 | **Clases y Objetos** | Crear clases, constructores, instanciar objetos, metodos |
+| 2 | **Encapsulacion** | private, public, getters, setters, proteger datos |
+| 3 | **Herencia** | extends, super, @Override, reutilizar codigo |
+| 4 | **Polimorfismo** | Sobrecarga, sobrescritura, tipos polymorphicos |
+| 5 | **Interfaces y Clases Abstractas** | interface, abstract, contratos, implements |
+| 6 | **Principios SOLID** | SRP, OCP, LSP, ISP, DIP |
+| 7 | **Excepciones** | try, catch, throw, finally, excepciones personalizadas |
+| 8 | **Colecciones y Genericos** | ArrayList, HashMap, Set, generics \<T\> |
+| 9 | **Java I/O** | Leer y escribir archivos, File, InputStream, OutputStream |
 
 ## Requisitos
 
-- Java Development Kit (JDK) 17 o superior
-- Editor de codigo o IDE
-- Terminal o linea de comandos
+- **Java 17+** → `java -version` y `javac -version`
+- Un editor de codigo
 
-## Como usar cada modulo
-
-Cada modulo contiene tres archivos:
-
-```
-01-clases-objetos/
-  README.md        -- Teoria y ejemplos
-  Ejercicios.java  -- Ejercicios interactivos
-  Soluciones.java  -- Soluciones comentadas
-```
-
-Para ejecutar un ejercicio desde la raiz del proyecto:
+## Como ejecutar los ejercicios
 
 ```bash
-python scripts/runner.py 2 [modulo] [ejercicio]
+# Ver la teoria
+code 02-poo-java/03-herencia/README.md
+
+# Ejecutar ejercicio
+python scripts/runner.py 2 3 1
+
+# Ver solucion
+python scripts/runner.py 2 3 1 -s
+
+# Ver pista
+python scripts/runner.py 2 3 1 -p 1
 ```
 
-Ejemplo:
-```bash
-python scripts/runner.py 2 1 1
-```
+## Diferencia con Python
 
-Para ver la solucion:
-```bash
-python scripts/runner.py 2 1 1 -s
-```
+En Python podias editar `ejercicios.py` directamente y ejecutar. En Java, los archivos `Ejercicios.java` muestran las instrucciones y debes crear tus propios archivos `.java` para practicar. Esto es INTENCIONAL: en el mundo real, los proyectos Java tienen multiples archivos.
 
-## Navegacion rapida
-
-- [01 - Clases y Objetos](01-clases-objetos/README.md)
-- [02 - Encapsulacion](02-encapsulacion/README.md)
-- [03 - Herencia](03-herencia/README.md)
-- [04 - Polimorfismo](04-polimorfismo/README.md)
-- [05 - Interfaces y Clases Abstractas](05-interfaces-abstractas/README.md)
-- [06 - Principios SOLID](06-principios-solid/README.md)
-- [07 - Excepciones](07-excepciones/README.md)
-- [08 - Colecciones y Genericos](08-colecciones-genericos/README.md)
-- [09 - Java I/O](09-java-io/README.md)
+**Pero los READMEs siguen siendo tu guia principal:** alli tienes la teoria, ejemplos, y ejercicios explicados igual que en Python.

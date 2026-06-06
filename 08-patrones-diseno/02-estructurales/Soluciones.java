@@ -1,15 +1,15 @@
 /**
  * SOLUCIONES - Patrones Estructurales
- * Ejecuta desde raiz: python scripts/runner.py 8 2 [ejercicio]
+ * Ejecuta desde raiz: python scripts/runner.py 8 2 [ejercicio] -s
  */
 public class Soluciones {
     public static void main(String[] args) {
-        if (args.length > 0) {
+        if (args.length > 0 && args[0].matches("\\d+")) {
             int num = Integer.parseInt(args[0]);
             switch (num) {
-                case 1: ejercicio_1(); break;
-                case 2: ejercicio_2(); break;
-                case 3: ejercicio_3(); break;
+                case 1: solucion_1(); break;
+                case 2: solucion_2(); break;
+                case 3: solucion_3(); break;
             }
         } else {
             for (int i = 1; i <= 3; i++) {
@@ -18,7 +18,7 @@ public class Soluciones {
         }
     }
 
-    static void ejercicio_1() {
+    static void solucion_1() {
         System.out.println(">> SOLUCION 1: Adapter - Enchufes");
         System.out.println("-".repeat(40));
 
@@ -45,7 +45,7 @@ public class Soluciones {
         adapter.plugIn();
     }
 
-    static void ejercicio_2() {
+    static void solucion_2() {
         System.out.println(">> SOLUCION 2: Decorator - Cafe");
         System.out.println("-".repeat(40));
 
@@ -80,7 +80,7 @@ public class Soluciones {
         System.out.println(cafe.descripcion() + " = $" + cafe.costo());
     }
 
-    static void ejercicio_3() {
+    static void solucion_3() {
         System.out.println(">> SOLUCION 3: Proxy - Control de Acceso");
         System.out.println("-".repeat(40));
 

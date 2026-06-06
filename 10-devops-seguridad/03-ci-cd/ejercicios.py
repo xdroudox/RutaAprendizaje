@@ -1,68 +1,201 @@
 """
 EJERCICIOS - CI/CD
-Ejecuta desde raiz: python scripts/runner.py 10 03 [ejercicio]
+Ejecuta desde raiz: python scripts/runner.py 10 03 [ejercicio] [-p N]
 """
 import sys
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-def ejercicio_1():
-    """Escribe un workflow YAML de GitHub Actions (build + test)"""
+def ejercicio_1(pista=0):
+    """Workflow basico: crea un workflow YAML con build y test"""
     print(">> EJERCICIO 1: Workflow basico CI")
     print("-" * 40)
-    print("Crea .github/workflows/ci.yml con:")
+    print("Crea un archivo .github/workflows/ci.yml con un job 'test'.")
     print()
-    print("  - name: CI")
-    print("  - on: push y pull_request a main")
+    print("Requisitos:")
+    print("  - Disparar en push y pull_request a main")
     print("  - runs-on: ubuntu-latest")
-    print("  - steps:")
+    print("  - Steps:")
     print("      1. actions/checkout@v4")
     print("      2. actions/setup-python@v5 (python 3.11)")
     print("      3. pip install -r requirements.txt")
     print("      4. pytest")
     print()
     print("# ==== ESCRIBE AQUI EL CONTENIDO DEL YAML ====")
+    if pista:
+        print("\n" + "="*40)
+        print("PISTAS:")
+    if pista >= 1:
+        print("\n🟢 PISTA 1 (Basica):")
+        print("  `name:` es el nombre del workflow.")
+        print("  `on:` define los eventos que lo disparan.")
+        print("  `jobs:` contiene uno o mas jobs.")
+        print("  Cada job tiene `runs-on` y `steps`.")
+    if pista >= 2:
+        print("\n🟡 PISTA 2 (Intermedia):")
+        print("  Estructura:")
+        print("    name: CI")
+        print("    on:")
+        print("      push:")
+        print("        branches: [main]")
+        print("      pull_request:")
+        print("        branches: [main]")
+        print("    jobs:")
+        print("      test:")
+        print("        runs-on: ubuntu-latest")
+        print("        steps:")
+        print("          - uses: actions/checkout@v4")
+        print("          - uses: actions/setup-python@v5")
+        print("            with:")
+        print("              python-version: '3.11'")
+        print("          - run: pip install -r requirements.txt")
+        print("          - run: pytest")
+    if pista >= 3:
+        print("\n🔴 PISTA 3 (Avanzada - casi la solucion):")
+        print("  YAML completo:")
+        print("    name: CI")
+        print("    on:")
+        print("      push:")
+        print("        branches: [main]")
+        print("      pull_request:")
+        print("        branches: [main]")
+        print("    jobs:")
+        print("      test:")
+        print("        runs-on: ubuntu-latest")
+        print("        steps:")
+        print("          - uses: actions/checkout@v4")
+        print("          - uses: actions/setup-python@v5")
+        print("            with:")
+        print("              python-version: '3.11'")
+        print("          - run: pip install -r requirements.txt")
+        print("          - run: pytest")
+        print()
+        print("  Guarda en .github/workflows/ci.yml y haz push a GitHub.")
 
-def ejercicio_2():
-    """Agrega un step de linting al workflow"""
-    print(">> EJERCICIO 2: Agregar linting")
+def ejercicio_2(pista=0):
+    """Agregar linting: anade un paso de linting al workflow"""
+    print(">> EJERCICIO 2: Agregar linting al workflow")
     print("-" * 40)
-    print("Modifica el workflow anterior para agregar un step de linting:")
+    print("Modifica el workflow anterior para anadir un paso de linting.")
     print()
-    print("  - Instalar ruff o flake8")
-    print("  - Ejecutar linter sobre el codigo")
-    print()
-    print("Agrega despues del paso de pytest:")
-    print("  - run: pip install ruff")
-    print("  - run: ruff check .")
+    print("Debe ejecutarse DESPUES de pytest:")
+    print("  - Instalar ruff: pip install ruff")
+    print("  - Ejecutar: ruff check .")
     print()
     print("# ==== ESCRIBE AQUI EL WORKFLOW COMPLETO CON LINTING ====")
+    if pista:
+        print("\n" + "="*40)
+        print("PISTAS:")
+    if pista >= 1:
+        print("\n🟢 PISTA 1 (Basica):")
+        print("  El linter revisa el codigo en busca de errores y malas practicas.")
+        print("  Ruff es un linter rapido para Python. Alternativas: flake8, pylint.")
+        print("  Simplemente agrega dos pasos (run:) al final del job test.")
+    if pista >= 2:
+        print("\n🟡 PISTA 2 (Intermedia):")
+        print("  Agrega al final de steps:")
+        print("          - run: pip install ruff")
+        print("          - run: ruff check .")
+        print()
+        print("  El workflow completo queda igual que el ejercicio 1,")
+        print("  pero con estos dos pasos extra al final.")
+    if pista >= 3:
+        print("\n🔴 PISTA 3 (Avanzada - casi la solucion):")
+        print("  Workflow completo con linting:")
+        print("    name: CI with Lint")
+        print("    on: [push, pull_request]")
+        print("    jobs:")
+        print("      test:")
+        print("        runs-on: ubuntu-latest")
+        print("        steps:")
+        print("          - uses: actions/checkout@v4")
+        print("          - uses: actions/setup-python@v5")
+        print("            with:")
+        print("              python-version: '3.11'")
+        print("          - run: pip install -r requirements.txt")
+        print("          - run: pytest")
+        print("          - run: pip install ruff")
+        print("          - run: ruff check .")
+        print()
+        print("  Haz push y ve a la pestana Actions de GitHub para ver el resultado.")
 
-def ejercicio_3():
-    """Agrega deploy a produccion al workflow"""
-    print(">> EJERCICIO 3: Deploy a produccion")
+def ejercicio_3(pista=0):
+    """Deploy a produccion: crea un pipeline completo CI/CD"""
+    print(">> EJERCICIO 3: Pipeline completo CI/CD")
     print("-" * 40)
-    print("Crea un workflow con DOS jobs:")
+    print("Crea un workflow con DOS jobs: 'test' y 'deploy'.")
     print()
-    print("  Job 'test':")
-    print("    - checkout, setup python, dependencias, pytest, lint")
+    print("Job 'test':")
+    print("  - checkout, setup python, dependencias, pytest, lint")
     print()
-    print("  Job 'deploy':")
-    print("    - needs: test")
-    print("    - if: github.ref == 'refs/heads/main'")
-    print("    - run: echo 'Desplegando a produccion...'")
+    print("Job 'deploy':")
+    print("  - Depende de test (needs: test)")
+    print("  - Solo en main (if: github.ref == 'refs/heads/main')")
+    print("  - Ejecuta: echo 'Desplegando a produccion...'")
     print()
     print("# ==== ESCRIBE AQUI EL WORKFLOW COMPLETO CON DEPLOY ====")
+    if pista:
+        print("\n" + "="*40)
+        print("PISTAS:")
+    if pista >= 1:
+        print("\n🟢 PISTA 1 (Basica):")
+        print("  `needs:` hace que un job espere a que otro termine.")
+        print("  `if:` condiciona la ejecucion del job (solo en main).")
+        print("  `github.ref` contiene la rama actual (refs/heads/main).")
+    if pista >= 2:
+        print("\n🟡 PISTA 2 (Intermedia):")
+        print("  Estructura:")
+        print("    jobs:")
+        print("      test:")
+        print("        runs-on: ubuntu-latest")
+        print("        steps:")
+        print("          ... (checkout, setup python, pip, pytest, lint)")
+        print("      deploy:")
+        print("        needs: test")
+        print("        runs-on: ubuntu-latest")
+        print("        if: github.ref == 'refs/heads/main'")
+        print("        steps:")
+        print("          - run: echo 'Desplegando a produccion...'")
+    if pista >= 3:
+        print("\n🔴 PISTA 3 (Avanzada - casi la solucion):")
+        print("  Workflow completo:")
+        print("    name: CI/CD")
+        print("    on:")
+        print("      push:")
+        print("        branches: [main]")
+        print("    jobs:")
+        print("      test:")
+        print("        runs-on: ubuntu-latest")
+        print("        steps:")
+        print("          - uses: actions/checkout@v4")
+        print("          - uses: actions/setup-python@v5")
+        print("            with:")
+        print("              python-version: '3.11'")
+        print("          - run: pip install -r requirements.txt")
+        print("          - run: pytest")
+        print("          - run: pip install ruff")
+        print("          - run: ruff check .")
+        print("      deploy:")
+        print("        needs: test")
+        print("        runs-on: ubuntu-latest")
+        print("        if: github.ref == 'refs/heads/main'")
+        print("        steps:")
+        print("          - run: echo 'Desplegando a produccion...'")
+        print()
+        print("  En un proyecto real reemplazarias el echo por el deploy real.")
 
 if __name__ == "__main__":
     ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    pista_level = 0
+    if "-p" in sys.argv:
+        idx = sys.argv.index("-p")
+        if idx + 1 < len(sys.argv) and sys.argv[idx + 1].isdigit():
+            pista_level = int(sys.argv[idx + 1])
     if len(sys.argv) > 1 and sys.argv[1].isdigit():
         num = int(sys.argv[1]) - 1
         if 0 <= num < len(ejercicios):
-            print(f">> EJERCICIO {num + 1}: {ejercicios[num].__doc__}")
-            print("-" * 40)
-            ejercicios[num]()
+            ejercicios[num](pista=pista_level)
     else:
         for i, ej in enumerate(ejercicios, 1):
             print(f"  {i}. {ej.__doc__}")

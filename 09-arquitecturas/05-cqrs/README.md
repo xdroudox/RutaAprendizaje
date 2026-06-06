@@ -70,6 +70,28 @@ CON CQRS:
 | Seguridad granular (diferentes permisos para commands y queries) | Mayor uso de almacenamiento |
 | Facil integracion con Event Sourcing | Dificil justificacion en sistemas simples |
 
+## Glosario
+
+**CQRS**: Patron que separa las operaciones de lectura (queries) y escritura (commands) en modelos distintos y optimizados independientemente.
+
+**Command**: Operacion que cambia el estado del sistema (crear, actualizar, eliminar). No retorna datos de dominio, solo confirmacion.
+
+**Query**: Operacion que lee el estado del sistema sin modificarlo. Retorna datos sin efectos secundarios.
+
+**Modelo de escritura**: Esquema optimizado para comandos, normalmente normalizado y con validaciones de negocio.
+
+**Modelo de lectura**: Esquema optimizado para consultas, normalmente denormalizado y con estructuras simplificadas.
+
+**Denormalizacion**: Tecnica que combina datos en una sola estructura para acelerar lecturas, sacrificando redundancia controlada.
+
+**Consistencia eventual**: En CQRS con sincronizacion asincrona, el modelo de lectura puede estar momentaneamente desactualizado respecto al de escritura.
+
+**Sincronizacion**: Mecanismo (triggers, eventos, jobs) que mantiene actualizado el modelo de lectura a partir del modelo de escritura.
+
+**Event Sourcing**: Almacen de eventos inmutable que registra todos los cambios; complementa a CQRS proporcionando el historial completo.
+
+**Separacion de responsabilidades**: Dividir un sistema en partes con propositos distintos para facilitar su mantenimiento y evolucion.
+
 ## Ejercicios
 
 ### Ejercicio 1: Identificar commands y queries

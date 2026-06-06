@@ -52,6 +52,28 @@ Flujo tipico: `Controller -> Service -> Repository -> DB`
 | Pruebas unitarias por capa aislada | Transicion a microservicios dolorosa |
 | Ampliamente conocida y documentada | Rigidez en la direccion de dependencias |
 
+## Glosario
+
+**Arquitectura en capas**: Estilo de diseno que organiza el software en niveles horizontales con responsabilidades separadas.
+
+**Capa de presentacion**: Capa que maneja la interaccion con el usuario (interfaz grafica, API, controladores).
+
+**Capa de negocio**: Capa que contiene la logica de dominio, reglas de negocio y validaciones de la aplicacion.
+
+**Capa de persistencia**: Capa encargada del acceso a datos, repositorios y abstraccion del almacenamiento.
+
+**DTO (Data Transfer Object)**: Objeto ligero que transporta datos entre capas sin incluir logica de negocio.
+
+**ORM (Object-Relational Mapping)**: Tecnica que mapea objetos del codigo a tablas de una base de datos relacional.
+
+**Acoplamiento**: Grado de dependencia entre capas o modulos; un alto acoplamiento dificulta los cambios.
+
+**Responsabilidad unica**: Principio que indica que cada capa o modulo debe tener una unica razon para cambiar.
+
+**Big ball of mud**: Antipatron donde el software crece sin estructura clara, volviendose caotico y dificil de mantener.
+
+**Separacion de preocupaciones (SoC)**: Principio de dividir el sistema en secciones distintas que no se solapan en responsabilidades.
+
 ## Ejercicios
 
 ### Ejercicio 1: Identificacion de capas

@@ -1,14 +1,14 @@
 """
 SOLUCIONES - TDD (Test Driven Development)
-Ejecuta desde raiz: python scripts/runner.py 7 3 [ejercicio]
+Ejecuta desde raiz: python scripts/runner.py 7 3 [ejercicio] -s
 """
 import sys
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-def ejercicio_1():
-    """Solucion: FizzBuzz con TDD"""
+def solucion_1():
+    """FizzBuzz con TDD (escribir test primero)"""
     def fizzbuzz(n):
         if n % 3 == 0 and n % 5 == 0:
             return 'FizzBuzz'
@@ -21,6 +21,8 @@ def ejercicio_1():
     assert fizzbuzz(3) == 'Fizz'
     assert fizzbuzz(5) == 'Buzz'
     assert fizzbuzz(15) == 'FizzBuzz'
+    print(">> SOLUCION 1: FizzBuzz con TDD")
+    print("-" * 40)
     print("def fizzbuzz(n):")
     print("    if n % 3 == 0 and n % 5 == 0:")
     print("        return 'FizzBuzz'")
@@ -32,8 +34,8 @@ def ejercicio_1():
     print()
     print("Todas las pruebas FizzBuzz pasaron.")
 
-def ejercicio_2():
-    """Solucion: validador de email con TDD"""
+def solucion_2():
+    """Validador de email con TDD"""
     def validar_email(email):
         if ' ' in email:
             return False
@@ -50,11 +52,20 @@ def ejercicio_2():
     assert validar_email('user@') == False
     assert validar_email('@dominio.com') == False
     assert validar_email('user con@espacio.com') == False
-    print("def validar_email(email): ...")
+    print(">> SOLUCION 2: Validador de email con TDD")
+    print("-" * 40)
+    print("def validar_email(email):")
+    print("    if ' ' in email: return False")
+    print("    if email.count('@') != 1: return False")
+    print("    local, dominio = email.split('@')")
+    print("    if not local or not dominio: return False")
+    print("    if '.' not in dominio: return False")
+    print("    return True")
+    print()
     print("Todas las pruebas de validacion de email pasaron.")
 
-def ejercicio_3():
-    """Solucion: calculadora de promedios con TDD"""
+def solucion_3():
+    """Calculadora de promedios con TDD"""
     def calcular_promedio(numeros):
         if not numeros:
             return 0
@@ -70,17 +81,23 @@ def ejercicio_3():
         assert False, "Debio lanzar TypeError"
     except TypeError:
         pass
-    print("def calcular_promedio(numeros): ...")
+    print(">> SOLUCION 3: Calculadora de promedios con TDD")
+    print("-" * 40)
+    print("def calcular_promedio(numeros):")
+    print("    if not numeros: return 0")
+    print("    for n in numeros:")
+    print("        if not isinstance(n, (int, float)):")
+    print("            raise TypeError('Elemento no numerico')")
+    print("    return sum(numeros) / len(numeros)")
+    print()
     print("Todas las pruebas de promedio pasaron.")
 
 if __name__ == "__main__":
-    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    soluciones = [solucion_1, solucion_2, solucion_3]
     if len(sys.argv) > 1 and sys.argv[1].isdigit():
         num = int(sys.argv[1]) - 1
-        if 0 <= num < len(ejercicios):
-            print(f">> EJERCICIO {num + 1}: {ejercicios[num].__doc__}")
-            print("-" * 40)
-            ejercicios[num]()
+        if 0 <= num < len(soluciones):
+            soluciones[num]()
     else:
-        for i, ej in enumerate(ejercicios, 1):
-            print(f"  {i}. {ej.__doc__}")
+        for i, sol in enumerate(soluciones, 1):
+            print(f"  {i}. {sol.__doc__}")

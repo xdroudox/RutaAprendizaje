@@ -1,6 +1,6 @@
 """
 SOLUCIONES - CI/CD
-Ejecuta desde raiz: python scripts/runner.py 10 03 [ejercicio] solucion
+Ejecuta desde raiz: python scripts/runner.py 10 03 [ejercicio] -s
 """
 import sys
 if sys.platform == "win32":
@@ -8,7 +8,7 @@ if sys.platform == "win32":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
 def solucion_1():
-    """Escribe un workflow YAML de GitHub Actions (build + test)"""
+    """Workflow basico: crea un workflow YAML con build y test"""
     print(">> SOLUCION 1: Workflow basico CI")
     print("-" * 40)
     print("Contenido de .github/workflows/ci.yml:")
@@ -31,9 +31,14 @@ def solucion_1():
     print("            python-version: '3.11'")
     print("        - run: pip install -r requirements.txt")
     print("        - run: pytest")
+    print()
+    print("Explicacion:")
+    print("  El workflow se dispara en push y PR a main.")
+    print("  Clona el repo, instala Python, dependencias y ejecuta tests.")
+    print("  Si algo falla, GitHub muestra el error en la pestana Actions.")
 
 def solucion_2():
-    """Agrega un step de linting al workflow"""
+    """Agregar linting: anade un paso de linting al workflow"""
     print(">> SOLUCION 2: Workflow con linting")
     print("-" * 40)
     print("Contenido de .github/workflows/ci-lint.yml:")
@@ -54,9 +59,14 @@ def solucion_2():
     print("        - run: pytest")
     print("        - run: pip install ruff")
     print("        - run: ruff check .")
+    print()
+    print("Explicacion:")
+    print("  Los pasos de linting se ejecutan SOLO si pytest pasa.")
+    print("  Ruff revisa el codigo y falla si encuentra problemas de estilo o errores.")
+    print("  Si el linter falla, el workflow se marca como fallido.")
 
 def solucion_3():
-    """Agrega deploy a produccion al workflow"""
+    """Deploy a produccion: crea un pipeline completo CI/CD"""
     print(">> SOLUCION 3: Pipeline completo CI/CD")
     print("-" * 40)
     print("Contenido de .github/workflows/cd.yml:")
@@ -86,14 +96,17 @@ def solucion_3():
     print("      if: github.ref == 'refs/heads/main'")
     print("      steps:")
     print("        - run: echo 'Desplegando a produccion...'")
+    print()
+    print("Explicacion:")
+    print("  `needs: test` asegura que deploy solo corre si test pasa.")
+    print("  `if: github.ref == 'refs/heads/main'` evita deploy en otras ramas.")
+    print("  En produccion reemplazarias el echo por un script de deploy real.")
 
 if __name__ == "__main__":
     soluciones = [solucion_1, solucion_2, solucion_3]
     if len(sys.argv) > 1 and sys.argv[1].isdigit():
         num = int(sys.argv[1]) - 1
         if 0 <= num < len(soluciones):
-            print(f">> SOLUCION {num + 1}: {soluciones[num].__doc__}")
-            print("-" * 40)
             soluciones[num]()
     else:
         for i, sol in enumerate(soluciones, 1):

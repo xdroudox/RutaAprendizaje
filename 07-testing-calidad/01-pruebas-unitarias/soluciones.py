@@ -1,14 +1,14 @@
 """
 SOLUCIONES - Pruebas Unitarias
-Ejecuta desde raiz: python scripts/runner.py 7 1 [ejercicio]
+Ejecuta desde raiz: python scripts/runner.py 7 1 [ejercicio] -s
 """
 import sys
 if sys.platform == "win32":
     import io
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-def ejercicio_1():
-    """Solucion: funcion es_par() con assert"""
+def solucion_1():
+    """Escribir funcion es_par() y probarla con assert"""
     def es_par(n):
         return n % 2 == 0
     assert es_par(2) == True
@@ -16,26 +16,32 @@ def ejercicio_1():
     assert es_par(3) == False
     assert es_par(-2) == True
     assert es_par(-3) == False
+    print(">> SOLUCION 1: Escribir funcion es_par() y probarla con assert")
+    print("-" * 40)
     print("def es_par(n):")
     print("    return n % 2 == 0")
     print()
     print("Pruebas superadas: es_par funciona correctamente.")
 
-def ejercicio_2():
-    """Solucion: funcion sumar_lista() con pruebas"""
+def solucion_2():
+    """Escribir test para funcion que suma lista"""
     def sumar_lista(numeros):
         return sum(numeros)
     assert sumar_lista([]) == 0
     assert sumar_lista([1, 2, 3]) == 6
     assert sumar_lista([-1, 1]) == 0
     assert sumar_lista([5]) == 5
+    print(">> SOLUCION 2: Escribir test para funcion que suma lista")
+    print("-" * 40)
     print("def sumar_lista(numeros):")
     print("    return sum(numeros)")
     print()
     print("Pruebas superadas: sumar_lista funciona correctamente.")
 
-def ejercicio_3():
-    """Solucion: funciones test_* con pytest"""
+def solucion_3():
+    """Usar pytest (funcion test_...)"""
+    print(">> SOLUCION 3: Usar pytest (funcion test_...)")
+    print("-" * 40)
     print("Crea un archivo test_pruebas.py con:")
     print()
     print("import pytest")
@@ -58,13 +64,11 @@ def ejercicio_3():
     print("Ejecuta: pytest test_pruebas.py -v")
 
 if __name__ == "__main__":
-    ejercicios = [ejercicio_1, ejercicio_2, ejercicio_3]
+    soluciones = [solucion_1, solucion_2, solucion_3]
     if len(sys.argv) > 1 and sys.argv[1].isdigit():
         num = int(sys.argv[1]) - 1
-        if 0 <= num < len(ejercicios):
-            print(f">> EJERCICIO {num + 1}: {ejercicios[num].__doc__}")
-            print("-" * 40)
-            ejercicios[num]()
+        if 0 <= num < len(soluciones):
+            soluciones[num]()
     else:
-        for i, ej in enumerate(ejercicios, 1):
-            print(f"  {i}. {ej.__doc__}")
+        for i, sol in enumerate(soluciones, 1):
+            print(f"  {i}. {sol.__doc__}")

@@ -61,6 +61,28 @@ Cada servicio es independiente y evoluciona su propio estado.
 | Auditoria natural (historial de eventos) | Mayor latencia en operaciones |
 | Permite agregar nuevos consumidores facilmente | Brokers como punto unico de falla |
 
+## Glosario
+
+**Evento**: Cambio significativo en el estado del sistema representado como un mensaje inmutable (ej: "PedidoCreado", "PagoRecibido").
+
+**Arquitectura orientada a eventos (EDA)**: Estilo arquitectonico donde los componentes se comunican produciendo y consumiendo eventos de forma desacoplada.
+
+**Productor de eventos**: Componente que emite eventos sin conocer quienes los consumiran.
+
+**Consumidor de eventos**: Componente que escucha y reacciona a eventos publicados en el broker.
+
+**Broker de mensajes**: Canal de comunicacion intermediario (Kafka, RabbitMQ) que almacena y distribuye eventos entre productores y consumidores.
+
+**Event Sourcing**: Patron que almacena el estado del sistema como una secuencia inmutable de eventos en lugar de solo el estado actual.
+
+**Consistencia eventual**: Propiedad donde el sistema no es consistente inmediatamente tras una escritura, pero lo sera con el tiempo.
+
+**Dead Letter Queue (DLQ)**: Cola especial donde se envian eventos que fallaron repetidamente para su inspeccion sin bloquear el flujo principal.
+
+**Idempotencia**: Propiedad que garantiza que procesar el mismo evento varias veces produce el mismo resultado final.
+
+**Backoff exponencial**: Estrategia de reintentos donde el tiempo de espera se incrementa progresivamente (1s, 2s, 4s, 8s...).
+
 ## Ejercicios
 
 ### Ejercicio 1: Disenar flujo de eventos

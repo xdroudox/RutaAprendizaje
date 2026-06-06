@@ -1,52 +1,59 @@
-# Nivel 4: Bases de Datos
+# NIVEL 4: Bases de Datos
 
-Bienvenido al nivel de Bases de Datos. Aqui aprenderas los fundamentos de SQL,
-diseno relacional, optimizacion y conceptos de bases NoSQL.
+```python
+print("Bienvenido al Nivel 4, guardian de los datos!")
+print("Aqui dominaras el arte de almacenar, consultar y optimizar informacion.")
+```
 
-## Modulos
+## Que aprenderas en este nivel
 
-### 1. SQL Fundamentos (01-sql-fundamentos)
-Creacion de tablas, insercion de datos, consultas SELECT, clausulas WHERE,
-ORDER BY y LIMIT.
+Las **bases de datos** son el corazon de cualquier aplicacion. Este nivel cubre desde SQL basico hasta disno relacional, transacciones y bases NoSQL.
 
-### 2. Normalizacion (02-normalizacion)
-Primera, segunda y tercera forma normal, BCNF, cuando desnormalizar.
+Cada tema sigue la misma estructura:
 
-### 3. Joins y Relaciones (03-joins-relaciones)
-INNER JOIN, LEFT/RIGHT JOIN, FOREIGN KEY, relaciones uno-a-muchos y
-muchos-a-muchos.
+```
+📖 TEORIA → Explicacion con ejemplos SQL
+📖 GLOSARIO → Terminos del tema definidos
+🔄 COMPARATIVA → SQL vs Python vs MongoDB
+📝 EJEMPLO GUIADO → Problema resuelto paso a paso
+🎯 EJERCICIOS → 3 niveles: 🟢 Basico, 🟡 Intermedio, 🔴 Avanzado
+```
 
-### 4. Subconsultas y Vistas (04-subconsultas-vistas)
-Subconsultas en WHERE/FROM/SELECT, VIEW, CTE con WITH.
+## Temas
 
-### 5. Transacciones ACID (05-transacciones-acid)
-BEGIN, COMMIT, ROLLBACK, propiedades ACID.
+| # | Tema | Que aprenderas |
+|---|------|----------------|
+| 1 | **SQL Fundamentos** | CREATE TABLE, INSERT, SELECT, WHERE, UPDATE, DELETE |
+| 2 | **Normalizacion** | 1FN, 2FN, 3FN, BCNF, desnormalizacion |
+| 3 | **Joins y Relaciones** | INNER JOIN, LEFT/RIGHT JOIN, FOREIGN KEY, relaciones |
+| 4 | **Subconsultas y Vistas** | Subqueries, VIEW, CTE (WITH), EXISTS |
+| 5 | **Transacciones ACID** | BEGIN, COMMIT, ROLLBACK, propiedades ACID |
+| 6 | **Indices y Optimizacion** | CREATE INDEX, EXPLAIN, plan de ejecucion |
+| 7 | **NoSQL Intro** | Documentos vs relacional, MongoDB, casos de uso |
 
-### 6. Indices y Optimizacion (06-indices-optimizacion)
-CREATE INDEX, EXPLAIN, planificacion de consultas, cuando indexar.
+## Progresion
 
-### 7. NoSQL Intro (07-nosql-intro)
-Documentos vs relacional, conceptos MongoDB, cuando usar NoSQL.
-
-## Como usar
-
-Cada modulo contiene:
-
-- `README.md` -- Explicacion teorica del tema
-- `ejercicios.py` -- Ejercicios practicos con SQLite en memoria
-- `soluciones.py` -- Soluciones a los ejercicios
-
-Ejecutar desde raiz:
-
-    python scripts/runner.py 4 [modulo] [ejercicio]
-
-Ejemplos:
-
-    python scripts/runner.py 4 1 1
-    python scripts/runner.py 4 2 2
-    python scripts/runner.py 4 7 1
+```
+T1 (SQL Basico) → T2 (Normalizacion) → T3 (Joins) → T4 (Subconsultas)
+                                                          │
+                                            T5 (ACID) ←──┤
+                                                          │
+                                            T6 (Indices) ←┘
+                                                          │
+                                              T7 (NoSQL) ←┘
+```
 
 ## Requisitos
 
-- Python 3.6+
-- Solo modulo `sqlite3` (incluido en la biblioteca estandar)
+- Completar Nivel 3 (Estructuras de Datos)
+- Python 3.6+ con modulo `sqlite3` (incluido)
+
+## Como empezar
+
+```bash
+# Comienza con el primer tema
+code 04-bases-datos/01-sql-fundamentos/README.md
+
+# Ejecuta ejercicios
+python scripts/runner.py 4 1 1
+```

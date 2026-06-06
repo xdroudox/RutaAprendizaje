@@ -78,6 +78,28 @@ Sistema de gestion de restaurantes:
 | Facilita el mantenimiento a largo plazo | Dificil de aplicar en equipos sin experiencia |
 | Complementa perfectamente Hexagonal y Microservicios | Requiere refactorizacion continua del modelo |
 
+## Glosario
+
+**Domain-Driven Design (DDD)**: Aproximacion al diseno de software que centra el desarrollo en el modelo del dominio del negocio y su logica.
+
+**Lenguaje Ubicuo**: Vocabulario compartido entre expertos de negocio y desarrolladores donde cada termino tiene un significado unico y preciso.
+
+**Contexto Acotado (Bounded Context)**: Limite explicito donde un modelo de dominio es valido; un mismo concepto puede significar algo diferente en distintos contextos.
+
+**Entidad (Entity)**: Objeto de dominio con identidad unica que persiste a lo largo del tiempo, aunque sus atributos cambien.
+
+**Objeto Valor (Value Object)**: Objeto inmutable definido unicamente por sus atributos, sin identidad propia (ej: Direccion, Dinero, Color).
+
+**Agregado (Aggregate)**: Grupo de objetos de dominio que se tratan como una unidad cohesiva, con una entidad raiz que garantiza las invariantes.
+
+**Repositorio (Repository)**: Mecanismo que proporciona operaciones de recuperacion y persistencia de agregados, abstrayendo el almacenamiento.
+
+**Invariante**: Regla de negocio que debe cumplirse siempre dentro de un agregado para mantener la consistencia del modelo.
+
+**Modelo de dominio**: Representacion conceptual y software de un dominio del negocio, incluyendo entidades, reglas y relaciones.
+
+**Experto de dominio**: Persona con conocimiento profundo del negocio que colabora con el equipo de desarrollo para definir el modelo de dominio.
+
 ## Ejercicios
 
 ### Ejercicio 1: Identificar Entidades y Objetos Valor
